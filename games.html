@@ -332,6 +332,7 @@
             const historyBody = document.getElementById('recentGamesBody');
             const balanceEls = document.querySelectorAll('[data-balance]');
             const DEFAULT_BALANCE = 1000;
+main
 
             if (!betInput || !actionButton || !multiplierEl) {
                 return;
@@ -344,6 +345,9 @@
 
             const state = {
                 balance: DEFAULT_BALANCE,
+
+                balance: 0,
+ main
                 running: false,
                 cashedOut: false,
                 intervalId: null,
@@ -356,6 +360,11 @@
                 history: []
             };
 
+
+            const initialBalance = balanceEls.length
+                ? parseFloat((balanceEls[0].textContent || '0').replace(/,/g, ''))
+                : 1000;
+            state.balance = Number.isFinite(initialBalance) ? initialBalance : 1000;
             function formatCurrency(value) {
                 return currencyFormatter.format(Math.max(0, Number(value) || 0));
             }
