@@ -60,6 +60,159 @@
             background: rgba(0, 194, 255, 0.1);
             border-left: 3px solid #00c2ff;
         }
+        .crash-launch-area {
+            position: relative;
+            width: 100%;
+            max-width: 16rem;
+            height: 12rem;
+            margin: 0 auto;
+            border-radius: 0.75rem;
+            border: 1px solid rgba(0, 194, 255, 0.12);
+            background: radial-gradient(circle at 50% 120%, rgba(0, 194, 255, 0.35), transparent 60%),
+                linear-gradient(to top, rgba(14, 15, 19, 0.95), rgba(14, 15, 19, 0.25));
+            overflow: hidden;
+            transition: box-shadow 0.3s ease;
+        }
+        .crash-launch-area::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                radial-gradient(1px 1px at 15% 25%, rgba(255, 255, 255, 0.35) 0%, transparent 100%),
+                radial-gradient(1.5px 1.5px at 70% 35%, rgba(0, 194, 255, 0.28) 0%, transparent 100%),
+                radial-gradient(1px 1px at 45% 70%, rgba(255, 255, 255, 0.22) 0%, transparent 100%),
+                radial-gradient(1.5px 1.5px at 85% 55%, rgba(124, 58, 237, 0.3) 0%, transparent 100%),
+                radial-gradient(1px 1px at 30% 60%, rgba(255, 255, 255, 0.18) 0%, transparent 100%);
+            opacity: 0.35;
+            pointer-events: none;
+        }
+        .crash-launch-area.active {
+            box-shadow: 0 0 30px rgba(0, 194, 255, 0.35);
+        }
+        .crash-trail {
+            position: absolute;
+            bottom: 2.2rem;
+            left: 50%;
+            width: 0.45rem;
+            height: 0;
+            transform: translateX(-50%);
+            background: linear-gradient(to top, rgba(253, 224, 71, 0.35), rgba(56, 189, 248, 0));
+            filter: blur(0.5px);
+            opacity: 0;
+            transition: height 0.3s ease, opacity 0.3s ease;
+            z-index: 1;
+        }
+        .crash-explosion {
+            position: absolute;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(248, 113, 113, 0.85) 0%, rgba(253, 224, 71, 0.45) 45%, rgba(14, 15, 19, 0) 70%);
+            border-radius: 999px;
+            transform: translate(-50%, 50%);
+            opacity: 0;
+            transition: opacity 0.2s ease, width 0.2s ease, height 0.2s ease, bottom 0.2s ease;
+            pointer-events: none;
+            z-index: 3;
+        }
+        .crash-explosion.active {
+            opacity: 1;
+            width: 6rem;
+            height: 6rem;
+        }
+        .crash-ship {
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            width: 3.5rem;
+            height: 5.5rem;
+            transform: translateX(-50%);
+            transition: bottom 0.3s linear, filter 0.3s ease;
+            z-index: 2;
+        }
+        .crash-ship--stalled {
+            filter: grayscale(0.6) brightness(0.85);
+        }
+        .crash-ship-body {
+            position: absolute;
+            inset: 0;
+            border-radius: 999px 999px 42% 42%;
+            background: linear-gradient(to bottom, rgba(0, 194, 255, 0.95), rgba(124, 58, 237, 0.9));
+            box-shadow: 0 0 25px rgba(0, 194, 255, 0.45);
+        }
+        .crash-ship-window {
+            position: absolute;
+            top: 28%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 1.35rem;
+            height: 1.35rem;
+            border-radius: 999px;
+            background: radial-gradient(circle at 35% 35%, #ffffff 0%, #c4f1ff 40%, #0ea5e9 75%);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 0 12px rgba(255, 255, 255, 0.35);
+        }
+        .crash-ship-wing {
+            position: absolute;
+            bottom: 1.4rem;
+            width: 1.2rem;
+            height: 2rem;
+            background: linear-gradient(to top, rgba(124, 58, 237, 0.85), rgba(0, 194, 255, 0.7));
+            border-radius: 0.7rem;
+            box-shadow: 0 0 12px rgba(124, 58, 237, 0.3);
+        }
+        .crash-ship-wing--left {
+            left: -0.75rem;
+            transform: rotate(-12deg);
+        }
+        .crash-ship-wing--right {
+            right: -0.75rem;
+            transform: rotate(12deg);
+        }
+        .crash-flame {
+            position: absolute;
+            bottom: -1.9rem;
+            left: 50%;
+            width: 1.6rem;
+            height: 2.5rem;
+            transform: translateX(-50%);
+            background: radial-gradient(circle at 50% 15%, #ffffff 0%, #fde047 38%, #fb923c 65%, rgba(248, 113, 113, 0) 100%);
+            filter: blur(0.5px);
+            opacity: 0;
+            animation: flame-flicker 0.2s infinite alternate;
+        }
+        .crash-flame.active {
+            opacity: 1;
+        }
+        @keyframes flame-flicker {
+            from {
+                transform: translateX(-50%) scaleY(1);
+            }
+            to {
+                transform: translateX(-50%) scaleY(0.85);
+            }
+        }
+        .crash-ground {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2.4rem;
+            background: linear-gradient(to top, rgba(14, 15, 19, 0.95), rgba(14, 15, 19, 0));
+            z-index: 4;
+        }
+        .crash-ground::before {
+            content: '';
+            position: absolute;
+            bottom: 0.7rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 5rem;
+            height: 0.6rem;
+            border-radius: 999px;
+            background: linear-gradient(to right, rgba(0, 194, 255, 0.45), rgba(124, 58, 237, 0.45));
+            box-shadow: 0 0 20px rgba(0, 194, 255, 0.35);
+        }
         @media (max-width: 768px) {
             .game-sidebar {
                 overflow-x: auto;
@@ -185,8 +338,19 @@
                                 <div id="crashMultiplier" class="text-5xl font-bold text-primary tracking-tight">1.00x</div>
                                 <p id="crashStatus" class="text-xs uppercase tracking-[0.35em] text-gray-400">Waiting</p>
                                 <p id="crashMessage" class="text-gray-400 leading-relaxed max-w-sm mx-auto">Place your bet to start the next round.</p>
-                                <div class="w-full h-1.5 bg-gray-900/80 rounded-full overflow-hidden">
-                                    <div id="crashProgress" class="h-full bg-gradient-to-r from-primary via-secondary to-accent transition-all duration-100 ease-linear" style="width: 0%;"></div>
+                                <div class="w-full pt-2">
+                                    <div id="crashLaunchArea" class="crash-launch-area">
+                                        <div id="crashTrail" class="crash-trail"></div>
+                                        <div id="crashExplosion" class="crash-explosion"></div>
+                                        <div id="crashShip" class="crash-ship">
+                                            <div class="crash-ship-body"></div>
+                                            <div class="crash-ship-window"></div>
+                                            <div class="crash-ship-wing crash-ship-wing--left"></div>
+                                            <div class="crash-ship-wing crash-ship-wing--right"></div>
+                                            <div id="crashFlame" class="crash-flame"></div>
+                                        </div>
+                                        <div class="crash-ground"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -327,7 +491,11 @@
             const multiplierEl = document.getElementById('crashMultiplier');
             const statusEl = document.getElementById('crashStatus');
             const messageEl = document.getElementById('crashMessage');
-            const progressEl = document.getElementById('crashProgress');
+            const launchAreaEl = document.getElementById('crashLaunchArea');
+            const shipEl = document.getElementById('crashShip');
+            const flameEl = document.getElementById('crashFlame');
+            const trailEl = document.getElementById('crashTrail');
+            const explosionEl = document.getElementById('crashExplosion');
             const lastResultEl = document.getElementById('lastResult');
             const historyBody = document.getElementById('recentGamesBody');
             const balanceEls = document.querySelectorAll('[data-balance]');
@@ -355,6 +523,8 @@
                 payout: 0,
                 history: []
             };
+
+            let explosionTimeoutId = null;
 
 
             const initialBalance = balanceEls.length
@@ -406,7 +576,7 @@
                     actionButton.className = 'w-full py-3 rounded-lg font-bold transition bg-accent text-dark hover:brightness-110';
                 } else if (mode === 'waiting') {
                     actionButton.disabled = true;
-                    actionButton.textContent = 'Waiting for crash...';
+                    actionButton.textContent = 'Awaiting new launch...';
                     actionButton.className = 'w-full py-3 rounded-lg font-bold transition bg-gray-800 text-gray-500 cursor-not-allowed';
                 } else {
                     actionButton.disabled = false;
@@ -445,20 +615,61 @@
                     multiplierEl.textContent = formatMultiplier(state.multiplier);
                 }
 
-                if (progressEl) {
-                    if (!state.crashPoint || state.crashPoint <= 1) {
-                        progressEl.style.width = '0%';
+                updateFlightVisuals();
+            }
+
+            function setFlameActive(active) {
+                if (!flameEl) {
+                    return;
+                }
+
+                flameEl.classList.toggle('active', Boolean(active));
+            }
+
+            function updateFlightVisuals() {
+                if (!shipEl) {
+                    return;
+                }
+
+                const altitude = Math.max(0, Math.min(88, (state.multiplier - 1) * 10));
+                shipEl.style.bottom = `${altitude}%`;
+
+                if (trailEl) {
+                    if (state.running) {
+                        const height = Math.min(95, Math.max(18, altitude + 18));
+                        trailEl.style.height = `${height}%`;
+                        trailEl.style.opacity = '0.5';
                     } else {
-                        const progress = ((state.multiplier - 1) / (state.crashPoint - 1)) * 100;
-                        progressEl.style.width = `${Math.max(0, Math.min(progress, 100))}%`;
+                        trailEl.style.opacity = '0';
+                        trailEl.style.height = '0%';
                     }
                 }
             }
 
-            function generateCrashPoint() {
-                const raw = -Math.log(1 - Math.random());
-                const scaled = 1 + raw * 1.6;
-                return Math.min(20, Math.max(1.02, Number(scaled.toFixed(2))));
+            function triggerExplosion(heightPercentage) {
+                if (!explosionEl) {
+                    return;
+                }
+
+                const boundedHeight = Math.max(12, Math.min(95, heightPercentage));
+                explosionEl.style.bottom = `${boundedHeight}%`;
+                explosionEl.classList.add('active');
+
+                if (explosionTimeoutId) {
+                    clearTimeout(explosionTimeoutId);
+                }
+
+                explosionTimeoutId = window.setTimeout(() => {
+                    explosionEl.classList.remove('active');
+                    explosionTimeoutId = null;
+                }, 900);
+            }
+
+            function getCrashChance(multiplier) {
+                const adjusted = Math.max(multiplier - 1, 0);
+                const scaled = Math.pow(adjusted, 1.2) / 140;
+                const base = 0.005;
+                return Math.min(0.35, base + scaled);
             }
 
             function generateGameId() {
@@ -532,13 +743,28 @@
                         return;
                     }
                     state.multiplier = 1;
-                    if (progressEl) {
-                        progressEl.style.width = '0%';
-                    }
                     updateMultiplierDisplay();
-                    setStatus('WAITING', 'Place your bet to start the next round.', 'neutral');
+                    setStatus('WAITING', 'Place your bet to start the next launch.', 'neutral');
+                    setFlameActive(false);
+                    if (trailEl) {
+                        trailEl.style.height = '0%';
+                        trailEl.style.opacity = '0';
+                    }
+                    if (shipEl) {
+                        shipEl.classList.remove('crash-ship--stalled');
+                    }
+                    if (launchAreaEl) {
+                        launchAreaEl.classList.remove('active');
+                    }
+                    if (explosionEl) {
+                        explosionEl.classList.remove('active');
+                    }
+                    if (explosionTimeoutId) {
+                        clearTimeout(explosionTimeoutId);
+                        explosionTimeoutId = null;
+                    }
                     state.resetTimeoutId = null;
-                }, 1800);
+                }, 2000);
             }
 
             function completeRound() {
@@ -554,10 +780,28 @@
                 const crashValue = state.crashPoint || state.multiplier;
                 const crashText = crashValue.toFixed(2);
 
+                setFlameActive(false);
+
+                if (trailEl) {
+                    trailEl.style.opacity = '0';
+                    trailEl.style.height = '0%';
+                }
+
+                if (launchAreaEl) {
+                    launchAreaEl.classList.remove('active');
+                }
+
+                if (shipEl) {
+                    shipEl.classList.add('crash-ship--stalled');
+                }
+
+                const altitude = Math.max(0, Math.min(88, (crashValue - 1) * 10));
+                triggerExplosion(altitude + 12);
+
                 if (state.cashedOut) {
-                    setStatus('ROUND COMPLETE', `Rocket crashed at ${crashText}x. You cashed out with ${formatCurrency(state.payout)}.`, 'success');
+                    setStatus('ROUND COMPLETE', `Spaceship lost control at ${crashText}x. You cashed out with ${formatCurrency(state.payout)}.`, 'success');
                 } else {
-                    setStatus('BUSTED', `Rocket crashed at ${crashText}x. You lost ${formatCurrency(state.currentBet)}.`, 'danger');
+                    setStatus('BUSTED', `Spaceship crashed at ${crashText}x. You lost ${formatCurrency(state.currentBet)}.`, 'danger');
                 }
 
                 if (lastResultEl) {
@@ -607,7 +851,7 @@
                 }
 
                 state.multiplier = 1;
-                state.crashPoint = generateCrashPoint();
+                state.crashPoint = null;
                 state.running = true;
                 state.cashedOut = false;
                 state.cashedOutAt = null;
@@ -618,22 +862,41 @@
                 showBetError('');
                 setControlsDisabled(true);
                 setActionButtonState('cashout');
-                setStatus('LIVE', 'Rocket launching — cash out before it crashes!', 'live');
-                if (progressEl) {
-                    progressEl.style.width = '0%';
+                setStatus('LIVE', 'Spaceship launching — cash out before it crashes!', 'live');
+                setFlameActive(true);
+                if (trailEl) {
+                    trailEl.style.height = '18%';
+                    trailEl.style.opacity = '0.5';
+                }
+                if (shipEl) {
+                    shipEl.classList.remove('crash-ship--stalled');
+                }
+                if (launchAreaEl) {
+                    launchAreaEl.classList.add('active');
+                }
+                if (explosionEl) {
+                    explosionEl.classList.remove('active');
+                }
+                if (explosionTimeoutId) {
+                    clearTimeout(explosionTimeoutId);
+                    explosionTimeoutId = null;
                 }
                 updateMultiplierDisplay();
 
-                const growthFactor = 1.015;
+                const growthFactor = 1.01;
                 state.intervalId = setInterval(() => {
-                    state.multiplier *= growthFactor;
-                    state.multiplier = Math.min(state.multiplier, state.crashPoint + 0.5);
+                    state.multiplier = parseFloat((state.multiplier * growthFactor).toFixed(3));
                     updateMultiplierDisplay();
 
-                    if (state.multiplier >= state.crashPoint) {
+                    const crashChance = getCrashChance(state.multiplier);
+                    const forcedCrash = state.multiplier >= 50;
+
+                    if (forcedCrash || Math.random() < crashChance) {
+                        state.crashPoint = parseFloat(state.multiplier.toFixed(2));
                         completeRound();
+                        return;
                     }
-                }, 75);
+                }, 120);
             }
 
             function cashOut() {
@@ -647,7 +910,7 @@
                 state.payout = parseFloat((state.currentBet * currentMultiplier).toFixed(2));
                 state.balance = parseFloat((state.balance + state.payout).toFixed(2));
                 updateBalanceDisplay();
-                setStatus('CASHED OUT', `You secured ${formatCurrency(state.payout)} at ${currentMultiplier.toFixed(2)}x. Hang tight for the crash.`, 'success');
+                setStatus('CASHED OUT', `You bailed out with ${formatCurrency(state.payout)} at ${currentMultiplier.toFixed(2)}x. Mission control is tracking the crash.`, 'success');
                 setActionButtonState('waiting');
             }
 
@@ -715,7 +978,7 @@
             renderHistory();
             setControlsDisabled(false);
             setActionButtonState('place');
-            setStatus('WAITING', 'Place your bet to start the next round.', 'neutral');
+            setStatus('WAITING', 'Place your bet to start the next launch.', 'neutral');
             state.multiplier = 1;
             updateMultiplierDisplay();
             betInput.value = (parseFloat(betInput.value) || 10).toFixed(2);
