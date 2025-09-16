@@ -36,6 +36,18 @@
         }
     </script>
 
+    <script type="application/json" id="firebase-config">
+        {
+            "apiKey": "YOUR_FIREBASE_API_KEY",
+            "authDomain": "YOUR_FIREBASE_AUTH_DOMAIN",
+            "projectId": "YOUR_FIREBASE_PROJECT_ID",
+            "storageBucket": "YOUR_FIREBASE_STORAGE_BUCKET",
+            "messagingSenderId": "YOUR_FIREBASE_MESSAGING_SENDER_ID",
+            "appId": "YOUR_FIREBASE_APP_ID",
+            "measurementId": "YOUR_FIREBASE_MEASUREMENT_ID"
+        }
+    </script>
+
     <style>
         body {
             background-color: #0e0f13;
@@ -652,25 +664,51 @@
 
     <!-- Auth Modal -->
     <div id="authModal" class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/60 px-4">
-        <div class="relative w-full max-w-sm rounded-2xl border border-primary/30 bg-gray-900/95 p-6 shadow-[0_0_35px_rgba(14,165,233,0.35)]">
+        <div class="relative w-full max-w-md rounded-2xl border border-primary/30 bg-gray-900/95 p-6 shadow-[0_0_35px_rgba(14,165,233,0.35)]">
             <button type="button" data-auth-close class="absolute right-4 top-4 text-gray-500 transition hover:text-white">
                 <i data-feather="x" class="w-4 h-4"></i>
             </button>
-            <h2 class="text-xl font-semibold text-white mb-1">Access the Hangar</h2>
-            <p class="text-sm text-gray-400 mb-4">Sign in to sync your commander profile and live balance.</p>
-            <form id="authForm" class="space-y-4">
-                <div>
-                    <label for="authUsername" class="text-xs font-semibold uppercase tracking-wide text-gray-400">Username</label>
-                    <input id="authUsername" type="text" required class="mt-1 w-full rounded-lg border border-gray-700 bg-gray-900/60 px-3 py-2 text-white focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/40" placeholder="StellarPilot">
+            <div class="mb-4">
+                <h2 class="text-xl font-semibold text-white">Command Center Access</h2>
+                <p class="text-sm text-gray-400 mt-1">Sign in with your Neon credentials to sync your live Firebase balance.</p>
+            </div>
+            <div data-auth-disabled class="hidden rounded-xl border border-amber-400/40 bg-amber-400/10 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-amber-200">
+                Authentication is currently unavailable. Configure Firebase credentials to continue.
+            </div>
+            <div data-auth-form-wrapper class="space-y-5">
+                <div class="flex items-center gap-2 rounded-full bg-gray-800/60 p-1 text-xs font-semibold uppercase tracking-[0.18em]">
+                    <button type="button" data-auth-mode-button="signin" class="flex-1 rounded-full bg-primary/80 px-4 py-2 text-white shadow-[0_0_12px_rgba(14,165,233,0.45)] transition hover:bg-primary">Sign In</button>
+                    <button type="button" data-auth-mode-button="signup" class="flex-1 rounded-full px-4 py-2 text-gray-400 transition hover:text-white">Create Account</button>
                 </div>
-                <div>
-                    <label for="authBalance" class="text-xs font-semibold uppercase tracking-wide text-gray-400">Starting Balance</label>
-                    <input id="authBalance" type="number" min="0" step="0.01" class="mt-1 w-full rounded-lg border border-gray-700 bg-gray-900/60 px-3 py-2 text-white focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/40" value="1000.00">
-                    <p class="mt-1 text-xs text-gray-500">Returning commanders resume with their saved balance.</p>
+                <form id="authForm" data-auth-form class="space-y-4">
+                    <div>
+                        <label for="authEmail" class="text-xs font-semibold uppercase tracking-wide text-gray-400">Email</label>
+                        <input id="authEmail" type="email" required autocomplete="email" class="mt-1 w-full rounded-lg border border-gray-700 bg-gray-900/60 px-3 py-2 text-white focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/40" placeholder="you@example.com">
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between">
+                            <label for="authPassword" class="text-xs font-semibold uppercase tracking-wide text-gray-400">Password</label>
+                            <button type="button" data-auth-forgot class="text-[0.65rem] font-semibold uppercase tracking-wide text-primary transition hover:text-white">Forgot?</button>
+                        </div>
+                        <input id="authPassword" type="password" required autocomplete="current-password" class="mt-1 w-full rounded-lg border border-gray-700 bg-gray-900/60 px-3 py-2 text-white focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/40" placeholder="••••••••">
+                    </div>
+                    <div data-auth-mode-field="signup" class="hidden">
+                        <label for="authDisplayName" class="text-xs font-semibold uppercase tracking-wide text-gray-400">Display Name</label>
+                        <input id="authDisplayName" type="text" autocomplete="nickname" class="mt-1 w-full rounded-lg border border-gray-700 bg-gray-900/60 px-3 py-2 text-white focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/40" placeholder="Captain Cosmos">
+                    </div>
+                    <p id="authFeedback" class="min-h-[1.25rem] text-xs font-medium text-red-400"></p>
+                    <button type="submit" data-auth-submit class="w-full rounded-lg bg-primary/90 py-2.5 font-semibold text-white transition hover:bg-primary">Sign In</button>
+                </form>
+            </div>
+            <div data-auth-signed-view class="mt-5 hidden rounded-xl border border-primary/30 bg-primary/10 px-4 py-4 text-sm text-gray-200">
+                <p class="mb-3">You are signed in as <span class="font-semibold text-white" data-username></span>. Your live balance is <span class="font-semibold text-primary" data-balance></span>.</p>
+                <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                    <button type="button" data-auth-continue class="gradient-btn inline-flex items-center justify-center gap-2 rounded-full px-4 py-2 font-semibold text-white transition hover:shadow-lg">
+                        Return to Crash
+                    </button>
+                    <button type="button" data-auth-trigger="sign-out" class="text-xs font-semibold uppercase tracking-wide text-primary transition hover:text-white">Sign Out</button>
                 </div>
-                <p id="authError" class="text-xs text-red-400 min-h-[1rem]"></p>
-                <button type="submit" class="w-full rounded-lg bg-primary/90 py-2.5 font-semibold text-white transition hover:bg-primary">Sign In</button>
-            </form>
+            </div>
         </div>
     </div>
 
@@ -695,7 +733,28 @@
         </div>
     </footer>
 
-    <script>
+        <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import {
+            getAuth,
+            onAuthStateChanged,
+            signInWithEmailAndPassword,
+            createUserWithEmailAndPassword,
+            signOut as firebaseSignOut,
+            updateProfile,
+            sendPasswordResetEmail
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import {
+            getFirestore,
+            doc,
+            getDoc,
+            setDoc,
+            updateDoc,
+            onSnapshot,
+            runTransaction,
+            serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
         AOS.init({
             duration: 800,
             easing: 'ease-in-out',
@@ -704,11 +763,63 @@
         feather.replace();
 
         const DEFAULT_BALANCE = 1000;
+        const currencyFormatter = new Intl.NumberFormat('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
 
-        const auth = createAuthController(DEFAULT_BALANCE);
-        const authUI = initAuthUI(auth);
+        const firebaseServices = initFirebase();
+        const authController = createAuthController(DEFAULT_BALANCE, firebaseServices);
+        const authUI = initAuthUI(authController);
         initSidebarPreview();
-        initCrashGame(auth, authUI);
+        initCrashGame(authController, authUI);
+
+        function initFirebase() {
+            const config = readFirebaseConfig();
+            if (!config) {
+                console.warn('Firebase configuration missing. Authentication is disabled.');
+                return { status: { ready: false, reason: 'missing-config' } };
+            }
+
+            try {
+                const app = initializeApp(config);
+                const auth = getAuth(app);
+                const db = getFirestore(app);
+                return { app, auth, db, status: { ready: true } };
+            } catch (error) {
+                console.error('Failed to initialize Firebase', error);
+                return { status: { ready: false, reason: 'initialization-error', error } };
+            }
+        }
+
+        function readFirebaseConfig() {
+            if (window.NEON_CASINO_FIREBASE_CONFIG) {
+                return window.NEON_CASINO_FIREBASE_CONFIG;
+            }
+            const configEl = document.getElementById('firebase-config');
+            if (!configEl) {
+                return null;
+            }
+            try {
+                const parsed = JSON.parse(configEl.textContent || '{}');
+                const requiredKeys = ['apiKey', 'authDomain', 'projectId', 'appId'];
+                const missing = requiredKeys.some(key => {
+                    const value = parsed[key];
+                    return !value || (typeof value === 'string' && value.startsWith('YOUR_FIREBASE_'));
+                });
+                if (missing) {
+                    return null;
+                }
+                return parsed;
+            } catch (error) {
+                console.error('Invalid Firebase config JSON', error);
+                return null;
+            }
+        }
+
+        function formatCurrency(value) {
+            return currencyFormatter.format(Math.max(0, Number(value) || 0));
+        }
 
         function initSidebarPreview() {
             const sidebarItems = document.querySelectorAll('.game-sidebar-item');
@@ -738,131 +849,276 @@
             });
         }
 
-        function createAuthController(defaultBalance) {
-            const STORAGE_KEY = 'neon-casino-auth';
-            const listeners = new Set();
-            let user = null;
-
-            function getStorage() {
-                try {
-                    return window.localStorage;
-                } catch (error) {
-                    return null;
-                }
+        function createAuthController(defaultBalance, services) {
+            if (!services?.status?.ready || !services?.auth || !services?.db) {
+                return createDisabledAuthController(defaultBalance, services?.status);
             }
 
-            const storage = getStorage();
+            const { auth, db } = services;
+            const listeners = new Set();
+            let currentUser = null;
+            let profileUnsubscribe = null;
 
             function notify() {
-                const snapshot = user ? { ...user } : null;
+                const snapshot = currentUser ? { ...currentUser } : null;
                 listeners.forEach(listener => {
                     try {
                         listener(snapshot);
                     } catch (error) {
-                        console.error(error);
+                        console.error('Auth listener error', error);
                     }
                 });
             }
 
-            function persist() {
-                if (!storage) {
-                    return;
-                }
-                try {
-                    if (!user) {
-                        storage.removeItem(STORAGE_KEY);
-                    } else {
-                        storage.setItem(STORAGE_KEY, JSON.stringify(user));
-                    }
-                } catch (error) {
-                    console.warn('Unable to persist auth state', error);
+            function detachProfileListener() {
+                if (typeof profileUnsubscribe === 'function') {
+                    profileUnsubscribe();
+                    profileUnsubscribe = null;
                 }
             }
 
-            function load() {
-                if (!storage) {
-                    return;
+            function deriveDisplayName(user, profileData = {}) {
+                return profileData.displayName || user.displayName || (user.email ? user.email.split('@')[0] : 'Player');
+            }
+
+            async function ensureProfile(user, options = {}) {
+                const userDocRef = doc(db, 'users', user.uid);
+                const snapshot = await getDoc(userDocRef);
+                const desiredName = options.displayName || deriveDisplayName(user, snapshot.data() || {});
+
+                if (!snapshot.exists()) {
+                    await setDoc(userDocRef, {
+                        balance: defaultBalance,
+                        displayName: desiredName,
+                        email: user.email ?? null,
+                        updatedAt: serverTimestamp()
+                    });
+                    return { balance: defaultBalance, displayName: desiredName };
                 }
-                try {
-                    const raw = storage.getItem(STORAGE_KEY);
-                    if (!raw) {
-                        return;
-                    }
-                    const parsed = JSON.parse(raw);
-                    if (parsed && typeof parsed.username === 'string') {
-                        const balanceValue = parseFloat(parsed.balance);
-                        user = {
-                            username: parsed.username,
-                            balance: Number.isFinite(balanceValue) ? parseFloat(balanceValue.toFixed(2)) : defaultBalance
-                        };
-                    }
-                } catch (error) {
-                    console.warn('Unable to load auth state', error);
-                    user = null;
+
+                const data = snapshot.data() || {};
+                const updates = {};
+                if (typeof data.balance !== 'number') {
+                    updates.balance = defaultBalance;
                 }
+                if (!data.displayName && desiredName) {
+                    updates.displayName = desiredName;
+                }
+                if (Object.keys(updates).length) {
+                    updates.updatedAt = serverTimestamp();
+                    await updateDoc(userDocRef, updates);
+                }
+                return { ...data, ...updates };
             }
 
-            function signIn(username, balance) {
-                const trimmed = (username || '').trim();
-                const sanitizedBalance = Number.isFinite(balance) ? parseFloat(balance.toFixed(2)) : defaultBalance;
-                user = {
-                    username: trimmed || 'Player',
-                    balance: Math.max(0, sanitizedBalance)
-                };
-                persist();
-                notify();
-            }
-
-            function signOut() {
-                user = null;
-                persist();
-                notify();
-            }
-
-            function updateBalance(balance) {
+            function attachProfileListener(user) {
+                detachProfileListener();
                 if (!user) {
+                    currentUser = null;
+                    notify();
                     return;
                 }
-                const sanitized = Number.isFinite(balance) ? parseFloat(balance.toFixed(2)) : user.balance;
-                if (Number.isFinite(sanitized)) {
-                    user.balance = Math.max(0, sanitized);
-                    persist();
+                const userDocRef = doc(db, 'users', user.uid);
+                profileUnsubscribe = onSnapshot(userDocRef, snapshot => {
+                    const data = snapshot.data() || {};
+                    const balanceValue = typeof data.balance === 'number' ? data.balance : defaultBalance;
+                    currentUser = {
+                        uid: user.uid,
+                        email: user.email ?? '',
+                        username: deriveDisplayName(user, data),
+                        balance: parseFloat(balanceValue.toFixed(2))
+                    };
+                    notify();
+                }, error => {
+                    console.error('Failed to listen to profile', error);
+                });
+            }
+
+            onAuthStateChanged(auth, async user => {
+                detachProfileListener();
+                if (user) {
+                    try {
+                        await ensureProfile(user);
+                        attachProfileListener(user);
+                    } catch (error) {
+                        console.error('Unable to prepare user profile', error);
+                        currentUser = null;
+                        notify();
+                    }
+                } else {
+                    currentUser = null;
                     notify();
                 }
+            });
+
+            async function performSignIn(email, password) {
+                const credential = await signInWithEmailAndPassword(auth, email, password);
+                return credential.user;
             }
 
-            function subscribe(listener) {
-                if (typeof listener !== 'function') {
-                    return () => {};
+            async function performRegister({ email, password, displayName }) {
+                const credential = await createUserWithEmailAndPassword(auth, email, password);
+                if (displayName) {
+                    await updateProfile(credential.user, { displayName });
                 }
-                listeners.add(listener);
-                return () => listeners.delete(listener);
+                await ensureProfile(credential.user, { displayName });
+                return credential.user;
             }
 
-            load();
+            async function performUpdateBalance(balance) {
+                const user = auth.currentUser;
+                if (!user) {
+                    throw new Error('Not signed in');
+                }
+                const sanitized = Number.isFinite(balance) ? Math.max(0, Number(balance)) : 0;
+                const userDocRef = doc(db, 'users', user.uid);
+                await runTransaction(db, async transaction => {
+                    const snapshot = await transaction.get(userDocRef);
+                    if (!snapshot.exists()) {
+                        transaction.set(userDocRef, {
+                            balance: sanitized,
+                            displayName: deriveDisplayName(user, {}),
+                            email: user.email ?? null,
+                            updatedAt: serverTimestamp()
+                        });
+                        return;
+                    }
+                    transaction.update(userDocRef, {
+                        balance: sanitized,
+                        updatedAt: serverTimestamp()
+                    });
+                });
+            }
 
             return {
                 defaultBalance,
-                getUser: () => (user ? { ...user } : null),
-                signIn,
-                signOut,
-                updateBalance,
-                subscribe
+                getUser: () => (currentUser ? { ...currentUser } : null),
+                subscribe(listener) {
+                    listeners.add(listener);
+                    try {
+                        listener(currentUser ? { ...currentUser } : null);
+                    } catch (error) {
+                        console.error('Auth listener error', error);
+                    }
+                    return () => listeners.delete(listener);
+                },
+                async signIn(email, password) {
+                    return performSignIn(email, password);
+                },
+                async register(payload) {
+                    return performRegister(payload);
+                },
+                async signOut() {
+                    detachProfileListener();
+                    await firebaseSignOut(auth);
+                },
+                async resetPassword(email) {
+                    return sendPasswordResetEmail(auth, email);
+                },
+                async updateBalance(balance) {
+                    return performUpdateBalance(balance);
+                },
+                isDisabled: false
+            };
+        }
+
+        function createDisabledAuthController(defaultBalance, status = {}) {
+            const listeners = new Set();
+            return {
+                defaultBalance,
+                getUser: () => null,
+                subscribe(listener) {
+                    listeners.add(listener);
+                    try {
+                        listener(null);
+                    } catch (error) {
+                        console.error('Auth listener error', error);
+                    }
+                    return () => listeners.delete(listener);
+                },
+                async signIn() {
+                    throw new Error(status.reason === 'missing-config' ? 'Firebase configuration missing.' : 'Authentication unavailable.');
+                },
+                async register() {
+                    throw new Error(status.reason === 'missing-config' ? 'Firebase configuration missing.' : 'Authentication unavailable.');
+                },
+                async signOut() {},
+                async resetPassword() {
+                    throw new Error('Authentication unavailable.');
+                },
+                async updateBalance() {},
+                isDisabled: true,
+                status
             };
         }
 
         function initAuthUI(authController) {
             const authModal = document.getElementById('authModal');
             const authForm = document.getElementById('authForm');
-            const usernameInput = document.getElementById('authUsername');
-            const balanceInput = document.getElementById('authBalance');
-            const authError = document.getElementById('authError');
+            const emailInput = document.getElementById('authEmail');
+            const passwordInput = document.getElementById('authPassword');
+            const displayNameInput = document.getElementById('authDisplayName');
+            const feedbackEl = document.getElementById('authFeedback');
+            const submitButton = authModal?.querySelector('[data-auth-submit]');
+            const forgotButton = authModal?.querySelector('[data-auth-forgot]');
             const closeButtons = document.querySelectorAll('[data-auth-close]');
             const signInTriggers = document.querySelectorAll('[data-auth-trigger="sign-in"]');
             const signOutTriggers = document.querySelectorAll('[data-auth-trigger="sign-out"]');
             const guestEls = document.querySelectorAll('[data-auth-guest]');
             const userEls = document.querySelectorAll('[data-auth-user]');
             const usernameEls = document.querySelectorAll('[data-username]');
+            const modeButtons = authModal?.querySelectorAll('[data-auth-mode-button]') ?? [];
+            const modeFields = authModal?.querySelectorAll('[data-auth-mode-field]') ?? [];
+            const disabledNotice = authModal?.querySelector('[data-auth-disabled]');
+            const formWrapper = authModal?.querySelector('[data-auth-form-wrapper]');
+            const signedView = authModal?.querySelector('[data-auth-signed-view]');
+            const continueButton = authModal?.querySelector('[data-auth-continue]');
+
+            let mode = 'signin';
+            let submitting = false;
+
+            function setMode(nextMode) {
+                mode = nextMode;
+                modeButtons.forEach(btn => {
+                    const btnMode = btn.getAttribute('data-auth-mode-button');
+                    const isActive = btnMode === mode;
+                    btn.classList.toggle('bg-primary/80', isActive);
+                    btn.classList.toggle('text-white', isActive);
+                    btn.classList.toggle('shadow-[0_0_12px_rgba(14,165,233,0.45)]', isActive);
+                    btn.classList.toggle('text-gray-400', !isActive);
+                });
+                modeFields.forEach(field => {
+                    const targetMode = field.getAttribute('data-auth-mode-field');
+                    field.classList.toggle('hidden', targetMode !== mode);
+                });
+                if (submitButton) {
+                    submitButton.textContent = mode === 'signin' ? 'Sign In' : 'Create Account';
+                }
+                clearFeedback();
+            }
+
+            function clearFeedback() {
+                if (!feedbackEl) {
+                    return;
+                }
+                feedbackEl.textContent = '';
+                feedbackEl.classList.remove('text-emerald-400');
+                feedbackEl.classList.add('text-red-400');
+            }
+
+            function setFeedback(message, tone = 'error') {
+                if (!feedbackEl) {
+                    return;
+                }
+                feedbackEl.textContent = message;
+                if (tone === 'success') {
+                    feedbackEl.classList.remove('text-red-400');
+                    feedbackEl.classList.add('text-emerald-400');
+                } else {
+                    feedbackEl.classList.remove('text-emerald-400');
+                    feedbackEl.classList.add('text-red-400');
+                }
+            }
 
             function toggleModal(visible) {
                 if (!authModal) {
@@ -872,23 +1128,59 @@
                 authModal.classList.toggle('flex', visible);
             }
 
+            function focusEmail() {
+                window.setTimeout(() => {
+                    if (emailInput && !authController.isDisabled) {
+                        emailInput.focus();
+                    }
+                }, 50);
+            }
+
             function openModal() {
-                const currentUser = authController.getUser();
+                if (!authModal) {
+                    return;
+                }
+                const isDisabled = authController.isDisabled;
                 toggleModal(true);
-                if (usernameInput) {
-                    usernameInput.value = currentUser?.username ?? '';
-                    window.setTimeout(() => usernameInput.focus(), 50);
-                    usernameInput.setSelectionRange(usernameInput.value.length, usernameInput.value.length);
+                if (isDisabled) {
+                    if (disabledNotice) {
+                        disabledNotice.classList.remove('hidden');
+                    }
+                    if (formWrapper) {
+                        formWrapper.classList.add('hidden');
+                    }
+                    if (signedView) {
+                        signedView.classList.add('hidden');
+                    }
+                    setFeedback('Firebase authentication is not configured.', 'error');
+                    return;
                 }
-                if (balanceInput) {
-                    const balanceValue = currentUser ? currentUser.balance : authController.defaultBalance;
-                    const formatted = Number.isFinite(balanceValue) ? Number(balanceValue).toFixed(2) : authController.defaultBalance.toFixed(2);
-                    balanceInput.value = formatted;
-                    balanceInput.toggleAttribute('readonly', Boolean(currentUser));
-                    balanceInput.classList.toggle('opacity-60', Boolean(currentUser));
+
+                const currentUser = authController.getUser();
+                if (currentUser) {
+                    if (signedView) {
+                        signedView.classList.remove('hidden');
+                    }
+                    if (formWrapper) {
+                        formWrapper.classList.add('hidden');
+                    }
+                    updateSignedInSummary(currentUser);
+                } else {
+                    if (signedView) {
+                        signedView.classList.add('hidden');
+                    }
+                    if (formWrapper) {
+                        formWrapper.classList.remove('hidden');
+                    }
+                    setMode('signin');
+                    if (authForm) {
+                        authForm.reset();
+                    }
+                    clearFeedback();
+                    focusEmail();
                 }
-                if (authError) {
-                    authError.textContent = '';
+                if (disabledNotice) {
+                    disabledNotice.classList.add('hidden');
                 }
             }
 
@@ -896,9 +1188,151 @@
                 toggleModal(false);
             }
 
-            signInTriggers.forEach(trigger => trigger.addEventListener('click', () => openModal()));
-            signOutTriggers.forEach(trigger => trigger.addEventListener('click', () => authController.signOut()));
-            closeButtons.forEach(btn => btn.addEventListener('click', () => closeModal()));
+            function parseFirebaseError(error, modeContext) {
+                const code = error?.code;
+                switch (code) {
+                    case 'auth/invalid-email':
+                        return 'Enter a valid email address.';
+                    case 'auth/missing-password':
+                        return 'Enter your password to continue.';
+                    case 'auth/user-not-found':
+                        return 'No account was found for that email.';
+                    case 'auth/wrong-password':
+                        return 'Incorrect password. Try again or reset it.';
+                    case 'auth/too-many-requests':
+                        return 'Too many attempts. Please wait and try again.';
+                    case 'auth/email-already-in-use':
+                        return 'An account already exists for that email address.';
+                    case 'auth/weak-password':
+                        return 'Choose a stronger password (at least 6 characters).';
+                    default:
+                        if (modeContext === 'reset') {
+                            return 'Unable to send reset email. Try again later.';
+                        }
+                        return error?.message || 'Authentication failed. Try again.';
+                }
+            }
+
+            function updateSignedInSummary(user) {
+                if (!signedView) {
+                    return;
+                }
+                signedView.querySelectorAll('[data-username]').forEach(el => {
+                    el.textContent = user?.username || '';
+                });
+                signedView.querySelectorAll('[data-balance]').forEach(el => {
+                    el.textContent = formatCurrency(user?.balance ?? 0);
+                });
+            }
+
+            modeButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const btnMode = btn.getAttribute('data-auth-mode-button');
+                    if (btnMode) {
+                        setMode(btnMode);
+                    }
+                });
+            });
+
+            authForm?.addEventListener('submit', async event => {
+                event.preventDefault();
+                if (authController.isDisabled || submitting) {
+                    return;
+                }
+                clearFeedback();
+
+                const email = emailInput?.value.trim();
+                const password = passwordInput?.value.trim();
+                const displayName = displayNameInput?.value.trim();
+
+                if (!email) {
+                    setFeedback('Enter your email address to continue.');
+                    emailInput?.focus();
+                    return;
+                }
+                if (!password || password.length < 6) {
+                    setFeedback('Password must be at least 6 characters long.');
+                    passwordInput?.focus();
+                    return;
+                }
+                if (mode === 'signup' && !displayName) {
+                    setFeedback('Choose a display name for your account.');
+                    displayNameInput?.focus();
+                    return;
+                }
+
+                submitting = true;
+                if (submitButton) {
+                    submitButton.disabled = true;
+                    submitButton.textContent = mode === 'signin' ? 'Signing In...' : 'Creating Account...';
+                }
+
+                try {
+                    if (mode === 'signin') {
+                        await authController.signIn(email, password);
+                    } else {
+                        await authController.register({ email, password, displayName });
+                    }
+                    closeModal();
+                } catch (error) {
+                    console.error('Auth form error', error);
+                    setFeedback(parseFirebaseError(error, mode));
+                } finally {
+                    submitting = false;
+                    if (submitButton) {
+                        submitButton.disabled = false;
+                        submitButton.textContent = mode === 'signin' ? 'Sign In' : 'Create Account';
+                    }
+                }
+            });
+
+            forgotButton?.addEventListener('click', async () => {
+                if (authController.isDisabled || submitting) {
+                    return;
+                }
+                const email = emailInput?.value.trim();
+                if (!email) {
+                    setFeedback('Enter your email above so we can send the reset link.');
+                    return;
+                }
+                submitting = true;
+                setFeedback('Sending reset email...', 'success');
+                try {
+                    await authController.resetPassword(email);
+                    setFeedback('Password reset email sent. Check your inbox!', 'success');
+                } catch (error) {
+                    console.error('Reset password error', error);
+                    setFeedback(parseFirebaseError(error, 'reset'));
+                } finally {
+                    submitting = false;
+                }
+            });
+
+            continueButton?.addEventListener('click', () => {
+                closeModal();
+            });
+
+            signInTriggers.forEach(trigger => {
+                trigger.addEventListener('click', event => {
+                    event.preventDefault();
+                    openModal();
+                });
+            });
+
+            signOutTriggers.forEach(trigger => {
+                trigger.addEventListener('click', async event => {
+                    event.preventDefault();
+                    try {
+                        await authController.signOut();
+                    } catch (error) {
+                        console.error('Sign out error', error);
+                    }
+                });
+            });
+
+            closeButtons.forEach(btn => {
+                btn.addEventListener('click', () => closeModal());
+            });
 
             authModal?.addEventListener('click', event => {
                 if (event.target === authModal) {
@@ -912,21 +1346,6 @@
                 }
             });
 
-            authForm?.addEventListener('submit', event => {
-                event.preventDefault();
-                const username = usernameInput?.value.trim();
-                const balanceValue = parseFloat(balanceInput?.value ?? `${authController.defaultBalance}`);
-                if (!username) {
-                    if (authError) {
-                        authError.textContent = 'Enter a username to continue.';
-                    }
-                    return;
-                }
-                const sanitizedBalance = Number.isFinite(balanceValue) ? Math.max(0, balanceValue) : authController.defaultBalance;
-                authController.signIn(username, parseFloat(sanitizedBalance.toFixed(2)));
-                closeModal();
-            });
-
             function updateUI(user) {
                 const signedIn = Boolean(user);
                 guestEls.forEach(el => el.classList.toggle('hidden', signedIn));
@@ -934,6 +1353,14 @@
                 usernameEls.forEach(el => {
                     el.textContent = user?.username ?? '';
                 });
+                if (signedIn) {
+                    updateSignedInSummary(user);
+                } else if (signedView) {
+                    signedView.classList.add('hidden');
+                    if (!authController.isDisabled && formWrapper) {
+                        formWrapper.classList.remove('hidden');
+                    }
+                }
             }
 
             updateUI(authController.getUser());
@@ -970,15 +1397,10 @@
             }
 
             const COOLDOWN_MS = 2000;
-            const currencyFormatter = new Intl.NumberFormat('en-US', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            });
-
             const initialUser = authController.getUser();
 
             const state = {
-                balance: initialUser?.balance && Number.isFinite(initialUser.balance) ? parseFloat(initialUser.balance.toFixed(2)) : 0,
+                balance: initialUser && Number.isFinite(initialUser.balance) ? parseFloat(initialUser.balance.toFixed(2)) : 0,
                 running: false,
                 cashedOut: false,
                 intervalId: null,
@@ -991,7 +1413,8 @@
                 history: [],
                 cooldownActive: false,
                 authenticated: Boolean(initialUser),
-                playerName: initialUser?.username || 'Guest'
+                playerName: initialUser?.username || 'Guest',
+                playerUid: initialUser?.uid || null
             };
 
             let explosionTimeoutId = null;
@@ -1008,8 +1431,13 @@
                 updatePathHighlight(getProgressForMultiplier(state.multiplier));
             }
 
-            function formatCurrency(value) {
-                return currencyFormatter.format(Math.max(0, Number(value) || 0));
+            function persistBalance(balance) {
+                if (authController.isDisabled || typeof authController.updateBalance !== 'function') {
+                    return;
+                }
+                authController.updateBalance(balance).catch(error => {
+                    console.error('Failed to persist balance', error);
+                });
             }
 
             function formatMultiplier(value) {
@@ -1081,8 +1509,8 @@
                 'text-gray-500',
                 'text-gray-300',
                 'hover:shadow-lg',
-                'hover:brightness-110',
                 'hover:bg-gray-600',
+                'hover:brightness-110',
                 'cursor-not-allowed',
                 'cursor-wait',
                 'shadow-lg',
@@ -1090,71 +1518,56 @@
                 'border-primary/40'
             ];
 
-            function setActionButtonState(mode) {
-                if (!actionButtons.length) {
-                    return;
-                }
-
-                const config = buttonStateConfig[mode] || buttonStateConfig.place;
-
-                actionButtons.forEach(btn => {
-                    btn.disabled = config.disabled;
-                    btn.textContent = config.text;
-
-                    buttonToggleClasses.forEach(cls => {
-                        btn.classList.remove(cls);
-                    });
-
-                    config.classes.forEach(cls => {
-                        btn.classList.add(cls);
-                    });
+            function setActionButtonState(stateKey) {
+                const config = buttonStateConfig[stateKey];
+                actionButtons.forEach(button => {
+                    button.disabled = config ? config.disabled : true;
+                    if (!config) {
+                        button.textContent = 'Unavailable';
+                        return;
+                    }
+                    button.textContent = config.text;
+                    button.classList.remove(...buttonToggleClasses);
+                    button.classList.add(...config.classes);
                 });
             }
 
             function setControlsDisabled(disabled) {
-                [betInput, decreaseBetButton, increaseBetButton].forEach(control => {
-                    if (control) {
-                        control.disabled = disabled;
-                        control.classList.toggle('opacity-60', disabled);
-                        control.classList.toggle('cursor-not-allowed', disabled);
-                    }
-                });
-
-                quickButtons.forEach(btn => {
-                    btn.disabled = disabled;
-                    btn.classList.toggle('opacity-60', disabled);
-                    btn.classList.toggle('cursor-not-allowed', disabled);
-                });
+                betInput.disabled = disabled;
+                decreaseBetButton?.setAttribute('aria-disabled', String(disabled));
+                increaseBetButton?.setAttribute('aria-disabled', String(disabled));
+                quickButtons.forEach(btn => btn.toggleAttribute('disabled', disabled));
             }
 
             function showBetError(message) {
-                if (betErrorEl) {
-                    betErrorEl.textContent = message;
+                if (!betErrorEl) {
+                    return;
                 }
-
-                betInput.classList.toggle('border-red-500', Boolean(message));
-                betInput.classList.toggle('focus:border-red-500', Boolean(message));
+                betErrorEl.textContent = message;
             }
 
             function getProgressForMultiplier(multiplier) {
-                if (!Number.isFinite(multiplier)) {
-                    return 0;
-                }
-
-                const safe = Math.max(multiplier, 1);
-                const normalized = LOG_MAX_MULTIPLIER > 0 ? Math.log(safe) / LOG_MAX_MULTIPLIER : 0;
-                const eased = Math.pow(Math.min(1, Math.max(0, normalized)), 0.92);
-                return Math.min(0.995, Math.max(0, eased));
+                const ratio = Math.log(Math.max(1, multiplier)) / LOG_MAX_MULTIPLIER;
+                return Math.min(1, Math.max(0, ratio));
             }
 
             function getPathMetrics(progress) {
-                const bounded = Math.min(0.995, Math.max(0, progress));
-
-                if (!pathGuideEl || crashPathLength <= 0 || typeof pathGuideEl.getPointAtLength !== 'function') {
+                if (!pathGuideEl || crashPathLength <= 0) {
                     return {
-                        leftPercent: 6 + bounded * 84,
-                        bottomPercent: 12 + bounded * 78,
-                        angle: 28 + bounded * 22
+                        leftPercent: progress * 100,
+                        bottomPercent: progress * 80 + 10,
+                        angle: 45
+                    };
+                }
+
+                const bounded = Math.min(1, Math.max(0, progress));
+
+                if (bounded <= 0) {
+                    const startPoint = pathGuideEl.getPointAtLength(0);
+                    return {
+                        leftPercent: startPoint.x,
+                        bottomPercent: 100 - startPoint.y,
+                        angle: 45
                     };
                 }
 
@@ -1399,80 +1812,69 @@
             }
 
             function completeRound() {
+                if (!state.running) {
+                    return;
+                }
+
+                state.running = false;
+                setFlameActive(false);
+
                 if (state.intervalId) {
                     clearInterval(state.intervalId);
                     state.intervalId = null;
                 }
 
-                state.running = false;
-                state.multiplier = state.crashPoint || state.multiplier;
-                updateMultiplierDisplay();
-
-                const crashValue = state.crashPoint || state.multiplier;
-                const crashText = crashValue.toFixed(2);
-
-                setFlameActive(false);
-
-                if (trailEl) {
-                    trailEl.style.opacity = '0';
+                if (state.crashPoint != null && !state.cashedOut) {
+                    triggerExplosion(state.crashPoint);
                 }
 
-                if (launchAreaEl) {
-                    launchAreaEl.classList.remove('active');
+                const crashMultiplier = state.crashPoint != null ? state.crashPoint : state.multiplier;
+                const didCashOut = state.cashedOut;
+
+                if (!didCashOut) {
+                    setStatus('CRASHED', `Mission failed at ${crashMultiplier.toFixed(2)}x. Better luck next launch.`, 'danger');
+                    setActionButtonState('waiting');
                 }
 
-                if (shipEl) {
-                    shipEl.classList.add('crash-ship--stalled');
-                }
-
-                triggerExplosion(crashValue);
-
-                if (state.cashedOut) {
-                    setStatus('ROUND COMPLETE', `Spaceship lost control at ${crashText}x. You cashed out with ${formatCurrency(state.payout)}.`, 'success');
-                } else {
-                    setStatus('BUSTED', `Spaceship crashed at ${crashText}x. You lost ${formatCurrency(state.currentBet)}.`, 'danger');
-                }
-
-                if (lastResultEl) {
-                    lastResultEl.textContent = `${crashText}x`;
-                }
-
-                recordHistoryEntry({
+                const entry = {
                     id: generateGameId(),
                     bet: state.currentBet,
-                    crashMultiplier: crashValue,
-                    cashedOut: state.cashedOut,
+                    crashMultiplier,
+                    cashedOut: didCashOut,
                     cashOutMultiplier: state.cashedOutAt,
-                    payout: state.cashedOut ? state.payout : 0
-                });
+                    payout: state.payout,
+                    playerName: state.playerName
+                };
 
-                if (state.authenticated) {
-                    authController.updateBalance(state.balance);
+                recordHistoryEntry(entry);
+
+                if (lastResultEl) {
+                    lastResultEl.textContent = didCashOut
+                        ? `${state.cashedOutAt?.toFixed(2) ?? crashMultiplier.toFixed(2)}x`
+                        : `${crashMultiplier.toFixed(2)}x`;
+                    lastResultEl.classList.toggle('text-accent', didCashOut);
+                    lastResultEl.classList.toggle('text-primary', !didCashOut);
+                }
+
+                if (!didCashOut) {
+                    setActionButtonState('waiting');
                 }
 
                 resetRoundState();
             }
 
             function startRound() {
-                if (!state.authenticated) {
-                    authUI?.openSignIn?.();
-                    return;
-                }
-
-                if (state.cooldownActive) {
-                    setStatus('PREPARING', 'Next launch is arming. Stand by…', 'neutral');
+                if (state.running || state.cooldownActive || !state.authenticated) {
                     return;
                 }
 
                 const rawValue = parseFloat(betInput.value);
-
-                if (Number.isNaN(rawValue) || rawValue <= 0) {
+                if (!Number.isFinite(rawValue) || rawValue <= 0) {
                     showBetError('Enter a valid bet amount.');
                     return;
                 }
-
                 if (rawValue > state.balance) {
-                    showBetError('Insufficient balance for this bet.');
+                    showBetError('Insufficient balance for that bet.');
                     return;
                 }
 
@@ -1502,9 +1904,7 @@
 
                 betInput.value = bet.toFixed(2);
                 updateBalanceDisplay();
-                if (state.authenticated) {
-                    authController.updateBalance(state.balance);
-                }
+                persistBalance(state.balance);
                 showBetError('');
                 setControlsDisabled(true);
                 setActionButtonState('cashout');
@@ -1551,9 +1951,7 @@
                 state.payout = parseFloat((state.currentBet * currentMultiplier).toFixed(2));
                 state.balance = parseFloat((state.balance + state.payout).toFixed(2));
                 updateBalanceDisplay();
-                if (state.authenticated) {
-                    authController.updateBalance(state.balance);
-                }
+                persistBalance(state.balance);
                 setStatus('CASHED OUT', `You bailed out with ${formatCurrency(state.payout)} at ${currentMultiplier.toFixed(2)}x. Mission control is tracking the crash.`, 'success');
                 setActionButtonState('waiting');
             }
@@ -1669,11 +2067,21 @@
             });
 
             function applyAuth(user) {
-                const previousName = state.playerName;
+                const previousUid = state.playerUid;
+                state.playerUid = user?.uid || null;
                 state.authenticated = Boolean(user);
                 state.playerName = user?.username || 'Guest';
-                state.balance = user && Number.isFinite(user.balance) ? parseFloat(user.balance.toFixed(2)) : 0;
+                state.balance = state.authenticated && Number.isFinite(user.balance)
+                    ? parseFloat(user.balance.toFixed(2))
+                    : 0;
                 updateBalanceDisplay();
+
+                if (authController.isDisabled) {
+                    setStatus('AUTH REQUIRED', 'Configure Firebase to enable Crash betting.', 'warning');
+                    setControlsDisabled(true);
+                    setActionButtonState('signin');
+                    return;
+                }
 
                 if (!state.authenticated) {
                     abortRoundForSignOut();
@@ -1686,7 +2094,7 @@
                     return;
                 }
 
-                if (previousName !== state.playerName) {
+                if (previousUid !== state.playerUid) {
                     state.history = [];
                     renderHistory();
                     if (lastResultEl) {
@@ -1711,6 +2119,8 @@
         }
 
     </script>
+
+
 
 </body>
 </html>

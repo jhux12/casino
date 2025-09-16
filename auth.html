@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEON CASINO | Account Access</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        dark: '#0e0f13',
+                        primary: '#00c2ff',
+                        secondary: '#7c3aed',
+                        accent: '#2bd975',
+                    },
+                    boxShadow: {
+                        'neon-blue': '0 0 15px rgba(0, 194, 255, 0.45)',
+                        'neon-purple': '0 0 15px rgba(124, 58, 237, 0.45)',
+                    }
+                }
+            }
+        }
+    </script>
+    <script type="application/json" id="firebase-config">
+        {
+            "apiKey": "YOUR_FIREBASE_API_KEY",
+            "authDomain": "YOUR_FIREBASE_AUTH_DOMAIN",
+            "projectId": "YOUR_FIREBASE_PROJECT_ID",
+            "storageBucket": "YOUR_FIREBASE_STORAGE_BUCKET",
+            "messagingSenderId": "YOUR_FIREBASE_MESSAGING_SENDER_ID",
+            "appId": "YOUR_FIREBASE_APP_ID",
+            "measurementId": "YOUR_FIREBASE_MEASUREMENT_ID"
+        }
+    </script>
+    <style>
+        body {
+            background-color: #05060a;
+            color: #f8fafc;
+        }
+        .glass-panel {
+            background: rgba(12, 14, 24, 0.85);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(0, 194, 255, 0.18);
+            box-shadow: 0 25px 55px rgba(8, 12, 20, 0.65);
+        }
+        .gradient-btn {
+            background: linear-gradient(45deg, #00c2ff, #7c3aed);
+        }
+        .gradient-btn:hover {
+            box-shadow: 0 0 18px rgba(0, 194, 255, 0.45);
+        }
+    </style>
+</head>
+<body class="font-sans min-h-screen">
+    <div class="relative min-h-screen overflow-hidden">
+        <div class="absolute inset-0 -z-10">
+            <div class="absolute -top-24 -left-24 h-80 w-80 rounded-full bg-primary/40 blur-3xl"></div>
+            <div class="absolute top-1/2 left-1/3 h-72 w-72 rounded-full bg-secondary/30 blur-3xl"></div>
+            <div class="absolute bottom-0 right-0 h-[26rem] w-[26rem] rounded-full bg-primary/25 blur-3xl"></div>
+        </div>
+        <div class="relative z-10 flex min-h-screen items-center justify-center px-4 py-12">
+            <div class="glass-panel w-full max-w-xl rounded-3xl border border-primary/20 px-8 py-10">
+                <div class="text-center">
+                    <span class="inline-block rounded-full border border-primary/40 bg-primary/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.35em] text-primary">Neon Casino</span>
+                    <h1 class="mt-6 text-3xl font-semibold text-white">Access Your Neon Account</h1>
+                    <p class="mt-2 text-sm text-gray-400">Sign in with Firebase to sync your crash game balance across devices.</p>
+                </div>
+                <div data-auth-disabled class="mt-6 hidden rounded-xl border border-amber-400/50 bg-amber-400/10 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-amber-200">
+                    Authentication is currently unavailable. Update the Firebase credentials to continue.
+                </div>
+                <div data-auth-form-wrapper class="mt-8 space-y-6">
+                    <div class="flex items-center gap-2 rounded-full bg-white/5 p-1 text-xs font-semibold uppercase tracking-[0.18em]">
+                        <button type="button" data-auth-mode-button="signin" class="flex-1 rounded-full bg-primary/80 px-4 py-2 text-white shadow-neon-blue transition hover:bg-primary">Sign In</button>
+                        <button type="button" data-auth-mode-button="signup" class="flex-1 rounded-full px-4 py-2 text-gray-400 transition hover:text-white">Create Account</button>
+                    </div>
+                    <form id="authForm" class="space-y-5">
+                        <div>
+                            <label for="authEmail" class="text-xs font-semibold uppercase tracking-wide text-gray-400">Email</label>
+                            <input id="authEmail" type="email" required autocomplete="email" class="mt-1 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white shadow-inner shadow-black/20 transition focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/40" placeholder="you@example.com">
+                        </div>
+                        <div>
+                            <div class="flex items-center justify-between">
+                                <label for="authPassword" class="text-xs font-semibold uppercase tracking-wide text-gray-400">Password</label>
+                                <button type="button" data-auth-forgot class="text-[0.7rem] font-semibold uppercase tracking-wide text-primary transition hover:text-white">Forgot?</button>
+                            </div>
+                            <input id="authPassword" type="password" required autocomplete="current-password" class="mt-1 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white shadow-inner shadow-black/20 transition focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/40" placeholder="••••••••">
+                        </div>
+                        <div data-auth-mode-field="signup" class="hidden">
+                            <label for="authDisplayName" class="text-xs font-semibold uppercase tracking-wide text-gray-400">Display Name</label>
+                            <input id="authDisplayName" type="text" autocomplete="nickname" class="mt-1 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white shadow-inner shadow-black/20 transition focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/40" placeholder="Captain Cosmos">
+                        </div>
+                        <p id="authFeedback" class="min-h-[1.25rem] text-xs font-medium text-red-400"></p>
+                        <button type="submit" data-auth-submit class="w-full rounded-full bg-primary/90 px-4 py-3 text-sm font-semibold uppercase tracking-wide text-white transition hover:bg-primary">Sign In</button>
+                    </form>
+                </div>
+                <div data-auth-signed-view class="mt-8 hidden rounded-2xl border border-primary/30 bg-primary/10 px-6 py-5 text-sm text-gray-200">
+                    <p class="text-base font-semibold text-white">You're signed in!</p>
+                    <p class="mt-2">Commander <span class="font-semibold text-primary" data-auth-signed-name></span>, your balance is <span class="font-semibold text-accent" data-auth-signed-balance></span>.</p>
+                    <div class="mt-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                        <a href="games.html" data-auth-play class="gradient-btn inline-flex items-center justify-center rounded-full px-5 py-2 text-sm font-semibold uppercase tracking-wide text-white transition hover:shadow-neon-blue">Play Crash</a>
+                        <button type="button" data-auth-sign-out class="text-xs font-semibold uppercase tracking-wide text-primary transition hover:text-white">Sign Out</button>
+                    </div>
+                </div>
+                <p class="mt-10 text-center text-xs text-gray-500">Need help? Contact <a href="mailto:support@neoncasino.demo" class="text-primary hover:text-white">support@neoncasino.demo</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import {
+            getAuth,
+            onAuthStateChanged,
+            signInWithEmailAndPassword,
+            createUserWithEmailAndPassword,
+            signOut as firebaseSignOut,
+            updateProfile,
+            sendPasswordResetEmail
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import {
+            getFirestore,
+            doc,
+            getDoc,
+            setDoc,
+            updateDoc,
+            serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const DEFAULT_BALANCE = 1000;
+        const currencyFormatter = new Intl.NumberFormat('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+
+        const services = initFirebase();
+        if (!services) {
+            showDisabledState('Missing Firebase configuration.');
+        } else {
+            initAuthFlow(services);
+        }
+
+        function initFirebase() {
+            const config = readFirebaseConfig();
+            if (!config) {
+                console.warn('Firebase configuration missing.');
+                return null;
+            }
+            try {
+                const app = initializeApp(config);
+                const auth = getAuth(app);
+                const db = getFirestore(app);
+                return { app, auth, db };
+            } catch (error) {
+                console.error('Unable to initialize Firebase', error);
+                return null;
+            }
+        }
+
+        function readFirebaseConfig() {
+            if (window.NEON_CASINO_FIREBASE_CONFIG) {
+                return window.NEON_CASINO_FIREBASE_CONFIG;
+            }
+            const el = document.getElementById('firebase-config');
+            if (!el) {
+                return null;
+            }
+            try {
+                const parsed = JSON.parse(el.textContent || '{}');
+                const requiredKeys = ['apiKey', 'authDomain', 'projectId', 'appId'];
+                const missing = requiredKeys.some(key => {
+                    const value = parsed[key];
+                    return !value || (typeof value === 'string' && value.startsWith('YOUR_FIREBASE_'));
+                });
+                if (missing) {
+                    return null;
+                }
+                return parsed;
+            } catch (error) {
+                console.error('Invalid Firebase configuration JSON', error);
+                return null;
+            }
+        }
+
+        function formatCurrency(value) {
+            return currencyFormatter.format(Math.max(0, Number(value) || 0));
+        }
+
+        function showDisabledState(message) {
+            const notice = document.querySelector('[data-auth-disabled]');
+            const formWrapper = document.querySelector('[data-auth-form-wrapper]');
+            const signedView = document.querySelector('[data-auth-signed-view]');
+            if (notice) {
+                notice.classList.remove('hidden');
+                notice.textContent = message;
+            }
+            formWrapper?.classList.add('hidden');
+            signedView?.classList.add('hidden');
+        }
+
+        function initAuthFlow({ auth, db }) {
+            const modeButtons = document.querySelectorAll('[data-auth-mode-button]');
+            const modeFields = document.querySelectorAll('[data-auth-mode-field]');
+            const authForm = document.getElementById('authForm');
+            const emailInput = document.getElementById('authEmail');
+            const passwordInput = document.getElementById('authPassword');
+            const displayNameInput = document.getElementById('authDisplayName');
+            const feedbackEl = document.getElementById('authFeedback');
+            const submitButton = document.querySelector('[data-auth-submit]');
+            const forgotButton = document.querySelector('[data-auth-forgot]');
+            const disabledNotice = document.querySelector('[data-auth-disabled]');
+            const formWrapper = document.querySelector('[data-auth-form-wrapper]');
+            const signedView = document.querySelector('[data-auth-signed-view]');
+            const signedNameEls = document.querySelectorAll('[data-auth-signed-name]');
+            const signedBalanceEls = document.querySelectorAll('[data-auth-signed-balance]');
+            const signOutButton = document.querySelector('[data-auth-sign-out]');
+
+            let mode = 'signin';
+            let submitting = false;
+
+            function setMode(nextMode) {
+                mode = nextMode;
+                modeButtons.forEach(btn => {
+                    const btnMode = btn.getAttribute('data-auth-mode-button');
+                    const active = btnMode === mode;
+                    btn.classList.toggle('bg-primary/80', active);
+                    btn.classList.toggle('text-white', active);
+                    btn.classList.toggle('shadow-neon-blue', active);
+                    btn.classList.toggle('text-gray-400', !active);
+                });
+                modeFields.forEach(field => {
+                    const target = field.getAttribute('data-auth-mode-field');
+                    field.classList.toggle('hidden', target !== mode);
+                });
+                if (submitButton) {
+                    submitButton.textContent = mode === 'signin' ? 'Sign In' : 'Create Account';
+                }
+                clearFeedback();
+            }
+
+            function clearFeedback() {
+                if (!feedbackEl) {
+                    return;
+                }
+                feedbackEl.textContent = '';
+                feedbackEl.classList.remove('text-emerald-400');
+                feedbackEl.classList.add('text-red-400');
+            }
+
+            function setFeedback(message, tone = 'error') {
+                if (!feedbackEl) {
+                    return;
+                }
+                feedbackEl.textContent = message;
+                if (tone === 'success') {
+                    feedbackEl.classList.remove('text-red-400');
+                    feedbackEl.classList.add('text-emerald-400');
+                } else {
+                    feedbackEl.classList.remove('text-emerald-400');
+                    feedbackEl.classList.add('text-red-400');
+                }
+            }
+
+            async function ensureProfile(user, displayName) {
+                const userDocRef = doc(db, 'users', user.uid);
+                const snapshot = await getDoc(userDocRef);
+                const preferredName = displayName || user.displayName || (user.email ? user.email.split('@')[0] : 'Player');
+                if (!snapshot.exists()) {
+                    await setDoc(userDocRef, {
+                        balance: DEFAULT_BALANCE,
+                        displayName: preferredName,
+                        email: user.email ?? null,
+                        updatedAt: serverTimestamp()
+                    });
+                    return { balance: DEFAULT_BALANCE, displayName: preferredName };
+                }
+                const data = snapshot.data() || {};
+                const updates = {};
+                if (typeof data.balance !== 'number') {
+                    updates.balance = DEFAULT_BALANCE;
+                }
+                if (!data.displayName && preferredName) {
+                    updates.displayName = preferredName;
+                }
+                if (Object.keys(updates).length) {
+                    updates.updatedAt = serverTimestamp();
+                    await updateDoc(userDocRef, updates);
+                }
+                return { ...data, ...updates };
+            }
+
+            function updateSignedView(profile) {
+                signedNameEls.forEach(el => {
+                    el.textContent = profile.displayName || 'Player';
+                });
+                signedBalanceEls.forEach(el => {
+                    el.textContent = formatCurrency(profile.balance ?? DEFAULT_BALANCE);
+                });
+            }
+
+            modeButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const btnMode = btn.getAttribute('data-auth-mode-button');
+                    if (btnMode) {
+                        setMode(btnMode);
+                    }
+                });
+            });
+
+            authForm?.addEventListener('submit', async event => {
+                event.preventDefault();
+                if (submitting) {
+                    return;
+                }
+                clearFeedback();
+
+                const email = emailInput?.value.trim();
+                const password = passwordInput?.value.trim();
+                const displayName = displayNameInput?.value.trim();
+
+                if (!email) {
+                    setFeedback('Enter your email address to continue.');
+                    emailInput?.focus();
+                    return;
+                }
+                if (!password || password.length < 6) {
+                    setFeedback('Password must be at least 6 characters long.');
+                    passwordInput?.focus();
+                    return;
+                }
+                if (mode === 'signup' && !displayName) {
+                    setFeedback('Choose a display name for your account.');
+                    displayNameInput?.focus();
+                    return;
+                }
+
+                submitting = true;
+                if (submitButton) {
+                    submitButton.disabled = true;
+                    submitButton.textContent = mode === 'signin' ? 'Signing In...' : 'Creating Account...';
+                }
+
+                try {
+                    if (mode === 'signin') {
+                        await signInWithEmailAndPassword(auth, email, password);
+                    } else {
+                        const credential = await createUserWithEmailAndPassword(auth, email, password);
+                        if (displayName) {
+                            await updateProfile(credential.user, { displayName });
+                        }
+                        await ensureProfile(credential.user, displayName);
+                    }
+                } catch (error) {
+                    console.error('Authentication error', error);
+                    setFeedback(parseFirebaseError(error));
+                } finally {
+                    submitting = false;
+                    if (submitButton) {
+                        submitButton.disabled = false;
+                        submitButton.textContent = mode === 'signin' ? 'Sign In' : 'Create Account';
+                    }
+                }
+            });
+
+            forgotButton?.addEventListener('click', async () => {
+                if (submitting) {
+                    return;
+                }
+                const email = emailInput?.value.trim();
+                if (!email) {
+                    setFeedback('Enter your email above so we can send the reset link.');
+                    return;
+                }
+                submitting = true;
+                setFeedback('Sending reset email...', 'success');
+                try {
+                    await sendPasswordResetEmail(auth, email);
+                    setFeedback('Password reset email sent! Check your inbox.', 'success');
+                } catch (error) {
+                    console.error('Reset email error', error);
+                    setFeedback(parseFirebaseError(error));
+                } finally {
+                    submitting = false;
+                }
+            });
+
+            signOutButton?.addEventListener('click', async () => {
+                try {
+                    await firebaseSignOut(auth);
+                } catch (error) {
+                    console.error('Sign out error', error);
+                }
+            });
+
+            onAuthStateChanged(auth, async user => {
+                if (!user) {
+                    signedView?.classList.add('hidden');
+                    formWrapper?.classList.remove('hidden');
+                    disabledNotice?.classList.add('hidden');
+                    return;
+                }
+
+                try {
+                    const profile = await ensureProfile(user);
+                    updateSignedView({
+                        displayName: profile.displayName || user.displayName || (user.email ? user.email.split('@')[0] : 'Player'),
+                        balance: typeof profile.balance === 'number' ? profile.balance : DEFAULT_BALANCE
+                    });
+                    formWrapper?.classList.add('hidden');
+                    signedView?.classList.remove('hidden');
+                    disabledNotice?.classList.add('hidden');
+                } catch (error) {
+                    console.error('Unable to load profile', error);
+                    setFeedback('Unable to load your profile. Try again later.');
+                }
+            });
+
+            setMode('signin');
+        }
+
+        function parseFirebaseError(error) {
+            const code = error?.code;
+            switch (code) {
+                case 'auth/invalid-email':
+                    return 'Enter a valid email address.';
+                case 'auth/user-not-found':
+                    return 'No account was found for that email.';
+                case 'auth/wrong-password':
+                    return 'Incorrect password. Try again or reset it.';
+                case 'auth/email-already-in-use':
+                    return 'An account already exists for that email address.';
+                case 'auth/weak-password':
+                    return 'Choose a stronger password (at least 6 characters).';
+                case 'auth/too-many-requests':
+                    return 'Too many attempts. Please wait and try again.';
+                default:
+                    return error?.message || 'Authentication failed. Try again.';
+            }
+        }
+    </script>
+</body>
+</html>
