@@ -60,158 +60,245 @@
             background: rgba(0, 194, 255, 0.1);
             border-left: 3px solid #00c2ff;
         }
+        .crash-visualization {
+            position: relative;
+            width: 100%;
+        }
         .crash-launch-area {
             position: relative;
             width: 100%;
-            max-width: 16rem;
-            height: 12rem;
-            margin: 0 auto;
-            border-radius: 0.75rem;
-            border: 1px solid rgba(0, 194, 255, 0.12);
-            background: radial-gradient(circle at 50% 120%, rgba(0, 194, 255, 0.35), transparent 60%),
-                linear-gradient(to top, rgba(14, 15, 19, 0.95), rgba(14, 15, 19, 0.25));
+            height: 20rem;
+            border-radius: 1.5rem;
+            border: 1px solid rgba(148, 197, 255, 0.18);
+            background: radial-gradient(circle at 20% -10%, rgba(59, 130, 246, 0.35), transparent 55%),
+                radial-gradient(circle at 80% 120%, rgba(14, 116, 144, 0.25), transparent 60%),
+                linear-gradient(160deg, #0f172a 0%, #0b1220 65%, #0a101b 100%);
             overflow: hidden;
-            transition: box-shadow 0.3s ease;
+            padding: 1.75rem 2rem 2.5rem 3rem;
+            box-shadow: inset 0 0 40px rgba(15, 23, 42, 0.8);
         }
         .crash-launch-area::before {
             content: '';
             position: absolute;
             inset: 0;
             background-image:
-                radial-gradient(1px 1px at 15% 25%, rgba(255, 255, 255, 0.35) 0%, transparent 100%),
-                radial-gradient(1.5px 1.5px at 70% 35%, rgba(0, 194, 255, 0.28) 0%, transparent 100%),
-                radial-gradient(1px 1px at 45% 70%, rgba(255, 255, 255, 0.22) 0%, transparent 100%),
-                radial-gradient(1.5px 1.5px at 85% 55%, rgba(124, 58, 237, 0.3) 0%, transparent 100%),
-                radial-gradient(1px 1px at 30% 60%, rgba(255, 255, 255, 0.18) 0%, transparent 100%);
+                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 100% 56px, 56px 100%;
             opacity: 0.35;
             pointer-events: none;
         }
+        .crash-launch-area::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 85%, rgba(8, 145, 178, 0.28), transparent 70%);
+            opacity: 0.4;
+            pointer-events: none;
+        }
         .crash-launch-area.active {
-            box-shadow: 0 0 30px rgba(0, 194, 255, 0.35);
+            box-shadow: 0 0 40px rgba(16, 185, 129, 0.25), inset 0 0 40px rgba(14, 165, 233, 0.15);
+        }
+        .crash-graph-svg {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+        }
+        .crash-graph-path-base {
+            fill: none;
+            stroke: rgba(250, 204, 21, 0.2);
+            stroke-width: 2.8;
+            stroke-linecap: round;
+        }
+        .crash-graph-path-active {
+            fill: none;
+            stroke: #facc15;
+            stroke-width: 3.2;
+            stroke-linecap: round;
+            filter: drop-shadow(0 0 10px rgba(250, 204, 21, 0.4));
+        }
+        .crash-axis {
+            position: absolute;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: rgba(148, 197, 255, 0.6);
+            z-index: 3;
+            pointer-events: none;
+        }
+        .crash-axis--y {
+            top: 3.5rem;
+            bottom: 3.75rem;
+            left: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            text-align: left;
+        }
+        .crash-axis--x {
+            left: 3rem;
+            right: 2rem;
+            bottom: 1.75rem;
+            display: flex;
+            justify-content: space-between;
+            text-transform: uppercase;
+        }
+        .crash-multiplier-display {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3;
+            pointer-events: none;
+        }
+        .crash-multiplier {
+            font-size: clamp(2.75rem, 6vw, 5.5rem);
+            font-weight: 700;
+            color: #f8fafc;
+            text-shadow: 0 18px 35px rgba(15, 23, 42, 0.8), 0 0 25px rgba(250, 204, 21, 0.25);
+            letter-spacing: -0.03em;
+        }
+        .crash-status-panel {
+            position: absolute;
+            right: 1.75rem;
+            bottom: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.4rem;
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            border: 1px solid rgba(148, 197, 255, 0.2);
+            background: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(6px);
+            text-align: right;
+            z-index: 4;
+            box-shadow: 0 18px 35px rgba(15, 23, 42, 0.45);
+        }
+        .crash-status-label {
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            transition: color 0.2s ease;
+        }
+        .crash-status-message {
+            font-size: 0.82rem;
+            color: rgba(226, 232, 240, 0.75);
+            line-height: 1.45;
+            max-width: 16rem;
+            margin-left: auto;
         }
         .crash-trail {
             position: absolute;
-            bottom: 2.2rem;
-            left: 50%;
-            width: 0.45rem;
-            height: 0;
-            transform: translateX(-50%);
-            background: linear-gradient(to top, rgba(253, 224, 71, 0.35), rgba(56, 189, 248, 0));
-            filter: blur(0.5px);
+            width: 7.25rem;
+            height: 0.4rem;
+            border-radius: 999px;
+            background: linear-gradient(90deg, rgba(251, 191, 36, 0.08) 0%, rgba(250, 204, 21, 0.55) 55%, rgba(250, 204, 21, 0) 100%);
             opacity: 0;
-            transition: height 0.3s ease, opacity 0.3s ease;
-            z-index: 1;
+            transform-origin: 100% 50%;
+            filter: blur(1.5px);
+            z-index: 2;
+            transition: opacity 0.2s ease;
         }
         .crash-explosion {
             position: absolute;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: radial-gradient(circle, rgba(248, 113, 113, 0.85) 0%, rgba(253, 224, 71, 0.45) 45%, rgba(14, 15, 19, 0) 70%);
-            border-radius: 999px;
-            transform: translate(-50%, 50%);
+            width: 7rem;
+            height: 7rem;
+            background: radial-gradient(circle, rgba(251, 191, 36, 0.85) 0%, rgba(248, 113, 113, 0.6) 45%, rgba(14, 14, 22, 0) 70%);
+            border-radius: 50%;
             opacity: 0;
-            transition: opacity 0.2s ease, width 0.2s ease, height 0.2s ease, bottom 0.2s ease;
+            transform: translate(-50%, 50%) scale(0.2);
+            transition: opacity 0.2s ease, transform 0.25s ease;
             pointer-events: none;
             z-index: 3;
         }
         .crash-explosion.active {
             opacity: 1;
-            width: 6rem;
-            height: 6rem;
+            transform: translate(-50%, 50%) scale(1);
         }
         .crash-ship {
             position: absolute;
-            left: 50%;
-            bottom: 0;
-            width: 3.5rem;
-            height: 5.5rem;
-            transform: translateX(-50%);
-            transition: bottom 0.3s linear, filter 0.3s ease;
-            z-index: 2;
+            width: 2.05rem;
+            height: 3.6rem;
+            transform: translate(-50%, 50%);
+            transform-origin: 50% 75%;
+            transition: left 0.2s linear, bottom 0.2s linear, transform 0.2s linear, filter 0.3s ease;
+            z-index: 4;
         }
         .crash-ship--stalled {
-            filter: grayscale(0.6) brightness(0.85);
+            filter: grayscale(0.7) brightness(0.85);
         }
         .crash-ship-body {
             position: absolute;
             inset: 0;
-            border-radius: 999px 999px 42% 42%;
-            background: linear-gradient(to bottom, rgba(0, 194, 255, 0.95), rgba(124, 58, 237, 0.9));
-            box-shadow: 0 0 25px rgba(0, 194, 255, 0.45);
+            border-radius: 999px 999px 45% 45%;
+            background: linear-gradient(180deg, rgba(14, 165, 233, 0.95), rgba(76, 29, 149, 0.9));
+            box-shadow: 0 12px 35px rgba(14, 165, 233, 0.45);
         }
         .crash-ship-window {
             position: absolute;
-            top: 28%;
+            top: 27%;
             left: 50%;
             transform: translateX(-50%);
-            width: 1.35rem;
-            height: 1.35rem;
+            width: 0.82rem;
+            height: 0.82rem;
             border-radius: 999px;
             background: radial-gradient(circle at 35% 35%, #ffffff 0%, #c4f1ff 40%, #0ea5e9 75%);
             border: 2px solid rgba(255, 255, 255, 0.6);
-            box-shadow: 0 0 12px rgba(255, 255, 255, 0.35);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.45);
         }
         .crash-ship-wing {
             position: absolute;
-            bottom: 1.4rem;
-            width: 1.2rem;
-            height: 2rem;
-            background: linear-gradient(to top, rgba(124, 58, 237, 0.85), rgba(0, 194, 255, 0.7));
-            border-radius: 0.7rem;
-            box-shadow: 0 0 12px rgba(124, 58, 237, 0.3);
+            bottom: 0.95rem;
+            width: 0.9rem;
+            height: 1.35rem;
+            background: linear-gradient(160deg, rgba(124, 58, 237, 0.85), rgba(14, 165, 233, 0.7));
+            border-radius: 0.75rem;
+            box-shadow: 0 0 18px rgba(124, 58, 237, 0.35);
         }
         .crash-ship-wing--left {
-            left: -0.75rem;
-            transform: rotate(-12deg);
+            left: -0.7rem;
+            transform: rotate(-18deg);
         }
         .crash-ship-wing--right {
-            right: -0.75rem;
-            transform: rotate(12deg);
+            right: -0.7rem;
+            transform: rotate(18deg);
         }
         .crash-flame {
             position: absolute;
-            bottom: -1.9rem;
+            bottom: -1.35rem;
             left: 50%;
-            width: 1.6rem;
-            height: 2.5rem;
+            width: 1.05rem;
+            height: 1.7rem;
             transform: translateX(-50%);
-            background: radial-gradient(circle at 50% 15%, #ffffff 0%, #fde047 38%, #fb923c 65%, rgba(248, 113, 113, 0) 100%);
-            filter: blur(0.5px);
+            background: radial-gradient(circle at 50% 18%, #ffffff 0%, #fde047 38%, #fb923c 65%, rgba(248, 113, 113, 0) 100%);
+            filter: blur(0.65px);
             opacity: 0;
-            animation: flame-flicker 0.2s infinite alternate;
+            animation: flame-flicker 0.18s infinite alternate;
         }
         .crash-flame.active {
             opacity: 1;
+        }
+        .crash-controls {
+            position: relative;
+        }
+        .crash-action-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.35rem;
+        }
+        .crash-mobile-action {
+            border-radius: 999px;
         }
         @keyframes flame-flicker {
             from {
                 transform: translateX(-50%) scaleY(1);
             }
             to {
-                transform: translateX(-50%) scaleY(0.85);
+                transform: translateX(-50%) scaleY(0.82);
             }
-        }
-        .crash-ground {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 2.4rem;
-            background: linear-gradient(to top, rgba(14, 15, 19, 0.95), rgba(14, 15, 19, 0));
-            z-index: 4;
-        }
-        .crash-ground::before {
-            content: '';
-            position: absolute;
-            bottom: 0.7rem;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 5rem;
-            height: 0.6rem;
-            border-radius: 999px;
-            background: linear-gradient(to right, rgba(0, 194, 255, 0.45), rgba(124, 58, 237, 0.45));
-            box-shadow: 0 0 20px rgba(0, 194, 255, 0.35);
         }
         @media (max-width: 768px) {
             .game-sidebar {
@@ -227,6 +314,76 @@
             .game-sidebar-item.active {
                 border-left: none;
                 border-bottom: 3px solid #00c2ff;
+            }
+            .crash-launch-area {
+                height: 18rem;
+                padding: 1.4rem 1.35rem 2.15rem 2rem;
+            }
+            .crash-axis--y {
+                left: 0.5rem;
+            }
+            .crash-axis--x {
+                left: 2rem;
+                right: 1.25rem;
+                bottom: 1.45rem;
+            }
+            .crash-status-panel {
+                right: 1.25rem;
+                bottom: 1.5rem;
+            }
+            .crash-status-message {
+                max-width: 12rem;
+            }
+            .crash-trail {
+                width: 6.5rem;
+            }
+            .crash-multiplier {
+                font-size: clamp(2.4rem, 8vw, 4.2rem);
+            }
+        }
+        @media (max-width: 640px) {
+            .crash-launch-area {
+                height: 17rem;
+                padding: 1.15rem 1.1rem 2.6rem 1.75rem;
+            }
+            .crash-status-panel {
+                top: 1.1rem;
+                right: 1.1rem;
+                left: auto;
+                bottom: auto;
+                transform: none;
+                align-items: flex-end;
+                text-align: right;
+                max-width: 11.5rem;
+                padding: 0.65rem 0.85rem;
+            }
+            .crash-status-message {
+                margin-left: 0;
+            }
+            .crash-controls {
+                padding-bottom: 2.25rem;
+            }
+            .crash-mobile-action {
+                position: sticky;
+                bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+                margin: 1.25rem auto 0;
+                width: 100%;
+                border-radius: 999px;
+                box-shadow: 0 12px 26px rgba(15, 23, 42, 0.4);
+                z-index: 5;
+            }
+            .crash-mobile-action:not(:disabled) {
+                box-shadow: 0 18px 36px rgba(14, 165, 233, 0.45);
+            }
+        }
+        @media (min-width: 641px) {
+            .crash-mobile-action {
+                display: none;
+                position: static;
+                left: auto;
+                right: auto;
+                bottom: auto;
+                box-shadow: none;
             }
         }
     </style>
@@ -353,34 +510,52 @@ CASINO</span>
 
                 <!-- Game Preview -->
                 <div class="bg-gray-800 rounded-xl p-8 mb-6 flex flex-col items-center justify-center" style="min-height: 400px;">
-                    <div class="relative w-full max-w-lg mb-10">
+                    <div class="relative w-full max-w-3xl mb-10">
                         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-primary/20 to-transparent opacity-30 blur-lg"></div>
-                        <div class="relative bg-dark border border-primary/20 rounded-xl p-8 text-center game-preview overflow-hidden">
-                            <div class="flex flex-col items-center space-y-4">
-                                <div class="game-preview-icon w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
-                                    <i data-feather="trending-up" class="w-10 h-10 text-primary"></i>
-                                </div>
-                                <div id="crashMultiplier" class="text-5xl font-bold text-primary tracking-tight">1.00x</div>
-                                <p id="crashStatus" class="text-xs uppercase tracking-[0.35em] text-gray-400">Waiting</p>
-                                <p id="crashMessage" class="text-gray-400 leading-relaxed max-w-sm mx-auto">Place your bet to start the next round.</p>
-                                <div class="w-full pt-2">
+                        <div class="relative bg-dark border border-primary/20 rounded-2xl p-6 md:p-8 game-preview overflow-hidden">
+                                <div class="crash-visualization">
                                     <div id="crashLaunchArea" class="crash-launch-area">
-                                        <div id="crashTrail" class="crash-trail"></div>
-                                        <div id="crashExplosion" class="crash-explosion"></div>
-                                        <div id="crashShip" class="crash-ship">
-                                            <div class="crash-ship-body"></div>
-                                            <div class="crash-ship-window"></div>
-                                            <div class="crash-ship-wing crash-ship-wing--left"></div>
-                                            <div class="crash-ship-wing crash-ship-wing--right"></div>
-                                            <div id="crashFlame" class="crash-flame"></div>
-                                        </div>
-                                        <div class="crash-ground"></div>
+                                    <svg class="crash-graph-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+                                        <path id="crashPathGuide" class="crash-graph-path-base" d="M6 88 Q 34 68 56 48 T 94 12"></path>
+                                        <path id="crashPathActive" class="crash-graph-path-active" d="M6 88 Q 34 68 56 48 T 94 12"></path>
+                                    </svg>
+                                    <div class="crash-axis crash-axis--y">
+                                        <span>4.3x</span>
+                                        <span>3.7x</span>
+                                        <span>3.1x</span>
+                                        <span>2.5x</span>
+                                        <span>1.9x</span>
+                                        <span>1.3x</span>
+                                    </div>
+                                    <div class="crash-axis crash-axis--x">
+                                        <span>1s</span>
+                                        <span>3s</span>
+                                        <span>7s</span>
+                                        <span>11s</span>
+                                        <span>14s</span>
+                                        <span>17s</span>
+                                    </div>
+                                    <div class="crash-multiplier-display">
+                                        <div id="crashMultiplier" class="crash-multiplier">1.00x</div>
+                                    </div>
+                                    <div class="crash-status-panel">
+                                        <p id="crashStatus" class="crash-status-label">WAITING</p>
+                                        <p id="crashMessage" class="crash-status-message">Place your bet to start the next launch.</p>
+                                    </div>
+                                    <div id="crashTrail" class="crash-trail"></div>
+                                    <div id="crashExplosion" class="crash-explosion"></div>
+                                    <div id="crashShip" class="crash-ship">
+                                        <div class="crash-ship-body"></div>
+                                        <div class="crash-ship-window"></div>
+                                        <div class="crash-ship-wing crash-ship-wing--left"></div>
+                                        <div class="crash-ship-wing crash-ship-wing--right"></div>
+                                        <div id="crashFlame" class="crash-flame"></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="w-full max-w-md space-y-4">
+                    <div class="w-full max-w-md space-y-4 crash-controls">
                         <div class="flex items-center justify-between">
                             <span class="text-gray-400">Bet Amount</span>
                             <div class="flex items-center space-x-2">
@@ -395,7 +570,10 @@ CASINO</span>
                             <button class="bg-gray-800 hover:bg-gray-700 text-white py-2 rounded-lg transition" type="button" data-quick="double">2x</button>
                             <button class="bg-gray-800 hover:bg-gray-700 text-white py-2 rounded-lg transition" type="button" data-quick="max">Max</button>
                         </div>
-                        <button id="crashActionButton" class="gradient-btn w-full py-3 rounded-lg font-bold text-white hover:shadow-lg transition">
+                        <button id="crashActionButton" data-crash-action type="button" class="crash-action-button hidden sm:flex w-full py-3 rounded-lg font-bold text-white transition gradient-btn hover:shadow-lg">
+                            Place Bet
+                        </button>
+                        <button data-crash-action type="button" class="crash-action-button crash-mobile-action flex sm:hidden w-full py-3 font-bold text-white transition gradient-btn">
                             Place Bet
                         </button>
                     </div>
@@ -626,7 +804,7 @@ CASINO</span>
 
         (function initCrashGame() {
             const betInput = document.getElementById('betAmount');
-            const actionButton = document.getElementById('crashActionButton');
+            const actionButtons = Array.from(document.querySelectorAll('[data-crash-action]'));
             const decreaseBetButton = document.getElementById('decreaseBet');
             const increaseBetButton = document.getElementById('increaseBet');
             const quickButtons = document.querySelectorAll('[data-quick]');
@@ -639,12 +817,14 @@ CASINO</span>
             const flameEl = document.getElementById('crashFlame');
             const trailEl = document.getElementById('crashTrail');
             const explosionEl = document.getElementById('crashExplosion');
+            const pathGuideEl = document.getElementById('crashPathGuide');
+            const pathActiveEl = document.getElementById('crashPathActive');
             const lastResultEl = document.getElementById('lastResult');
             const historyBody = document.getElementById('recentGamesBody');
             const balanceEls = document.querySelectorAll('[data-balance]');
             const DEFAULT_BALANCE = 1000;
 
-            if (!betInput || !actionButton || !multiplierEl) {
+            if (!betInput || actionButtons.length === 0 || !multiplierEl) {
                 return;
             }
 
@@ -668,7 +848,18 @@ CASINO</span>
             };
 
             let explosionTimeoutId = null;
+            let crashPathLength = 0;
+            const LOG_MAX_MULTIPLIER = Math.log(50);
 
+            if (pathGuideEl && typeof pathGuideEl.getTotalLength === 'function') {
+                crashPathLength = pathGuideEl.getTotalLength();
+                if (pathActiveEl) {
+                    const dashValue = crashPathLength.toString();
+                    pathActiveEl.style.strokeDasharray = dashValue;
+                    pathActiveEl.style.strokeDashoffset = dashValue;
+                }
+                updatePathHighlight(getProgressForMultiplier(state.multiplier));
+            }
 
             const initialBalance = balanceEls.length
                 ? parseFloat((balanceEls[0].textContent || '0').replace(/,/g, ''))
@@ -699,7 +890,7 @@ CASINO</span>
 
                 if (statusEl) {
                     statusEl.textContent = label;
-                    statusEl.className = 'text-xs uppercase tracking-[0.35em] transition-colors duration-200';
+                    statusEl.className = 'crash-status-label transition-colors duration-200';
                     statusEl.classList.add(toneClasses[tone] || toneClasses.neutral);
                 }
 
@@ -708,24 +899,45 @@ CASINO</span>
                 }
             }
 
+            const buttonStateConfig = {
+                cashout: {
+                    text: 'Cash Out',
+                    disabled: false,
+                    classes: ['bg-accent', 'text-dark', 'hover:brightness-110', 'hover:shadow-lg', 'shadow-lg']
+                },
+                waiting: {
+                    text: 'Awaiting new launch...',
+                    disabled: true,
+                    classes: ['bg-gray-800', 'text-gray-500', 'cursor-not-allowed']
+                },
+                place: {
+                    text: 'Place Bet',
+                    disabled: false,
+                    classes: ['gradient-btn', 'text-white', 'hover:shadow-lg', 'shadow-lg']
+                }
+            };
+
+            const buttonToggleClasses = ['gradient-btn', 'bg-accent', 'bg-gray-800', 'text-dark', 'text-white', 'text-gray-500', 'hover:shadow-lg', 'hover:brightness-110', 'cursor-not-allowed', 'shadow-lg'];
+
             function setActionButtonState(mode) {
-                if (!actionButton) {
+                if (!actionButtons.length) {
                     return;
                 }
 
-                if (mode === 'cashout') {
-                    actionButton.disabled = false;
-                    actionButton.textContent = 'Cash Out';
-                    actionButton.className = 'w-full py-3 rounded-lg font-bold transition bg-accent text-dark hover:brightness-110';
-                } else if (mode === 'waiting') {
-                    actionButton.disabled = true;
-                    actionButton.textContent = 'Awaiting new launch...';
-                    actionButton.className = 'w-full py-3 rounded-lg font-bold transition bg-gray-800 text-gray-500 cursor-not-allowed';
-                } else {
-                    actionButton.disabled = false;
-                    actionButton.textContent = 'Place Bet';
-                    actionButton.className = 'gradient-btn w-full py-3 rounded-lg font-bold text-white hover:shadow-lg transition';
-                }
+                const config = buttonStateConfig[mode] || buttonStateConfig.place;
+
+                actionButtons.forEach(btn => {
+                    btn.disabled = config.disabled;
+                    btn.textContent = config.text;
+
+                    buttonToggleClasses.forEach(cls => {
+                        btn.classList.remove(cls);
+                    });
+
+                    config.classes.forEach(cls => {
+                        btn.classList.add(cls);
+                    });
+                });
             }
 
             function setControlsDisabled(disabled) {
@@ -753,6 +965,51 @@ CASINO</span>
                 betInput.classList.toggle('focus:border-red-500', Boolean(message));
             }
 
+            function getProgressForMultiplier(multiplier) {
+                if (!Number.isFinite(multiplier)) {
+                    return 0;
+                }
+
+                const safe = Math.max(multiplier, 1);
+                const normalized = LOG_MAX_MULTIPLIER > 0 ? Math.log(safe) / LOG_MAX_MULTIPLIER : 0;
+                const eased = Math.pow(Math.min(1, Math.max(0, normalized)), 0.92);
+                return Math.min(0.995, Math.max(0, eased));
+            }
+
+            function getPathMetrics(progress) {
+                const bounded = Math.min(0.995, Math.max(0, progress));
+
+                if (!pathGuideEl || crashPathLength <= 0 || typeof pathGuideEl.getPointAtLength !== 'function') {
+                    return {
+                        leftPercent: 6 + bounded * 84,
+                        bottomPercent: 12 + bounded * 78,
+                        angle: 28 + bounded * 22
+                    };
+                }
+
+                const length = crashPathLength * bounded;
+                const point = pathGuideEl.getPointAtLength(length);
+                const ahead = pathGuideEl.getPointAtLength(Math.min(crashPathLength, length + crashPathLength * 0.02));
+                const dx = ahead.x - point.x;
+                const dy = ahead.y - point.y;
+                const angle = Math.atan2(-(dy), dx) * (180 / Math.PI);
+
+                return {
+                    leftPercent: point.x,
+                    bottomPercent: 100 - point.y,
+                    angle
+                };
+            }
+
+            function updatePathHighlight(progress) {
+                if (!pathActiveEl || crashPathLength <= 0) {
+                    return;
+                }
+
+                const offset = crashPathLength * (1 - Math.min(1, Math.max(0, progress)));
+                pathActiveEl.style.strokeDashoffset = offset;
+            }
+
             function updateMultiplierDisplay() {
                 if (multiplierEl) {
                     multiplierEl.textContent = formatMultiplier(state.multiplier);
@@ -770,33 +1027,42 @@ CASINO</span>
             }
 
             function updateFlightVisuals() {
-                if (!shipEl) {
-                    return;
-                }
+                const progress = getProgressForMultiplier(state.multiplier);
+                const metrics = getPathMetrics(progress);
 
-                const altitude = Math.max(0, Math.min(88, (state.multiplier - 1) * 10));
-                shipEl.style.bottom = `${altitude}%`;
+                if (shipEl) {
+                    shipEl.style.left = `${metrics.leftPercent}%`;
+                    shipEl.style.bottom = `${metrics.bottomPercent}%`;
+                    shipEl.style.transform = `translate(-50%, 50%) rotate(${metrics.angle}deg)`;
+                }
 
                 if (trailEl) {
                     if (state.running) {
-                        const height = Math.min(95, Math.max(18, altitude + 18));
-                        trailEl.style.height = `${height}%`;
-                        trailEl.style.opacity = '0.5';
+                        trailEl.style.opacity = '0.85';
+                        trailEl.style.left = `${metrics.leftPercent}%`;
+                        trailEl.style.bottom = `${metrics.bottomPercent}%`;
+                        trailEl.style.transform = `translate(-95%, -35%) rotate(${metrics.angle}deg)`;
                     } else {
                         trailEl.style.opacity = '0';
-                        trailEl.style.height = '0%';
                     }
                 }
+
+                updatePathHighlight(progress);
             }
 
-            function triggerExplosion(heightPercentage) {
+            function triggerExplosion(multiplierValue) {
                 if (!explosionEl) {
                     return;
                 }
 
-                const boundedHeight = Math.max(12, Math.min(95, heightPercentage));
-                explosionEl.style.bottom = `${boundedHeight}%`;
+                const progress = getProgressForMultiplier(multiplierValue);
+                const metrics = getPathMetrics(progress);
+
+                explosionEl.style.left = `${metrics.leftPercent}%`;
+                explosionEl.style.bottom = `${metrics.bottomPercent}%`;
                 explosionEl.classList.add('active');
+
+                updatePathHighlight(progress);
 
                 if (explosionTimeoutId) {
                     clearTimeout(explosionTimeoutId);
@@ -890,7 +1156,6 @@ CASINO</span>
                     setStatus('WAITING', 'Place your bet to start the next launch.', 'neutral');
                     setFlameActive(false);
                     if (trailEl) {
-                        trailEl.style.height = '0%';
                         trailEl.style.opacity = '0';
                     }
                     if (shipEl) {
@@ -927,7 +1192,6 @@ CASINO</span>
 
                 if (trailEl) {
                     trailEl.style.opacity = '0';
-                    trailEl.style.height = '0%';
                 }
 
                 if (launchAreaEl) {
@@ -938,8 +1202,7 @@ CASINO</span>
                     shipEl.classList.add('crash-ship--stalled');
                 }
 
-                const altitude = Math.max(0, Math.min(88, (crashValue - 1) * 10));
-                triggerExplosion(altitude + 12);
+                triggerExplosion(crashValue);
 
                 if (state.cashedOut) {
                     setStatus('ROUND COMPLETE', `Spaceship lost control at ${crashText}x. You cashed out with ${formatCurrency(state.payout)}.`, 'success');
@@ -1007,10 +1270,6 @@ CASINO</span>
                 setActionButtonState('cashout');
                 setStatus('LIVE', 'Spaceship launching — cash out before it crashes!', 'live');
                 setFlameActive(true);
-                if (trailEl) {
-                    trailEl.style.height = '18%';
-                    trailEl.style.opacity = '0.5';
-                }
                 if (shipEl) {
                     shipEl.classList.remove('crash-ship--stalled');
                 }
@@ -1107,14 +1366,16 @@ CASINO</span>
                 }
             });
 
-            actionButton.addEventListener('click', () => {
-                if (state.running) {
-                    if (!state.cashedOut) {
-                        cashOut();
+            actionButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    if (state.running) {
+                        if (!state.cashedOut) {
+                            cashOut();
+                        }
+                    } else {
+                        startRound();
                     }
-                } else {
-                    startRound();
-                }
+                });
             });
 
             updateBalanceDisplay();
