@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEON CASINO | Sign In & Create Account</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        dark: '#0e0f13',
+                        primary: '#00c2ff',
+                        secondary: '#7c3aed',
+                        accent: '#2bd975',
+                    },
+                    boxShadow: {
+                        'neon-blue': '0 0 15px rgba(0, 194, 255, 0.45)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0e0f13;
+            color: #fff;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .gradient-btn {
+            background: linear-gradient(45deg, #00c2ff, #7c3aed);
+        }
+        .gradient-btn:hover {
+            box-shadow: 0 0 20px rgba(0, 194, 255, 0.45);
+        }
+        .auth-input {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+        .auth-input:focus {
+            outline: none;
+            border-color: rgba(0, 194, 255, 0.8);
+            box-shadow: 0 0 0 3px rgba(0, 194, 255, 0.15);
+        }
+    </style>
+</head>
+<body class="font-sans min-h-screen">
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-dark/80 backdrop-blur-md border-b border-gray-800">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <span class="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">NEON
+CASINO</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html" class="text-white hover:text-primary transition">Home</a>
+                    <a href="games.html" class="text-white hover:text-primary transition">Games</a>
+                    <a href="#" class="text-white hover:text-primary transition">Promotions</a>
+                    <a href="#" class="text-white hover:text-primary transition">Provably Fair</a>
+                    <a href="#" class="text-white hover:text-primary transition">Leaderboard</a>
+                </div>
+                <div class="hidden md:flex items-center space-x-4">
+                    <div class="bg-gray-800 rounded-full px-4 py-1.5 flex items-center space-x-2">
+                        <i data-feather="dollar-sign" class="w-4 h-4 text-accent"></i>
+                        <span class="font-medium" data-balance data-default-balance="1000.00">1,000.00</span>
+                    </div>
+                    <a href="games.html" class="gradient-btn rounded-full px-6 py-2 font-medium text-white hover:shadow-lg transition">Play Games</a>
+                </div>
+                <button type="button" class="md:hidden text-white focus:outline-none" data-mobile-toggle aria-expanded="false" aria-controls="mobile-menu">
+                    <span class="sr-only">Toggle navigation</span>
+                    <i data-feather="menu" class="w-6 h-6" data-icon-closed></i>
+                    <i data-feather="x" class="w-6 h-6 hidden" data-icon-open></i>
+                </button>
+            </div>
+            <div id="mobile-menu" class="md:hidden hidden flex-col space-y-4 pt-4 border-t border-gray-800" data-mobile-menu>
+                <div class="flex flex-col space-y-3">
+                    <a href="index.html" class="text-white hover:text-primary transition">Home</a>
+                    <a href="games.html" class="text-white hover:text-primary transition">Games</a>
+                    <a href="#" class="text-white hover:text-primary transition">Promotions</a>
+                    <a href="#" class="text-white hover:text-primary transition">Provably Fair</a>
+                    <a href="#" class="text-white hover:text-primary transition">Leaderboard</a>
+                </div>
+                <div class="space-y-3 border-t border-gray-800 pt-4">
+                    <div class="space-y-2">
+                        <span class="text-xs uppercase tracking-wide text-gray-400">Wallet Balance</span>
+                        <div class="bg-gray-800 rounded-full px-4 py-1.5 flex items-center space-x-2">
+                            <i data-feather="dollar-sign" class="w-4 h-4 text-accent"></i>
+                            <span class="font-medium" data-balance data-default-balance="1000.00">1,000.00</span>
+                        </div>
+                    </div>
+                    <a href="games.html" class="gradient-btn rounded-full px-6 py-2 font-medium text-white text-center hover:shadow-lg transition">Play Games</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="pt-32 pb-16 px-4 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-20">
+            <div class="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-primary blur-3xl"></div>
+            <div class="absolute bottom-1/4 right-1/4 w-64 h-64 rounded-full bg-secondary blur-3xl"></div>
+        </div>
+        <div class="container mx-auto relative z-10">
+            <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,460px)] items-start">
+                <div class="space-y-8" data-aos="fade-up">
+                    <span class="inline-flex items-center rounded-full border border-primary/50 bg-primary/10 px-3 py-1 text-xs uppercase tracking-[0.3em] text-primary/80">Provably Fair Access</span>
+                    <h1 class="text-3xl md:text-4xl font-bold leading-tight">Claim your $100 welcome balance and dive into neon-powered action.</h1>
+                    <p class="text-gray-300 text-base md:text-lg">Create a Neon Casino account in seconds. Your wallet is instantly topped up with $100 in demo credits so you can explore crash, mines, plinko and more — all secured by Firebase authentication.</p>
+                    <div class="space-y-5">
+                        <div class="flex items-start gap-4">
+                            <div class="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+                                <i data-feather="gift" class="h-6 w-6 text-primary"></i>
+                            </div>
+                            <div class="space-y-1">
+                                <h3 class="text-lg font-semibold text-white">Instant $100 bankroll</h3>
+                                <p class="text-sm text-gray-400">Every new signup receives $100 in demo funds automatically — no promo codes, no waiting.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="flex h-12 w-12 items-center justify-center rounded-full bg-secondary/10">
+                                <i data-feather="shield" class="h-6 w-6 text-secondary"></i>
+                            </div>
+                            <div class="space-y-1">
+                                <h3 class="text-lg font-semibold text-white">Firebase-secured login</h3>
+                                <p class="text-sm text-gray-400">Email and password logins are powered by Firebase Auth for dependable sessions and protected data.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4">
+                            <div class="flex h-12 w-12 items-center justify-center rounded-full bg-accent/10">
+                                <i data-feather="activity" class="h-6 w-6 text-accent"></i>
+                            </div>
+                            <div class="space-y-1">
+                                <h3 class="text-lg font-semibold text-white">Balances that travel with you</h3>
+                                <p class="text-sm text-gray-400">Sign back in on any device to sync your wallet and continue your streak without missing a beat.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="glass-card rounded-3xl px-6 py-5">
+                        <p class="text-sm text-gray-300">Returning player? Sign in to instantly restore your wallet and jump back into the live crash feed. We keep your progress so you can focus on timing the perfect cash out.</p>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-3xl p-8 md:p-10 space-y-6" data-aos="fade-left">
+                    <div class="space-y-2 text-center md:text-left">
+                        <h2 class="text-2xl md:text-3xl font-bold">Access your Neon Casino account</h2>
+                        <p class="text-gray-300 text-sm md:text-base">Sign in or create a new account to start playing instantly. New players receive $100 on the house — applied the moment you finish signup.</p>
+                    </div>
+                    <div class="bg-gray-900/40 border border-gray-800 rounded-2xl p-1 flex items-center gap-2" data-auth-tabs>
+                        <button type="button" data-auth-tab="login" class="flex-1 rounded-xl border border-transparent px-4 py-2 text-sm font-medium text-gray-300 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60">Sign In</button>
+                        <button type="button" data-auth-tab="signup" class="flex-1 rounded-xl border border-transparent px-4 py-2 text-sm font-medium text-gray-300 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60">Create Account</button>
+                    </div>
+                    <div id="authAlert" class="hidden rounded-2xl border border-primary/40 bg-primary/10 px-4 py-3 text-sm text-primary" role="alert"></div>
+                    <div data-auth-forms class="space-y-8">
+                        <form id="loginForm" data-form="login" class="space-y-5">
+                            <div class="space-y-2">
+                                <label for="loginEmail" class="text-sm font-medium text-gray-300">Email address</label>
+                                <input type="email" id="loginEmail" name="loginEmail" required autocomplete="email" placeholder="you@example.com" class="auth-input w-full rounded-xl px-4 py-3 text-base text-white placeholder-gray-500">
+                            </div>
+                            <div class="space-y-2">
+                                <label for="loginPassword" class="text-sm font-medium text-gray-300">Password</label>
+                                <input type="password" id="loginPassword" name="loginPassword" required autocomplete="current-password" placeholder="Enter your password" class="auth-input w-full rounded-xl px-4 py-3 text-base text-white placeholder-gray-500">
+                            </div>
+                            <button type="submit" data-submit data-loading-text="Signing in..." class="gradient-btn w-full rounded-xl px-4 py-3 font-semibold text-white transition">Sign In</button>
+                        </form>
+
+                        <form id="signupForm" data-form="signup" class="hidden space-y-5">
+                            <div class="grid gap-4">
+                                <div class="space-y-2">
+                                    <label for="signupName" class="text-sm font-medium text-gray-300">Display name (optional)</label>
+                                    <input type="text" id="signupName" name="signupName" autocomplete="name" placeholder="NeonLegend" class="auth-input w-full rounded-xl px-4 py-3 text-base text-white placeholder-gray-500">
+                                </div>
+                                <div class="space-y-2">
+                                    <label for="signupEmail" class="text-sm font-medium text-gray-300">Email address</label>
+                                    <input type="email" id="signupEmail" name="signupEmail" required autocomplete="email" placeholder="you@example.com" class="auth-input w-full rounded-xl px-4 py-3 text-base text-white placeholder-gray-500">
+                                </div>
+                                <div class="grid gap-4 sm:grid-cols-2">
+                                    <div class="space-y-2">
+                                        <label for="signupPassword" class="text-sm font-medium text-gray-300">Password</label>
+                                        <input type="password" id="signupPassword" name="signupPassword" required minlength="6" autocomplete="new-password" placeholder="At least 6 characters" class="auth-input w-full rounded-xl px-4 py-3 text-base text-white placeholder-gray-500">
+                                    </div>
+                                    <div class="space-y-2">
+                                        <label for="signupConfirmPassword" class="text-sm font-medium text-gray-300">Confirm password</label>
+                                        <input type="password" id="signupConfirmPassword" name="signupConfirmPassword" required minlength="6" autocomplete="new-password" placeholder="Re-enter your password" class="auth-input w-full rounded-xl px-4 py-3 text-base text-white placeholder-gray-500">
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-xs text-gray-400">By creating an account you confirm you are 18+ and agree to the Neon Casino demo terms of use.</p>
+                            <button type="submit" data-submit data-loading-text="Creating account..." class="gradient-btn w-full rounded-xl px-4 py-3 font-semibold text-white transition">Create Account</button>
+                        </form>
+                    </div>
+                    <div id="userPanel" class="hidden space-y-6">
+                        <div class="rounded-2xl border border-primary/40 bg-primary/10 px-6 py-5 space-y-3">
+                            <p class="text-xs uppercase tracking-[0.35em] text-primary/80">Account Ready</p>
+                            <h3 class="text-2xl font-bold text-white">Welcome back, <span data-user-name>Player</span>!</h3>
+                            <p class="text-gray-300">Your current balance is <span class="font-semibold text-white" data-user-balance>$0.00</span>. Head to the games lobby to put it to work.</p>
+                            <p class="text-sm text-gray-400">Signed in as <span data-user-email>-</span></p>
+                        </div>
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <a href="games.html" class="gradient-btn flex-1 rounded-xl px-4 py-3 font-semibold text-white text-center transition">Play Games</a>
+                            <button type="button" id="signOutButton" class="flex-1 rounded-xl border border-gray-700 bg-gray-900/40 px-4 py-3 font-semibold text-white transition hover:border-primary/60 hover:text-primary">Sign Out</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-900/50 border-t border-gray-800 py-8 px-4">
+        <div class="container mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <span class="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">NEON CASINO</span>
+                    <p class="text-gray-500 text-sm mt-1">Demo site. No real-money gambling.</p>
+                </div>
+                <div class="flex flex-wrap justify-center gap-4 md:gap-6 mb-4 md:mb-0">
+                    <a href="#" class="text-gray-400 hover:text-white text-xs uppercase">Terms</a>
+                    <a href="#" class="text-gray-400 hover:text-white text-xs uppercase">Privacy</a>
+                    <a href="#" class="text-gray-400 hover:text-white text-xs uppercase">Responsible Play</a>
+                    <a href="#" class="text-gray-400 hover:text-white text-xs uppercase">Contact</a>
+                </div>
+                <div class="text-gray-500 text-sm">
+                    © 2025 Neon Casino Demo • 18+ Only
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+        feather.replace();
+
+        (function initNavigation() {
+            const BALANCE_STORAGE_KEY = 'neonCasinoBalance';
+            const balanceTargets = Array.from(document.querySelectorAll('[data-balance]')).map(element => {
+                const attributeFallback = element.getAttribute('data-default-balance');
+                const textFallback = (element.textContent || '').trim();
+                const fallback = attributeFallback != null && attributeFallback !== ''
+                    ? attributeFallback
+                    : (textFallback || '0.00');
+
+                return { element, fallback };
+            });
+            const formatCurrency = value => value.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+
+            const updateBalanceFromStorage = () => {
+                if (!balanceTargets.length) {
+                    return;
+                }
+
+                let storedBalance = null;
+                try {
+                    storedBalance = window.localStorage.getItem(BALANCE_STORAGE_KEY);
+                } catch (error) {
+                    storedBalance = null;
+                }
+
+                if (storedBalance == null) {
+                    balanceTargets.forEach(({ element, fallback }) => {
+                        element.textContent = fallback;
+                    });
+                    return;
+                }
+
+                const numericValue = Number.parseFloat(storedBalance);
+                if (Number.isFinite(numericValue)) {
+                    const formatted = formatCurrency(numericValue);
+                    balanceTargets.forEach(({ element }) => {
+                        element.textContent = formatted;
+                    });
+                } else {
+                    balanceTargets.forEach(({ element, fallback }) => {
+                        element.textContent = fallback;
+                    });
+                }
+            };
+
+            updateBalanceFromStorage();
+
+            window.addEventListener('storage', event => {
+                if (event.key === BALANCE_STORAGE_KEY) {
+                    updateBalanceFromStorage();
+                }
+            });
+
+            document.addEventListener('neonCasinoBalanceUpdated', updateBalanceFromStorage);
+
+            const toggleButton = document.querySelector('[data-mobile-toggle]');
+            const mobileMenu = document.querySelector('[data-mobile-menu]');
+
+            if (toggleButton && mobileMenu) {
+                const setMenuState = isOpen => {
+                    mobileMenu.classList.toggle('hidden', !isOpen);
+                    toggleButton.setAttribute('aria-expanded', String(isOpen));
+
+                    const openIcon = toggleButton.querySelector('[data-icon-open]');
+                    const closedIcon = toggleButton.querySelector('[data-icon-closed]');
+                    if (openIcon) {
+                        openIcon.classList.toggle('hidden', !isOpen);
+                    }
+                    if (closedIcon) {
+                        closedIcon.classList.toggle('hidden', isOpen);
+                    }
+
+                    document.body.classList.toggle('overflow-hidden', isOpen);
+                };
+
+                toggleButton.addEventListener('click', () => {
+                    const currentlyOpen = !mobileMenu.classList.contains('hidden');
+                    setMenuState(!currentlyOpen);
+                });
+
+                mobileMenu.querySelectorAll('a, button').forEach(element => {
+                    element.addEventListener('click', () => setMenuState(false));
+                });
+
+                document.addEventListener('keydown', event => {
+                    if (event.key === 'Escape') {
+                        setMenuState(false);
+                    }
+                });
+
+                const mediaQuery = window.matchMedia('(min-width: 768px)');
+                const handleMediaChange = event => {
+                    if (event.matches) {
+                        setMenuState(false);
+                    }
+                };
+
+                if (typeof mediaQuery.addEventListener === 'function') {
+                    mediaQuery.addEventListener('change', handleMediaChange);
+                } else if (typeof mediaQuery.addListener === 'function') {
+                    mediaQuery.addListener(handleMediaChange);
+                }
+
+                setMenuState(false);
+            }
+        })();
+    </script>
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js';
+        import {
+            getAuth,
+            onAuthStateChanged,
+            signInWithEmailAndPassword,
+            createUserWithEmailAndPassword,
+            signOut,
+            updateProfile
+        } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js';
+        import {
+            getFirestore,
+            doc,
+            getDoc,
+            setDoc,
+            serverTimestamp
+        } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: 'AIzaSyB_Dj7URsA_5N1okSuxCN5m2c7q7H9098o',
+            authDomain: 'casino-cd04e.firebaseapp.com',
+            projectId: 'casino-cd04e',
+            storageBucket: 'casino-cd04e.appspot.com',
+            messagingSenderId: '237834419290'
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const STORAGE_USER_KEY = 'neonCasinoUser';
+        const STORAGE_BALANCE_KEY = 'neonCasinoBalance';
+
+        const tabButtons = document.querySelectorAll('[data-auth-tab]');
+        const forms = document.querySelectorAll('[data-form]');
+        const formsContainer = document.querySelector('[data-auth-forms]');
+        const tabsContainer = document.querySelector('[data-auth-tabs]');
+        const authAlert = document.getElementById('authAlert');
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        const userPanel = document.getElementById('userPanel');
+        const userNameTargets = document.querySelectorAll('[data-user-name]');
+        const userEmailTarget = document.querySelector('[data-user-email]');
+        const userBalanceTargets = document.querySelectorAll('[data-user-balance]');
+        const signOutButton = document.getElementById('signOutButton');
+
+        const formatCurrency = value => {
+            const numeric = Number(value) || 0;
+            return `$${numeric.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        };
+
+        const clearAlert = () => {
+            if (!authAlert) {
+                return;
+            }
+            authAlert.classList.add('hidden');
+            authAlert.textContent = '';
+            authAlert.classList.remove('bg-red-500/10', 'text-red-400', 'border-red-500/40', 'bg-primary/10', 'text-primary', 'border-primary/40');
+        };
+
+        const showAlert = (message, variant = 'success') => {
+            if (!authAlert) {
+                return;
+            }
+            clearAlert();
+            if (variant === 'error') {
+                authAlert.classList.add('bg-red-500/10', 'text-red-400', 'border-red-500/40');
+            } else {
+                authAlert.classList.add('bg-primary/10', 'text-primary', 'border-primary/40');
+            }
+            authAlert.textContent = message;
+            authAlert.classList.remove('hidden');
+        };
+
+        const setActiveTab = target => {
+            tabButtons.forEach(button => {
+                const isActive = button.dataset.authTab === target;
+                button.classList.toggle('bg-primary/20', isActive);
+                button.classList.toggle('bg-primary/10', isActive);
+                button.classList.toggle('text-primary', isActive);
+                button.classList.toggle('border-primary/50', isActive);
+                button.classList.toggle('shadow-[0_0_18px_rgba(0,194,255,0.25)]', isActive);
+                button.classList.toggle('border-transparent', !isActive);
+            });
+            forms.forEach(form => {
+                form.classList.toggle('hidden', form.dataset.form !== target);
+            });
+        };
+
+        const setFormLoading = (form, isLoading) => {
+            if (!form) {
+                return;
+            }
+            const submitButton = form.querySelector('[data-submit]');
+            if (!submitButton) {
+                return;
+            }
+            if (!submitButton.dataset.originalText) {
+                submitButton.dataset.originalText = submitButton.textContent?.trim() ?? '';
+            }
+            submitButton.disabled = isLoading;
+            submitButton.classList.toggle('opacity-70', isLoading);
+            submitButton.textContent = isLoading
+                ? submitButton.getAttribute('data-loading-text') ?? 'Please wait...'
+                : submitButton.dataset.originalText;
+        };
+
+        const toggleForms = showForms => {
+            formsContainer?.classList.toggle('hidden', !showForms);
+            tabsContainer?.classList.toggle('hidden', !showForms);
+            userPanel?.classList.toggle('hidden', showForms);
+            if (showForms) {
+                setActiveTab('login');
+                loginForm?.reset();
+                signupForm?.reset();
+            }
+        };
+
+        const updateUserPanel = (user, balance) => {
+            const displayName = (user?.displayName && user.displayName.trim()) || (user?.email?.split('@')[0] ?? 'Player');
+            userNameTargets.forEach(element => {
+                element.textContent = displayName;
+            });
+            if (userEmailTarget) {
+                userEmailTarget.textContent = user?.email ?? '-';
+            }
+            const formattedBalance = formatCurrency(balance ?? 0);
+            userBalanceTargets.forEach(element => {
+                element.textContent = formattedBalance;
+            });
+        };
+
+        const persistSession = (user, balance) => {
+            try {
+                if (user) {
+                    localStorage.setItem(STORAGE_USER_KEY, JSON.stringify({
+                        uid: user.uid,
+                        displayName: user.displayName ?? '',
+                        email: user.email ?? ''
+                    }));
+                    localStorage.setItem(STORAGE_BALANCE_KEY, String(balance ?? 0));
+                } else {
+                    localStorage.removeItem(STORAGE_USER_KEY);
+                    localStorage.removeItem(STORAGE_BALANCE_KEY);
+                }
+                document.dispatchEvent(new Event('neonCasinoBalanceUpdated'));
+            } catch (error) {
+                console.warn('Storage unavailable', error);
+            }
+        };
+
+        const getFriendlyErrorMessage = error => {
+            const code = error?.code ?? '';
+            switch (code) {
+                case 'auth/email-already-in-use':
+                    return 'An account with that email already exists. Try signing in instead.';
+                case 'auth/invalid-email':
+                    return 'Please provide a valid email address.';
+                case 'auth/weak-password':
+                    return 'Choose a stronger password with at least six characters.';
+                case 'auth/user-not-found':
+                case 'auth/wrong-password':
+                    return 'The email or password you entered was not recognized.';
+                case 'auth/network-request-failed':
+                    return 'We could not reach Firebase. Check your connection and try again.';
+                default:
+                    return error?.message ?? 'Something went wrong. Please try again.';
+            }
+        };
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                setActiveTab(button.dataset.authTab ?? 'login');
+                clearAlert();
+            });
+        });
+
+        setActiveTab('login');
+
+        loginForm?.addEventListener('submit', async event => {
+            event.preventDefault();
+            clearAlert();
+
+            const email = loginForm.loginEmail?.value?.trim();
+            const password = loginForm.loginPassword?.value ?? '';
+
+            if (!email || !password) {
+                showAlert('Please enter your email and password.', 'error');
+                return;
+            }
+
+            setFormLoading(loginForm, true);
+            try {
+                const { user } = await signInWithEmailAndPassword(auth, email, password);
+                await setDoc(doc(db, 'users', user.uid), { lastLoginAt: serverTimestamp() }, { merge: true });
+                showAlert('Signed in successfully!', 'success');
+            } catch (error) {
+                console.error(error);
+                showAlert(getFriendlyErrorMessage(error), 'error');
+            } finally {
+                setFormLoading(loginForm, false);
+            }
+        });
+
+        signupForm?.addEventListener('submit', async event => {
+            event.preventDefault();
+            clearAlert();
+
+            const displayName = signupForm.signupName?.value?.trim() ?? '';
+            const email = signupForm.signupEmail?.value?.trim();
+            const password = signupForm.signupPassword?.value ?? '';
+            const confirmPassword = signupForm.signupConfirmPassword?.value ?? '';
+
+            if (!email || !password) {
+                showAlert('Please provide an email and password to continue.', 'error');
+                return;
+            }
+            if (password !== confirmPassword) {
+                showAlert('Your passwords do not match. Double-check and try again.', 'error');
+                return;
+            }
+
+            setFormLoading(signupForm, true);
+            try {
+                const { user } = await createUserWithEmailAndPassword(auth, email, password);
+                if (displayName) {
+                    await updateProfile(user, { displayName });
+                }
+                await setDoc(doc(db, 'users', user.uid), {
+                    displayName: displayName || null,
+                    email,
+                    balance: 100,
+                    createdAt: serverTimestamp(),
+                    lastLoginAt: serverTimestamp()
+                });
+                showAlert('Account created! $100 has been added to your wallet.', 'success');
+            } catch (error) {
+                console.error(error);
+                showAlert(getFriendlyErrorMessage(error), 'error');
+            } finally {
+                setFormLoading(signupForm, false);
+            }
+        });
+
+        signOutButton?.addEventListener('click', async () => {
+            if (signOutButton.disabled) {
+                return;
+            }
+            signOutButton.disabled = true;
+            signOutButton.classList.add('opacity-70');
+            try {
+                await signOut(auth);
+                showAlert('You have been signed out.', 'success');
+            } catch (error) {
+                console.error(error);
+                showAlert('We were unable to sign you out. Please try again.', 'error');
+            } finally {
+                signOutButton.disabled = false;
+                signOutButton.classList.remove('opacity-70');
+            }
+        });
+
+        onAuthStateChanged(auth, async user => {
+            if (user) {
+                try {
+                    const userRef = doc(db, 'users', user.uid);
+                    const snapshot = await getDoc(userRef);
+                    let balance = 100;
+
+                    if (snapshot.exists()) {
+                        const data = snapshot.data();
+                        if (typeof data.balance === 'number') {
+                            balance = data.balance;
+                        }
+                    } else {
+                        await setDoc(userRef, {
+                            displayName: user.displayName ?? null,
+                            email: user.email ?? null,
+                            balance,
+                            createdAt: serverTimestamp(),
+                            lastLoginAt: serverTimestamp()
+                        });
+                    }
+
+                    await setDoc(userRef, { lastLoginAt: serverTimestamp() }, { merge: true });
+                    updateUserPanel(user, balance);
+                    toggleForms(false);
+                    persistSession(user, balance);
+                } catch (error) {
+                    console.error('Failed to load account details', error);
+                    showAlert('We were unable to load your account details. Please refresh and try again.', 'error');
+                    toggleForms(true);
+                }
+            } else {
+                toggleForms(true);
+                persistSession(null, null);
+            }
+        });
+    </script>
+</body>
+</html>
