@@ -99,46 +99,6 @@
         .crash-launch-area.active {
             box-shadow: 0 0 40px rgba(16, 185, 129, 0.25), inset 0 0 40px rgba(14, 165, 233, 0.15);
         }
-        .crash-chip-row {
-            position: absolute;
-            top: 1.25rem;
-            left: 50%;
-            transform: translateX(-50%);
-            display: inline-flex;
-            gap: 0.75rem;
-            z-index: 4;
-        }
-        .crash-chip {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.25rem 0.75rem;
-            border-radius: 999px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            letter-spacing: 0.02em;
-            background: rgba(15, 23, 42, 0.7);
-            border: 1px solid rgba(148, 197, 255, 0.2);
-            color: rgba(226, 232, 240, 0.75);
-            box-shadow: 0 0 12px rgba(15, 23, 42, 0.6);
-        }
-        .crash-chip--highlight {
-            background: linear-gradient(135deg, #22d3ee 0%, #2bd975 100%);
-            color: #0b1120;
-            box-shadow: 0 0 18px rgba(34, 211, 238, 0.45);
-            border-color: rgba(255, 255, 255, 0.35);
-        }
-        .crash-corner-label {
-            position: absolute;
-            top: 1.5rem;
-            right: 2rem;
-            font-size: 0.75rem;
-            font-weight: 500;
-            letter-spacing: 0.08em;
-            color: rgba(148, 197, 255, 0.75);
-            text-transform: uppercase;
-            z-index: 4;
-        }
         .crash-graph-svg {
             position: absolute;
             inset: 0;
@@ -200,39 +160,39 @@
         }
         .crash-status-panel {
             position: absolute;
-            right: 2rem;
-            bottom: 1.75rem;
+            right: 1.75rem;
+            bottom: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.4rem;
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            border: 1px solid rgba(148, 197, 255, 0.2);
+            background: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(6px);
             text-align: right;
             z-index: 4;
-        }
-        .crash-status-heading {
-            display: block;
-            font-size: 0.7rem;
-            font-weight: 600;
-            letter-spacing: 0.35em;
-            text-transform: uppercase;
-            color: rgba(148, 197, 255, 0.6);
-            margin-bottom: 0.35rem;
+            box-shadow: 0 18px 35px rgba(15, 23, 42, 0.45);
         }
         .crash-status-label {
-            font-size: 0.8rem;
-            font-weight: 600;
-            letter-spacing: 0.4em;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.28em;
             text-transform: uppercase;
             transition: color 0.2s ease;
         }
         .crash-status-message {
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             color: rgba(226, 232, 240, 0.75);
-            margin-top: 0.35rem;
+            line-height: 1.45;
             max-width: 16rem;
             margin-left: auto;
-            line-height: 1.4;
         }
         .crash-trail {
             position: absolute;
-            width: 12rem;
-            height: 0.45rem;
+            width: 9rem;
+            height: 0.4rem;
             border-radius: 999px;
             background: linear-gradient(90deg, rgba(251, 191, 36, 0.08) 0%, rgba(250, 204, 21, 0.55) 55%, rgba(250, 204, 21, 0) 100%);
             opacity: 0;
@@ -259,8 +219,8 @@
         }
         .crash-ship {
             position: absolute;
-            width: 3.6rem;
-            height: 5.8rem;
+            width: 2.6rem;
+            height: 4.4rem;
             transform: translate(-50%, 50%);
             transform-origin: 50% 75%;
             transition: left 0.2s linear, bottom 0.2s linear, transform 0.2s linear, filter 0.3s ease;
@@ -281,36 +241,36 @@
             top: 27%;
             left: 50%;
             transform: translateX(-50%);
-            width: 1.4rem;
-            height: 1.4rem;
+            width: 1rem;
+            height: 1rem;
             border-radius: 999px;
             background: radial-gradient(circle at 35% 35%, #ffffff 0%, #c4f1ff 40%, #0ea5e9 75%);
-            border: 2px solid rgba(255, 255, 255, 0.65);
-            box-shadow: 0 0 14px rgba(255, 255, 255, 0.45);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.45);
         }
         .crash-ship-wing {
             position: absolute;
-            bottom: 1.5rem;
-            width: 1.25rem;
-            height: 2.1rem;
+            bottom: 1.2rem;
+            width: 1.1rem;
+            height: 1.7rem;
             background: linear-gradient(160deg, rgba(124, 58, 237, 0.85), rgba(14, 165, 233, 0.7));
             border-radius: 0.75rem;
             box-shadow: 0 0 18px rgba(124, 58, 237, 0.35);
         }
         .crash-ship-wing--left {
-            left: -0.85rem;
+            left: -0.7rem;
             transform: rotate(-18deg);
         }
         .crash-ship-wing--right {
-            right: -0.85rem;
+            right: -0.7rem;
             transform: rotate(18deg);
         }
         .crash-flame {
             position: absolute;
-            bottom: -2rem;
+            bottom: -1.8rem;
             left: 50%;
-            width: 1.75rem;
-            height: 2.7rem;
+            width: 1.4rem;
+            height: 2.2rem;
             transform: translateX(-50%);
             background: radial-gradient(circle at 50% 18%, #ffffff 0%, #fde047 38%, #fb923c 65%, rgba(248, 113, 113, 0) 100%);
             filter: blur(0.65px);
@@ -319,6 +279,18 @@
         }
         .crash-flame.active {
             opacity: 1;
+        }
+        .crash-controls {
+            position: relative;
+        }
+        .crash-action-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.35rem;
+        }
+        .crash-mobile-action {
+            border-radius: 999px;
         }
         @keyframes flame-flicker {
             from {
@@ -345,36 +317,71 @@
             }
             .crash-launch-area {
                 height: 18rem;
-                padding: 1.5rem 1.5rem 2rem 2.25rem;
-            }
-            .crash-chip-row {
-                gap: 0.5rem;
-                top: 1rem;
-            }
-            .crash-corner-label {
-                right: 1.5rem;
-                font-size: 0.7rem;
+                padding: 1.4rem 1.35rem 2.15rem 2rem;
             }
             .crash-axis--y {
                 left: 0.5rem;
             }
             .crash-axis--x {
-                left: 2.5rem;
-                right: 1.5rem;
-                bottom: 1.5rem;
+                left: 2rem;
+                right: 1.25rem;
+                bottom: 1.45rem;
             }
             .crash-status-panel {
-                right: 1.5rem;
-                bottom: 1.4rem;
+                right: 1.25rem;
+                bottom: 1.5rem;
             }
             .crash-status-message {
                 max-width: 12rem;
             }
             .crash-trail {
-                width: 9rem;
+                width: 8rem;
             }
             .crash-multiplier {
                 font-size: clamp(2.4rem, 8vw, 4.2rem);
+            }
+        }
+        @media (max-width: 640px) {
+            .crash-launch-area {
+                height: 17rem;
+                padding: 1.15rem 1.1rem 2.6rem 1.75rem;
+            }
+            .crash-status-panel {
+                left: 50%;
+                right: auto;
+                bottom: 5.6rem;
+                transform: translateX(-50%);
+                align-items: center;
+                text-align: center;
+                max-width: calc(100% - 3rem);
+            }
+            .crash-status-message {
+                margin-left: 0;
+            }
+            .crash-controls {
+                padding-bottom: 7rem;
+            }
+            .crash-mobile-action {
+                position: fixed;
+                left: 1rem;
+                right: 1rem;
+                bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+                z-index: 50;
+                border-radius: 999px;
+                box-shadow: 0 12px 26px rgba(15, 23, 42, 0.6);
+            }
+            .crash-mobile-action:not(:disabled) {
+                box-shadow: 0 22px 42px rgba(14, 165, 233, 0.45);
+            }
+        }
+        @media (min-width: 641px) {
+            .crash-mobile-action {
+                display: none;
+                position: static;
+                left: auto;
+                right: auto;
+                bottom: auto;
+                box-shadow: none;
             }
         }
     </style>
@@ -479,16 +486,8 @@
                     <div class="relative w-full max-w-3xl mb-10">
                         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-primary/20 to-transparent opacity-30 blur-lg"></div>
                         <div class="relative bg-dark border border-primary/20 rounded-2xl p-6 md:p-8 game-preview overflow-hidden">
-                            <div class="crash-visualization">
-                                <div id="crashLaunchArea" class="crash-launch-area">
-                                    <div class="crash-chip-row">
-                                        <span class="crash-chip">1.39x</span>
-                                        <span class="crash-chip">1.93x</span>
-                                        <span class="crash-chip crash-chip--highlight">2.70x</span>
-                                        <span class="crash-chip">1.41x</span>
-                                        <span class="crash-chip">1.13x</span>
-                                    </div>
-                                    <div class="crash-corner-label">TwitchPlays</div>
+                                <div class="crash-visualization">
+                                    <div id="crashLaunchArea" class="crash-launch-area">
                                     <svg class="crash-graph-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
                                         <path id="crashPathGuide" class="crash-graph-path-base" d="M6 88 Q 34 68 56 48 T 94 12"></path>
                                         <path id="crashPathActive" class="crash-graph-path-active" d="M6 88 Q 34 68 56 48 T 94 12"></path>
@@ -513,9 +512,8 @@
                                         <div id="crashMultiplier" class="crash-multiplier">1.00x</div>
                                     </div>
                                     <div class="crash-status-panel">
-                                        <span class="crash-status-heading">Network Status</span>
                                         <p id="crashStatus" class="crash-status-label">WAITING</p>
-                                        <p id="crashMessage" class="crash-status-message">Place your bet to start the next round.</p>
+                                        <p id="crashMessage" class="crash-status-message">Place your bet to start the next launch.</p>
                                     </div>
                                     <div id="crashTrail" class="crash-trail"></div>
                                     <div id="crashExplosion" class="crash-explosion"></div>
@@ -530,7 +528,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="w-full max-w-md space-y-4">
+                    <div class="w-full max-w-md space-y-4 crash-controls">
                         <div class="flex items-center justify-between">
                             <span class="text-gray-400">Bet Amount</span>
                             <div class="flex items-center space-x-2">
@@ -545,7 +543,10 @@
                             <button class="bg-gray-800 hover:bg-gray-700 text-white py-2 rounded-lg transition" type="button" data-quick="double">2x</button>
                             <button class="bg-gray-800 hover:bg-gray-700 text-white py-2 rounded-lg transition" type="button" data-quick="max">Max</button>
                         </div>
-                        <button id="crashActionButton" class="gradient-btn w-full py-3 rounded-lg font-bold text-white hover:shadow-lg transition">
+                        <button id="crashActionButton" data-crash-action type="button" class="crash-action-button hidden sm:inline-flex w-full py-3 rounded-lg font-bold text-white transition gradient-btn hover:shadow-lg">
+                            Place Bet
+                        </button>
+                        <button data-crash-action type="button" class="crash-action-button crash-mobile-action flex w-full py-3 font-bold text-white transition gradient-btn">
                             Place Bet
                         </button>
                     </div>
@@ -658,7 +659,7 @@
 
         (function initCrashGame() {
             const betInput = document.getElementById('betAmount');
-            const actionButton = document.getElementById('crashActionButton');
+            const actionButtons = Array.from(document.querySelectorAll('[data-crash-action]'));
             const decreaseBetButton = document.getElementById('decreaseBet');
             const increaseBetButton = document.getElementById('increaseBet');
             const quickButtons = document.querySelectorAll('[data-quick]');
@@ -678,7 +679,7 @@
             const balanceEls = document.querySelectorAll('[data-balance]');
             const DEFAULT_BALANCE = 1000;
 
-            if (!betInput || !actionButton || !multiplierEl) {
+            if (!betInput || actionButtons.length === 0 || !multiplierEl) {
                 return;
             }
 
@@ -753,24 +754,45 @@
                 }
             }
 
+            const buttonStateConfig = {
+                cashout: {
+                    text: 'Cash Out',
+                    disabled: false,
+                    classes: ['bg-accent', 'text-dark', 'hover:brightness-110', 'hover:shadow-lg', 'shadow-lg']
+                },
+                waiting: {
+                    text: 'Awaiting new launch...',
+                    disabled: true,
+                    classes: ['bg-gray-800', 'text-gray-500', 'cursor-not-allowed']
+                },
+                place: {
+                    text: 'Place Bet',
+                    disabled: false,
+                    classes: ['gradient-btn', 'text-white', 'hover:shadow-lg', 'shadow-lg']
+                }
+            };
+
+            const buttonToggleClasses = ['gradient-btn', 'bg-accent', 'bg-gray-800', 'text-dark', 'text-white', 'text-gray-500', 'hover:shadow-lg', 'hover:brightness-110', 'cursor-not-allowed', 'shadow-lg'];
+
             function setActionButtonState(mode) {
-                if (!actionButton) {
+                if (!actionButtons.length) {
                     return;
                 }
 
-                if (mode === 'cashout') {
-                    actionButton.disabled = false;
-                    actionButton.textContent = 'Cash Out';
-                    actionButton.className = 'w-full py-3 rounded-lg font-bold transition bg-accent text-dark hover:brightness-110';
-                } else if (mode === 'waiting') {
-                    actionButton.disabled = true;
-                    actionButton.textContent = 'Awaiting new launch...';
-                    actionButton.className = 'w-full py-3 rounded-lg font-bold transition bg-gray-800 text-gray-500 cursor-not-allowed';
-                } else {
-                    actionButton.disabled = false;
-                    actionButton.textContent = 'Place Bet';
-                    actionButton.className = 'gradient-btn w-full py-3 rounded-lg font-bold text-white hover:shadow-lg transition';
-                }
+                const config = buttonStateConfig[mode] || buttonStateConfig.place;
+
+                actionButtons.forEach(btn => {
+                    btn.disabled = config.disabled;
+                    btn.textContent = config.text;
+
+                    buttonToggleClasses.forEach(cls => {
+                        btn.classList.remove(cls);
+                    });
+
+                    config.classes.forEach(cls => {
+                        btn.classList.add(cls);
+                    });
+                });
             }
 
             function setControlsDisabled(disabled) {
@@ -1199,14 +1221,16 @@
                 }
             });
 
-            actionButton.addEventListener('click', () => {
-                if (state.running) {
-                    if (!state.cashedOut) {
-                        cashOut();
+            actionButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    if (state.running) {
+                        if (!state.cashedOut) {
+                            cashOut();
+                        }
+                    } else {
+                        startRound();
                     }
-                } else {
-                    startRound();
-                }
+                });
             });
 
             updateBalanceDisplay();
