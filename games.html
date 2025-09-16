@@ -482,9 +482,22 @@ CASINO</span>
 
         (function initNavigation() {
             const BALANCE_STORAGE_KEY = 'neonCasinoBalance';
+            const resolveFallbackBalance = element => {
+                const attributeValue = element.getAttribute('data-default-balance');
+                if (attributeValue != null && attributeValue !== '') {
+                    return attributeValue;
+                }
+
+                const textValue = (element.textContent || '').trim();
+                if (textValue) {
+                    return textValue;
+                }
+
+                return '0.00';
+            };
             const balanceTargets = Array.from(document.querySelectorAll('[data-balance]')).map(element => ({
                 element,
-                fallback: element.getAttribute('data-default-balance') ?? (element.textContent || '').trim() || '0.00'
+                fallback: resolveFallbackBalance(element)
             }));
             const formatCurrency = value => value.toLocaleString('en-US', {
                 minimumFractionDigits: 2,
