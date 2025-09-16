@@ -158,10 +158,15 @@
             text-shadow: 0 18px 35px rgba(15, 23, 42, 0.8), 0 0 25px rgba(250, 204, 21, 0.25);
             letter-spacing: -0.03em;
         }
-        .crash-status-panel {
+        .crash-status-dock {
             position: absolute;
-            right: 1.75rem;
-            bottom: 1.5rem;
+            inset: auto 1.75rem 1.5rem auto;
+            display: flex;
+            justify-content: flex-end;
+            pointer-events: none;
+            z-index: 4;
+        }
+        .crash-status-panel {
             display: flex;
             flex-direction: column;
             align-items: flex-end;
@@ -172,8 +177,8 @@
             background: rgba(15, 23, 42, 0.55);
             backdrop-filter: blur(6px);
             text-align: right;
-            z-index: 4;
             box-shadow: 0 18px 35px rgba(15, 23, 42, 0.45);
+            pointer-events: auto;
         }
         .crash-status-label {
             font-size: 0.9rem;
@@ -327,10 +332,6 @@
                 right: 1.25rem;
                 bottom: 1.45rem;
             }
-            .crash-status-panel {
-                right: 1.25rem;
-                bottom: 1.5rem;
-            }
             .crash-status-message {
                 max-width: 12rem;
             }
@@ -346,19 +347,31 @@
                 height: 17rem;
                 padding: 1.15rem 1.1rem 2.6rem 1.75rem;
             }
+            .crash-status-dock {
+                position: static;
+                width: 100%;
+                margin-top: 0.85rem;
+                justify-content: center;
+                pointer-events: auto;
+            }
             .crash-status-panel {
-                top: 1.1rem;
-                right: 1.1rem;
-                left: auto;
-                bottom: auto;
-                transform: none;
-                align-items: flex-end;
-                text-align: right;
-                max-width: 11.5rem;
-                padding: 0.65rem 0.85rem;
+                flex-direction: row;
+                align-items: center;
+                gap: 0.65rem;
+                width: 100%;
+                max-width: none;
+                text-align: left;
+                padding: 0.65rem 0.9rem;
+                border-radius: 999px;
+                box-shadow: 0 16px 30px rgba(15, 23, 42, 0.4);
+            }
+            .crash-status-label {
+                letter-spacing: 0.18em;
             }
             .crash-status-message {
                 margin-left: 0;
+                max-width: none;
+                flex: 1;
             }
             .crash-controls {
                 padding-bottom: 2.25rem;
@@ -413,15 +426,34 @@
                         <i data-feather="dollar-sign" class="w-4 h-4 text-accent"></i>
                         <span class="font-medium" data-balance>1,000.00</span>
                     </div>
-                    <button class="gradient-btn rounded-full px-6 py-2 font-medium text-white hover:shadow-lg transition">
+                    <div class="hidden items-center space-x-2 text-sm text-gray-400" data-auth-user>
+                        <span>Signed in as</span>
+                        <span class="font-semibold text-white" data-username></span>
+                    </div>
+                    <button data-auth-trigger="sign-in" data-auth-guest class="gradient-btn rounded-full px-6 py-2 font-medium text-white hover:shadow-lg transition">
                         Sign In
+                    </button>
+                    <button data-auth-trigger="sign-out" data-auth-user class="hidden rounded-full border border-gray-700 px-6 py-2 text-sm font-semibold text-white transition hover:border-primary">
+                        Sign Out
                     </button>
                 </div>
 
-                <!-- Mobile Menu Button -->
-                <button class="md:hidden text-white focus:outline-none">
-                    <i data-feather="menu" class="w-6 h-6"></i>
-                </button>
+                <!-- Mobile Controls -->
+                <div class="md:hidden flex items-center space-x-3">
+                    <button class="text-white focus:outline-none">
+                        <i data-feather="menu" class="w-6 h-6"></i>
+                    </button>
+                    <div class="bg-gray-800 rounded-full px-3 py-1 flex items-center space-x-1.5">
+                        <i data-feather="dollar-sign" class="w-4 h-4 text-accent"></i>
+                        <span class="text-sm font-medium" data-balance>1,000.00</span>
+                    </div>
+                    <button data-auth-trigger="sign-in" data-auth-guest class="gradient-btn px-4 py-2 text-sm font-semibold text-white hover:shadow-lg transition">
+                        Sign In
+                    </button>
+                    <button data-auth-trigger="sign-out" data-auth-user class="hidden rounded-full border border-gray-700 px-4 py-2 text-xs font-semibold text-white transition hover:border-primary">
+                        Sign Out
+                    </button>
+                </div>
             </div>
         </div>
     </nav>
@@ -490,47 +522,61 @@
                         <div class="relative bg-dark border border-primary/20 rounded-2xl p-6 md:p-8 game-preview overflow-hidden">
                                 <div class="crash-visualization">
                                     <div id="crashLaunchArea" class="crash-launch-area">
-                                    <svg class="crash-graph-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-                                        <path id="crashPathGuide" class="crash-graph-path-base" d="M6 88 Q 34 68 56 48 T 94 12"></path>
-                                        <path id="crashPathActive" class="crash-graph-path-active" d="M6 88 Q 34 68 56 48 T 94 12"></path>
-                                    </svg>
-                                    <div class="crash-axis crash-axis--y">
-                                        <span>4.3x</span>
-                                        <span>3.7x</span>
-                                        <span>3.1x</span>
-                                        <span>2.5x</span>
-                                        <span>1.9x</span>
-                                        <span>1.3x</span>
+                                        <svg class="crash-graph-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+                                            <path id="crashPathGuide" class="crash-graph-path-base" d="M6 88 Q 34 68 56 48 T 94 12"></path>
+                                            <path id="crashPathActive" class="crash-graph-path-active" d="M6 88 Q 34 68 56 48 T 94 12"></path>
+                                        </svg>
+                                        <div class="crash-axis crash-axis--y">
+                                            <span>4.3x</span>
+                                            <span>3.7x</span>
+                                            <span>3.1x</span>
+                                            <span>2.5x</span>
+                                            <span>1.9x</span>
+                                            <span>1.3x</span>
+                                        </div>
+                                        <div class="crash-axis crash-axis--x">
+                                            <span>1s</span>
+                                            <span>3s</span>
+                                            <span>7s</span>
+                                            <span>11s</span>
+                                            <span>14s</span>
+                                            <span>17s</span>
+                                        </div>
+                                        <div class="crash-multiplier-display">
+                                            <div id="crashMultiplier" class="crash-multiplier">1.00x</div>
+                                        </div>
+                                        <div id="crashTrail" class="crash-trail"></div>
+                                        <div id="crashExplosion" class="crash-explosion"></div>
+                                        <div id="crashShip" class="crash-ship">
+                                            <div class="crash-ship-body"></div>
+                                            <div class="crash-ship-window"></div>
+                                            <div class="crash-ship-wing crash-ship-wing--left"></div>
+                                            <div class="crash-ship-wing crash-ship-wing--right"></div>
+                                            <div id="crashFlame" class="crash-flame"></div>
+                                        </div>
                                     </div>
-                                    <div class="crash-axis crash-axis--x">
-                                        <span>1s</span>
-                                        <span>3s</span>
-                                        <span>7s</span>
-                                        <span>11s</span>
-                                        <span>14s</span>
-                                        <span>17s</span>
-                                    </div>
-                                    <div class="crash-multiplier-display">
-                                        <div id="crashMultiplier" class="crash-multiplier">1.00x</div>
-                                    </div>
-                                    <div class="crash-status-panel">
-                                        <p id="crashStatus" class="crash-status-label">WAITING</p>
-                                        <p id="crashMessage" class="crash-status-message">Place your bet to start the next launch.</p>
-                                    </div>
-                                    <div id="crashTrail" class="crash-trail"></div>
-                                    <div id="crashExplosion" class="crash-explosion"></div>
-                                    <div id="crashShip" class="crash-ship">
-                                        <div class="crash-ship-body"></div>
-                                        <div class="crash-ship-window"></div>
-                                        <div class="crash-ship-wing crash-ship-wing--left"></div>
-                                        <div class="crash-ship-wing crash-ship-wing--right"></div>
-                                        <div id="crashFlame" class="crash-flame"></div>
+                                    <div class="crash-status-dock">
+                                        <div class="crash-status-panel">
+                                            <p id="crashStatus" class="crash-status-label">WAITING</p>
+                                            <p id="crashMessage" class="crash-status-message">Place your bet to start the next launch.</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="w-full max-w-md space-y-4 crash-controls">
+                        <div id="crashAuthNotice" data-auth-guest class="rounded-xl border border-primary/30 bg-primary/10 px-4 py-3 text-sm text-primary flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                            <span class="font-semibold text-primary/90">Sign in to place bets and launch missions.</span>
+                            <button data-auth-trigger="sign-in" class="w-full sm:w-auto gradient-btn px-4 py-2 rounded-full text-white font-semibold transition hover:shadow-lg">Sign In</button>
+                        </div>
+                        <div id="crashPlayerTag" data-auth-user class="hidden flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 rounded-xl border border-primary/20 bg-primary/5 px-4 py-3 text-sm text-gray-300">
+                            <div class="flex items-center gap-2">
+                                <i data-feather="user" class="w-4 h-4 text-primary"></i>
+                                <span>Commander <span class="text-white font-semibold" data-username></span></span>
+                            </div>
+                            <button data-auth-trigger="sign-out" class="text-xs font-semibold uppercase tracking-wide text-primary hover:text-white transition">Sign Out</button>
+                        </div>
                         <div class="flex items-center justify-between">
                             <span class="text-gray-400">Bet Amount</span>
                             <div class="flex items-center space-x-2">
@@ -604,6 +650,30 @@
         </div>
     </div>
 
+    <!-- Auth Modal -->
+    <div id="authModal" class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/60 px-4">
+        <div class="relative w-full max-w-sm rounded-2xl border border-primary/30 bg-gray-900/95 p-6 shadow-[0_0_35px_rgba(14,165,233,0.35)]">
+            <button type="button" data-auth-close class="absolute right-4 top-4 text-gray-500 transition hover:text-white">
+                <i data-feather="x" class="w-4 h-4"></i>
+            </button>
+            <h2 class="text-xl font-semibold text-white mb-1">Access the Hangar</h2>
+            <p class="text-sm text-gray-400 mb-4">Sign in to sync your commander profile and live balance.</p>
+            <form id="authForm" class="space-y-4">
+                <div>
+                    <label for="authUsername" class="text-xs font-semibold uppercase tracking-wide text-gray-400">Username</label>
+                    <input id="authUsername" type="text" required class="mt-1 w-full rounded-lg border border-gray-700 bg-gray-900/60 px-3 py-2 text-white focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/40" placeholder="StellarPilot">
+                </div>
+                <div>
+                    <label for="authBalance" class="text-xs font-semibold uppercase tracking-wide text-gray-400">Starting Balance</label>
+                    <input id="authBalance" type="number" min="0" step="0.01" class="mt-1 w-full rounded-lg border border-gray-700 bg-gray-900/60 px-3 py-2 text-white focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/40" value="1000.00">
+                    <p class="mt-1 text-xs text-gray-500">Returning commanders resume with their saved balance.</p>
+                </div>
+                <p id="authError" class="text-xs text-red-400 min-h-[1rem]"></p>
+                <button type="submit" class="w-full rounded-lg bg-primary/90 py-2.5 font-semibold text-white transition hover:bg-primary">Sign In</button>
+            </form>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="bg-gray-900/50 border-t border-gray-800 py-8 px-4">
         <div class="container mx-auto">
@@ -633,33 +703,248 @@
         });
         feather.replace();
 
-        const sidebarItems = document.querySelectorAll('.game-sidebar-item');
-        const gameTitleEl = document.querySelector('.game-title');
-        const previewIconContainer = document.querySelector('.game-preview-icon');
+        const DEFAULT_BALANCE = 1000;
 
-        sidebarItems.forEach(item => {
-            item.addEventListener('click', event => {
-                event.preventDefault();
-                const active = document.querySelector('.game-sidebar-item.active');
-                if (active) {
-                    active.classList.remove('active');
+        const auth = createAuthController(DEFAULT_BALANCE);
+        const authUI = initAuthUI(auth);
+        initSidebarPreview();
+        initCrashGame(auth, authUI);
+
+        function initSidebarPreview() {
+            const sidebarItems = document.querySelectorAll('.game-sidebar-item');
+            const gameTitleEl = document.querySelector('.game-title');
+            const previewIconContainer = document.querySelector('.game-preview-icon');
+
+            sidebarItems.forEach(item => {
+                item.addEventListener('click', event => {
+                    event.preventDefault();
+                    const active = document.querySelector('.game-sidebar-item.active');
+                    if (active) {
+                        active.classList.remove('active');
+                    }
+                    item.classList.add('active');
+
+                    const name = item.querySelector('span')?.textContent ?? '';
+                    if (gameTitleEl && name) {
+                        gameTitleEl.textContent = `${name.toUpperCase()} — Demo Preview`;
+                    }
+
+                    const iconName = item.querySelector('[data-feather]')?.getAttribute('data-feather');
+                    if (previewIconContainer && iconName) {
+                        previewIconContainer.innerHTML = `<i data-feather="${iconName}" class="w-10 h-10 text-primary"></i>`;
+                        feather.replace();
+                    }
+                });
+            });
+        }
+
+        function createAuthController(defaultBalance) {
+            const STORAGE_KEY = 'neon-casino-auth';
+            const listeners = new Set();
+            let user = null;
+
+            function getStorage() {
+                try {
+                    return window.localStorage;
+                } catch (error) {
+                    return null;
                 }
-                item.classList.add('active');
+            }
 
-                const name = item.querySelector('span')?.textContent ?? '';
-                if (gameTitleEl && name) {
-                    gameTitleEl.textContent = `${name.toUpperCase()} — Demo Preview`;
+            const storage = getStorage();
+
+            function notify() {
+                const snapshot = user ? { ...user } : null;
+                listeners.forEach(listener => {
+                    try {
+                        listener(snapshot);
+                    } catch (error) {
+                        console.error(error);
+                    }
+                });
+            }
+
+            function persist() {
+                if (!storage) {
+                    return;
                 }
+                try {
+                    if (!user) {
+                        storage.removeItem(STORAGE_KEY);
+                    } else {
+                        storage.setItem(STORAGE_KEY, JSON.stringify(user));
+                    }
+                } catch (error) {
+                    console.warn('Unable to persist auth state', error);
+                }
+            }
 
-                const iconName = item.querySelector('[data-feather]')?.getAttribute('data-feather');
-                if (previewIconContainer && iconName) {
-                    previewIconContainer.innerHTML = `<i data-feather="${iconName}" class="w-10 h-10 text-primary"></i>`;
-                    feather.replace();
+            function load() {
+                if (!storage) {
+                    return;
+                }
+                try {
+                    const raw = storage.getItem(STORAGE_KEY);
+                    if (!raw) {
+                        return;
+                    }
+                    const parsed = JSON.parse(raw);
+                    if (parsed && typeof parsed.username === 'string') {
+                        const balanceValue = parseFloat(parsed.balance);
+                        user = {
+                            username: parsed.username,
+                            balance: Number.isFinite(balanceValue) ? parseFloat(balanceValue.toFixed(2)) : defaultBalance
+                        };
+                    }
+                } catch (error) {
+                    console.warn('Unable to load auth state', error);
+                    user = null;
+                }
+            }
+
+            function signIn(username, balance) {
+                const trimmed = (username || '').trim();
+                const sanitizedBalance = Number.isFinite(balance) ? parseFloat(balance.toFixed(2)) : defaultBalance;
+                user = {
+                    username: trimmed || 'Player',
+                    balance: Math.max(0, sanitizedBalance)
+                };
+                persist();
+                notify();
+            }
+
+            function signOut() {
+                user = null;
+                persist();
+                notify();
+            }
+
+            function updateBalance(balance) {
+                if (!user) {
+                    return;
+                }
+                const sanitized = Number.isFinite(balance) ? parseFloat(balance.toFixed(2)) : user.balance;
+                if (Number.isFinite(sanitized)) {
+                    user.balance = Math.max(0, sanitized);
+                    persist();
+                    notify();
+                }
+            }
+
+            function subscribe(listener) {
+                if (typeof listener !== 'function') {
+                    return () => {};
+                }
+                listeners.add(listener);
+                return () => listeners.delete(listener);
+            }
+
+            load();
+
+            return {
+                defaultBalance,
+                getUser: () => (user ? { ...user } : null),
+                signIn,
+                signOut,
+                updateBalance,
+                subscribe
+            };
+        }
+
+        function initAuthUI(authController) {
+            const authModal = document.getElementById('authModal');
+            const authForm = document.getElementById('authForm');
+            const usernameInput = document.getElementById('authUsername');
+            const balanceInput = document.getElementById('authBalance');
+            const authError = document.getElementById('authError');
+            const closeButtons = document.querySelectorAll('[data-auth-close]');
+            const signInTriggers = document.querySelectorAll('[data-auth-trigger="sign-in"]');
+            const signOutTriggers = document.querySelectorAll('[data-auth-trigger="sign-out"]');
+            const guestEls = document.querySelectorAll('[data-auth-guest]');
+            const userEls = document.querySelectorAll('[data-auth-user]');
+            const usernameEls = document.querySelectorAll('[data-username]');
+
+            function toggleModal(visible) {
+                if (!authModal) {
+                    return;
+                }
+                authModal.classList.toggle('hidden', !visible);
+                authModal.classList.toggle('flex', visible);
+            }
+
+            function openModal() {
+                const currentUser = authController.getUser();
+                toggleModal(true);
+                if (usernameInput) {
+                    usernameInput.value = currentUser?.username ?? '';
+                    window.setTimeout(() => usernameInput.focus(), 50);
+                    usernameInput.setSelectionRange(usernameInput.value.length, usernameInput.value.length);
+                }
+                if (balanceInput) {
+                    const balanceValue = currentUser ? currentUser.balance : authController.defaultBalance;
+                    const formatted = Number.isFinite(balanceValue) ? Number(balanceValue).toFixed(2) : authController.defaultBalance.toFixed(2);
+                    balanceInput.value = formatted;
+                    balanceInput.toggleAttribute('readonly', Boolean(currentUser));
+                    balanceInput.classList.toggle('opacity-60', Boolean(currentUser));
+                }
+                if (authError) {
+                    authError.textContent = '';
+                }
+            }
+
+            function closeModal() {
+                toggleModal(false);
+            }
+
+            signInTriggers.forEach(trigger => trigger.addEventListener('click', () => openModal()));
+            signOutTriggers.forEach(trigger => trigger.addEventListener('click', () => authController.signOut()));
+            closeButtons.forEach(btn => btn.addEventListener('click', () => closeModal()));
+
+            authModal?.addEventListener('click', event => {
+                if (event.target === authModal) {
+                    closeModal();
                 }
             });
-        });
 
-        (function initCrashGame() {
+            document.addEventListener('keydown', event => {
+                if (event.key === 'Escape' && authModal && authModal.classList.contains('flex')) {
+                    closeModal();
+                }
+            });
+
+            authForm?.addEventListener('submit', event => {
+                event.preventDefault();
+                const username = usernameInput?.value.trim();
+                const balanceValue = parseFloat(balanceInput?.value ?? `${authController.defaultBalance}`);
+                if (!username) {
+                    if (authError) {
+                        authError.textContent = 'Enter a username to continue.';
+                    }
+                    return;
+                }
+                const sanitizedBalance = Number.isFinite(balanceValue) ? Math.max(0, balanceValue) : authController.defaultBalance;
+                authController.signIn(username, parseFloat(sanitizedBalance.toFixed(2)));
+                closeModal();
+            });
+
+            function updateUI(user) {
+                const signedIn = Boolean(user);
+                guestEls.forEach(el => el.classList.toggle('hidden', signedIn));
+                userEls.forEach(el => el.classList.toggle('hidden', !signedIn));
+                usernameEls.forEach(el => {
+                    el.textContent = user?.username ?? '';
+                });
+            }
+
+            updateUI(authController.getUser());
+            authController.subscribe(updateUI);
+
+            return {
+                openSignIn: openModal
+            };
+        }
+
+        function initCrashGame(authController, authUI) {
             const betInput = document.getElementById('betAmount');
             const actionButtons = Array.from(document.querySelectorAll('[data-crash-action]'));
             const decreaseBetButton = document.getElementById('decreaseBet');
@@ -679,19 +964,21 @@
             const lastResultEl = document.getElementById('lastResult');
             const historyBody = document.getElementById('recentGamesBody');
             const balanceEls = document.querySelectorAll('[data-balance]');
-            const DEFAULT_BALANCE = 1000;
 
             if (!betInput || actionButtons.length === 0 || !multiplierEl) {
                 return;
             }
 
+            const COOLDOWN_MS = 2000;
             const currencyFormatter = new Intl.NumberFormat('en-US', {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2
             });
 
+            const initialUser = authController.getUser();
+
             const state = {
-                balance: DEFAULT_BALANCE,
+                balance: initialUser?.balance && Number.isFinite(initialUser.balance) ? parseFloat(initialUser.balance.toFixed(2)) : 0,
                 running: false,
                 cashedOut: false,
                 intervalId: null,
@@ -701,7 +988,10 @@
                 crashPoint: null,
                 cashedOutAt: null,
                 payout: 0,
-                history: []
+                history: [],
+                cooldownActive: false,
+                authenticated: Boolean(initialUser),
+                playerName: initialUser?.username || 'Guest'
             };
 
             let explosionTimeoutId = null;
@@ -718,10 +1008,6 @@
                 updatePathHighlight(getProgressForMultiplier(state.multiplier));
             }
 
-            const initialBalance = balanceEls.length
-                ? parseFloat((balanceEls[0].textContent || '0').replace(/,/g, ''))
-                : 1000;
-            state.balance = Number.isFinite(initialBalance) ? initialBalance : 1000;
             function formatCurrency(value) {
                 return currencyFormatter.format(Math.max(0, Number(value) || 0));
             }
@@ -742,7 +1028,8 @@
                     neutral: 'text-gray-400',
                     live: 'text-primary',
                     success: 'text-accent',
-                    danger: 'text-red-400'
+                    danger: 'text-red-400',
+                    warning: 'text-amber-300'
                 };
 
                 if (statusEl) {
@@ -767,6 +1054,16 @@
                     disabled: true,
                     classes: ['bg-gray-800', 'text-gray-500', 'cursor-not-allowed']
                 },
+                cooldown: {
+                    text: 'Preparing launch...',
+                    disabled: true,
+                    classes: ['bg-gray-800', 'text-gray-500', 'cursor-wait']
+                },
+                signin: {
+                    text: 'Sign In to Play',
+                    disabled: false,
+                    classes: ['bg-gray-700', 'text-gray-300', 'hover:bg-gray-600', 'border', 'border-primary/40']
+                },
                 place: {
                     text: 'Place Bet',
                     disabled: false,
@@ -774,7 +1071,24 @@
                 }
             };
 
-            const buttonToggleClasses = ['gradient-btn', 'bg-accent', 'bg-gray-800', 'text-dark', 'text-white', 'text-gray-500', 'hover:shadow-lg', 'hover:brightness-110', 'cursor-not-allowed', 'shadow-lg'];
+            const buttonToggleClasses = [
+                'gradient-btn',
+                'bg-accent',
+                'bg-gray-800',
+                'bg-gray-700',
+                'text-dark',
+                'text-white',
+                'text-gray-500',
+                'text-gray-300',
+                'hover:shadow-lg',
+                'hover:brightness-110',
+                'hover:bg-gray-600',
+                'cursor-not-allowed',
+                'cursor-wait',
+                'shadow-lg',
+                'border',
+                'border-primary/40'
+            ];
 
             function setActionButtonState(mode) {
                 if (!actionButtons.length) {
@@ -961,13 +1275,32 @@
 
                 state.history.forEach(entry => {
                     const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">${entry.id}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">You</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">${formatCurrency(entry.bet)}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm ${entry.cashedOut ? 'text-accent' : 'text-red-400'}">${entry.resultText}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm ${entry.cashedOut ? 'text-accent' : 'text-gray-400'}">${entry.payoutText}</td>
-                    `;
+
+                    const idCell = document.createElement('td');
+                    idCell.className = 'px-6 py-4 whitespace-nowrap text-sm text-gray-300';
+                    idCell.textContent = entry.id;
+                    row.appendChild(idCell);
+
+                    const playerCell = document.createElement('td');
+                    playerCell.className = 'px-6 py-4 whitespace-nowrap text-sm text-gray-300';
+                    playerCell.textContent = entry.playerName;
+                    row.appendChild(playerCell);
+
+                    const betCell = document.createElement('td');
+                    betCell.className = 'px-6 py-4 whitespace-nowrap text-sm text-gray-300';
+                    betCell.textContent = formatCurrency(entry.bet);
+                    row.appendChild(betCell);
+
+                    const resultCell = document.createElement('td');
+                    resultCell.className = `px-6 py-4 whitespace-nowrap text-sm ${entry.cashedOut ? 'text-accent' : 'text-red-400'}`;
+                    resultCell.textContent = entry.resultText;
+                    row.appendChild(resultCell);
+
+                    const payoutCell = document.createElement('td');
+                    payoutCell.className = `px-6 py-4 whitespace-nowrap text-sm ${entry.cashedOut ? 'text-accent' : 'text-gray-400'}`;
+                    payoutCell.textContent = entry.payoutText;
+                    row.appendChild(payoutCell);
+
                     historyBody.appendChild(row);
                 });
             }
@@ -981,7 +1314,8 @@
                 state.history.unshift({
                     ...entry,
                     resultText,
-                    payoutText
+                    payoutText,
+                    playerName: entry.playerName ?? state.playerName
                 });
 
                 if (state.history.length > 10) {
@@ -990,9 +1324,34 @@
 
                 renderHistory();
             }
-            function resetRoundState() {
-                setActionButtonState('place');
+
+            function enterCooldown() {
+                state.cooldownActive = true;
+                setControlsDisabled(true);
+                if (state.authenticated) {
+                    setActionButtonState('cooldown');
+                } else {
+                    setActionButtonState('signin');
+                }
+            }
+
+            function exitCooldown() {
+                state.cooldownActive = false;
+                if (state.running) {
+                    return;
+                }
+                if (!state.authenticated) {
+                    setControlsDisabled(true);
+                    setActionButtonState('signin');
+                    return;
+                }
                 setControlsDisabled(false);
+                setActionButtonState('place');
+                setStatus('WAITING', 'Place your bet to start the next launch.', 'neutral');
+            }
+
+            function resetRoundState() {
+                enterCooldown();
 
                 state.currentBet = 0;
                 state.cashedOut = false;
@@ -1004,32 +1363,39 @@
                     clearTimeout(state.resetTimeoutId);
                 }
 
-                state.resetTimeoutId = setTimeout(() => {
+                state.resetTimeoutId = window.setTimeout(() => {
                     if (state.running) {
                         return;
                     }
+
                     state.multiplier = 1;
                     updateMultiplierDisplay();
-                    setStatus('WAITING', 'Place your bet to start the next launch.', 'neutral');
                     setFlameActive(false);
+
                     if (trailEl) {
                         trailEl.style.opacity = '0';
                     }
+
                     if (shipEl) {
                         shipEl.classList.remove('crash-ship--stalled');
                     }
+
                     if (launchAreaEl) {
                         launchAreaEl.classList.remove('active');
                     }
+
                     if (explosionEl) {
                         explosionEl.classList.remove('active');
                     }
+
                     if (explosionTimeoutId) {
                         clearTimeout(explosionTimeoutId);
                         explosionTimeoutId = null;
                     }
+
+                    exitCooldown();
                     state.resetTimeoutId = null;
-                }, 2000);
+                }, COOLDOWN_MS);
             }
 
             function completeRound() {
@@ -1080,10 +1446,24 @@
                     payout: state.cashedOut ? state.payout : 0
                 });
 
+                if (state.authenticated) {
+                    authController.updateBalance(state.balance);
+                }
+
                 resetRoundState();
             }
 
             function startRound() {
+                if (!state.authenticated) {
+                    authUI?.openSignIn?.();
+                    return;
+                }
+
+                if (state.cooldownActive) {
+                    setStatus('PREPARING', 'Next launch is arming. Stand by…', 'neutral');
+                    return;
+                }
+
                 const rawValue = parseFloat(betInput.value);
 
                 if (Number.isNaN(rawValue) || rawValue <= 0) {
@@ -1122,6 +1502,9 @@
 
                 betInput.value = bet.toFixed(2);
                 updateBalanceDisplay();
+                if (state.authenticated) {
+                    authController.updateBalance(state.balance);
+                }
                 showBetError('');
                 setControlsDisabled(true);
                 setActionButtonState('cashout');
@@ -1143,7 +1526,7 @@
                 updateMultiplierDisplay();
 
                 const growthFactor = 1.01;
-                state.intervalId = setInterval(() => {
+                state.intervalId = window.setInterval(() => {
                     state.multiplier = parseFloat((state.multiplier * growthFactor).toFixed(3));
                     updateMultiplierDisplay();
 
@@ -1153,7 +1536,6 @@
                     if (forcedCrash || Math.random() < crashChance) {
                         state.crashPoint = parseFloat(state.multiplier.toFixed(2));
                         completeRound();
-                        return;
                     }
                 }, 120);
             }
@@ -1169,12 +1551,15 @@
                 state.payout = parseFloat((state.currentBet * currentMultiplier).toFixed(2));
                 state.balance = parseFloat((state.balance + state.payout).toFixed(2));
                 updateBalanceDisplay();
+                if (state.authenticated) {
+                    authController.updateBalance(state.balance);
+                }
                 setStatus('CASHED OUT', `You bailed out with ${formatCurrency(state.payout)} at ${currentMultiplier.toFixed(2)}x. Mission control is tracking the crash.`, 'success');
                 setActionButtonState('waiting');
             }
 
             function adjustBet(delta) {
-                if (state.running) {
+                if (state.running || !state.authenticated) {
                     return;
                 }
                 const current = parseFloat(betInput.value) || 0;
@@ -1186,12 +1571,55 @@
                 showBetError('');
             }
 
+            function abortRoundForSignOut() {
+                if (state.intervalId) {
+                    clearInterval(state.intervalId);
+                    state.intervalId = null;
+                }
+                if (state.resetTimeoutId) {
+                    clearTimeout(state.resetTimeoutId);
+                    state.resetTimeoutId = null;
+                }
+                if (explosionTimeoutId) {
+                    clearTimeout(explosionTimeoutId);
+                    explosionTimeoutId = null;
+                }
+
+                state.running = false;
+                state.cooldownActive = false;
+                state.cashedOut = false;
+                state.cashedOutAt = null;
+                state.payout = 0;
+                state.currentBet = 0;
+                state.multiplier = 1;
+                state.crashPoint = null;
+
+                updateMultiplierDisplay();
+                setFlameActive(false);
+
+                if (trailEl) {
+                    trailEl.style.opacity = '0';
+                }
+                if (launchAreaEl) {
+                    launchAreaEl.classList.remove('active');
+                }
+                if (shipEl) {
+                    shipEl.classList.add('crash-ship--stalled');
+                }
+                if (explosionEl) {
+                    explosionEl.classList.remove('active');
+                }
+
+                setControlsDisabled(true);
+                setActionButtonState('signin');
+            }
+
             decreaseBetButton?.addEventListener('click', () => adjustBet(-1));
             increaseBetButton?.addEventListener('click', () => adjustBet(1));
 
             quickButtons.forEach(btn => {
                 btn.addEventListener('click', () => {
-                    if (state.running) {
+                    if (state.running || !state.authenticated) {
                         return;
                     }
 
@@ -1225,25 +1653,63 @@
 
             actionButtons.forEach(button => {
                 button.addEventListener('click', () => {
+                    if (!state.authenticated) {
+                        authUI?.openSignIn?.();
+                        return;
+                    }
+
                     if (state.running) {
                         if (!state.cashedOut) {
                             cashOut();
                         }
-                    } else {
+                    } else if (!state.cooldownActive) {
                         startRound();
                     }
                 });
             });
 
-            updateBalanceDisplay();
+            function applyAuth(user) {
+                const previousName = state.playerName;
+                state.authenticated = Boolean(user);
+                state.playerName = user?.username || 'Guest';
+                state.balance = user && Number.isFinite(user.balance) ? parseFloat(user.balance.toFixed(2)) : 0;
+                updateBalanceDisplay();
+
+                if (!state.authenticated) {
+                    abortRoundForSignOut();
+                    state.history = [];
+                    renderHistory();
+                    if (lastResultEl) {
+                        lastResultEl.textContent = '—';
+                    }
+                    setStatus('SIGN IN', 'Sign in to place bets and launch missions.', 'warning');
+                    return;
+                }
+
+                if (previousName !== state.playerName) {
+                    state.history = [];
+                    renderHistory();
+                    if (lastResultEl) {
+                        lastResultEl.textContent = '—';
+                    }
+                }
+
+                if (!state.running && !state.cooldownActive) {
+                    setControlsDisabled(false);
+                    setActionButtonState('place');
+                    setStatus('WAITING', 'Place your bet to start the next launch.', 'neutral');
+                }
+            }
+
+            authController.subscribe(applyAuth);
+            applyAuth(initialUser);
+
             renderHistory();
-            setControlsDisabled(false);
-            setActionButtonState('place');
-            setStatus('WAITING', 'Place your bet to start the next launch.', 'neutral');
             state.multiplier = 1;
             updateMultiplierDisplay();
             betInput.value = (parseFloat(betInput.value) || 10).toFixed(2);
-        })();
+        }
+
     </script>
 
 </body>
