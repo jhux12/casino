@@ -35,6 +35,7 @@
             }
         }
     </script>
+
     <style>
         body {
             background-color: #0e0f13;
@@ -100,7 +101,7 @@
                 <div class="hidden md:flex items-center space-x-4">
                     <div class="bg-gray-800 rounded-full px-4 py-1.5 flex items-center space-x-2">
                         <i data-feather="dollar-sign" class="w-4 h-4 text-accent"></i>
-                        <span class="font-medium">1,000.00</span>
+                        <span class="font-medium" data-balance>1,000.00</span>
                     </div>
                     <button class="gradient-btn rounded-full px-6 py-2 font-medium text-white hover:shadow-lg transition">
                         Sign In
@@ -163,40 +164,49 @@
         <div class="md:w-4/5">
             <div class="glass-card rounded-xl p-6">
                 <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-2xl font-bold">CRASH — Demo Preview</h2>
+                    <h2 class="text-2xl font-bold game-title">CRASH — Demo Preview</h2>
                     <div class="flex items-center space-x-4">
                         <div class="bg-gray-800 rounded-full px-4 py-1.5 flex items-center space-x-2">
                             <i data-feather="dollar-sign" class="w-4 h-4 text-accent"></i>
-                            <span class="font-medium">1,000.00</span>
+                            <span class="font-medium" data-balance>1,000.00</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Game Preview -->
                 <div class="bg-gray-800 rounded-xl p-8 mb-6 flex flex-col items-center justify-center" style="min-height: 400px;">
-                    <div class="relative w-full max-w-lg mb-8">
+                    <div class="relative w-full max-w-lg mb-10">
                         <div class="absolute inset-0 bg-gradient-to-r from-transparent via-primary/20 to-transparent opacity-30 blur-lg"></div>
-                        <div class="relative bg-dark border border-primary/20 rounded-xl p-8 text-center">
-                            <i data-feather="trending-up" class="w-16 h-16 text-primary mx-auto mb-4"></i>
-                            <h3 class="text-2xl font-bold mb-2">Crash Game</h3>
-                            <p class="text-gray-400">Place your bet and cash out before the rocket crashes!</p>
-                        </div>
-                    </div>
-                    <div class="w-full max-w-md">
-                        <div class="flex items-center justify-between mb-4">
-                            <span class="text-gray-400">Bet Amount</span>
-                            <div class="flex items-center space-x-2">
-                                <button class="bg-gray-700 hover:bg-gray-600 text-white w-8 h-8 rounded-lg transition">-</button>
-                                <input type="text" class="bg-gray-800 border border-gray-700 rounded-lg w-24 px-3 py-1 text-center" value="10.00">
-                                <button class="bg-gray-700 hover:bg-gray-600 text-white w-8 h-8 rounded-lg transition">+</button>
+                        <div class="relative bg-dark border border-primary/20 rounded-xl p-8 text-center game-preview overflow-hidden">
+                            <div class="flex flex-col items-center space-y-4">
+                                <div class="game-preview-icon w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
+                                    <i data-feather="trending-up" class="w-10 h-10 text-primary"></i>
+                                </div>
+                                <div id="crashMultiplier" class="text-5xl font-bold text-primary tracking-tight">1.00x</div>
+                                <p id="crashStatus" class="text-xs uppercase tracking-[0.35em] text-gray-400">Waiting</p>
+                                <p id="crashMessage" class="text-gray-400 leading-relaxed max-w-sm mx-auto">Place your bet to start the next round.</p>
+                                <div class="w-full h-1.5 bg-gray-900/80 rounded-full overflow-hidden">
+                                    <div id="crashProgress" class="h-full bg-gradient-to-r from-primary via-secondary to-accent transition-all duration-100 ease-linear" style="width: 0%;"></div>
+                                </div>
                             </div>
                         </div>
-                        <div class="grid grid-cols-3 gap-2 mb-4">
-                            <button class="bg-gray-800 hover:bg-gray-700 text-white py-2 rounded-lg transition">1/2</button>
-                            <button class="bg-gray-800 hover:bg-gray-700 text-white py-2 rounded-lg transition">2x</button>
-                            <button class="bg-gray-800 hover:bg-gray-700 text-white py-2 rounded-lg transition">Max</button>
+                    </div>
+                    <div class="w-full max-w-md space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-400">Bet Amount</span>
+                            <div class="flex items-center space-x-2">
+                                <button id="decreaseBet" class="bg-gray-700 hover:bg-gray-600 text-white w-9 h-9 rounded-lg transition" type="button">-</button>
+                                <input id="betAmount" type="number" min="0.10" step="0.01" class="bg-gray-800 border border-gray-700 rounded-lg w-28 px-3 py-1.5 text-center focus:outline-none focus:border-primary" value="10.00">
+                                <button id="increaseBet" class="bg-gray-700 hover:bg-gray-600 text-white w-9 h-9 rounded-lg transition" type="button">+</button>
+                            </div>
                         </div>
-                        <button class="gradient-btn w-full py-3 rounded-lg font-bold text-white hover:shadow-lg transition">
+                        <p id="betError" class="text-xs text-red-400 min-h-[1.5rem]"></p>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button class="bg-gray-800 hover:bg-gray-700 text-white py-2 rounded-lg transition" type="button" data-quick="half">1/2</button>
+                            <button class="bg-gray-800 hover:bg-gray-700 text-white py-2 rounded-lg transition" type="button" data-quick="double">2x</button>
+                            <button class="bg-gray-800 hover:bg-gray-700 text-white py-2 rounded-lg transition" type="button" data-quick="max">Max</button>
+                        </div>
+                        <button id="crashActionButton" class="gradient-btn w-full py-3 rounded-lg font-bold text-white hover:shadow-lg transition">
                             Place Bet
                         </button>
                     </div>
@@ -206,8 +216,8 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div class="glass-card rounded-lg p-4">
                         <div class="flex items-center justify-between">
-                            <span class="text-gray-400">Last Result</span>
-                            <span class="font-bold text-primary">3.42x</span>
+                            <span class="text-gray-400">Last Crash</span>
+                            <span id="lastResult" class="font-bold text-primary">—</span>
                         </div>
                     </div>
                     <div class="glass-card rounded-lg p-4">
@@ -236,38 +246,13 @@
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Game ID</th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Player</th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Bet</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Multiplier</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Result</th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Payout</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-800">
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">#a7b3c9</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">Player123</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">10.00</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">5.32x</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-accent">53.20</td>
-                                </tr>
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">#b4c8d2</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">Gamer456</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">25.00</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">1.87x</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-accent">46.75</td>
-                                </tr>
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">#c5d9e3</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">Lucky777</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">5.00</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">12.45x</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-accent">62.25</td>
-                                </tr>
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">#d6eaf4</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">Newbie001</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">2.00</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">1.01x</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-accent">2.02</td>
+                            <tbody id="recentGamesBody" class="divide-y divide-gray-800">
+                                <tr class="empty-state">
+                                    <td colspan="5" class="px-6 py-6 text-center text-sm text-gray-500">No rounds played yet. Place a bet to begin.</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -305,24 +290,435 @@
             once: true
         });
         feather.replace();
-        
-        // Simple game sidebar interaction
-        document.querySelectorAll('.game-sidebar-item').forEach(item => {
-            item.addEventListener('click', function(e) {
-                e.preventDefault();
-                document.querySelector('.game-sidebar-item.active').classList.remove('active');
-                this.classList.add('active');
-                
-                // Update game title (demo only)
-                const gameName = this.querySelector('span').textContent;
-                document.querySelector('h2').textContent = `${gameName.toUpperCase()} — Demo Preview`;
-                
-                // Update game icon (demo only)
-                const gameIcon = this.querySelector('i').getAttribute('data-feather');
-                document.querySelector('.game-preview i').setAttribute('data-feather', gameIcon);
-                feather.replace();
+
+        const sidebarItems = document.querySelectorAll('.game-sidebar-item');
+        const gameTitleEl = document.querySelector('.game-title');
+        const previewIconContainer = document.querySelector('.game-preview-icon');
+
+        sidebarItems.forEach(item => {
+            item.addEventListener('click', event => {
+                event.preventDefault();
+                const active = document.querySelector('.game-sidebar-item.active');
+                if (active) {
+                    active.classList.remove('active');
+                }
+                item.classList.add('active');
+
+                const name = item.querySelector('span')?.textContent ?? '';
+                if (gameTitleEl && name) {
+                    gameTitleEl.textContent = `${name.toUpperCase()} — Demo Preview`;
+                }
+
+                const iconName = item.querySelector('[data-feather]')?.getAttribute('data-feather');
+                if (previewIconContainer && iconName) {
+                    previewIconContainer.innerHTML = `<i data-feather="${iconName}" class="w-10 h-10 text-primary"></i>`;
+                    feather.replace();
+                }
             });
         });
+
+        (function initCrashGame() {
+            const betInput = document.getElementById('betAmount');
+            const actionButton = document.getElementById('crashActionButton');
+            const decreaseBetButton = document.getElementById('decreaseBet');
+            const increaseBetButton = document.getElementById('increaseBet');
+            const quickButtons = document.querySelectorAll('[data-quick]');
+            const betErrorEl = document.getElementById('betError');
+            const multiplierEl = document.getElementById('crashMultiplier');
+            const statusEl = document.getElementById('crashStatus');
+            const messageEl = document.getElementById('crashMessage');
+            const progressEl = document.getElementById('crashProgress');
+            const lastResultEl = document.getElementById('lastResult');
+            const historyBody = document.getElementById('recentGamesBody');
+            const balanceEls = document.querySelectorAll('[data-balance]');
+
+            if (!betInput || !actionButton || !multiplierEl) {
+                return;
+            }
+
+            const currencyFormatter = new Intl.NumberFormat('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+
+            const state = {
+                balance: 0,
+                running: false,
+                cashedOut: false,
+                intervalId: null,
+                resetTimeoutId: null,
+                currentBet: 0,
+                multiplier: 1,
+                crashPoint: null,
+                cashedOutAt: null,
+                payout: 0,
+                history: []
+            };
+
+            const initialBalance = balanceEls.length
+                ? parseFloat((balanceEls[0].textContent || '0').replace(/,/g, ''))
+                : 1000;
+            state.balance = Number.isFinite(initialBalance) ? initialBalance : 1000;
+            function formatCurrency(value) {
+                return currencyFormatter.format(Math.max(0, Number(value) || 0));
+            }
+
+            function formatMultiplier(value) {
+                return `${(Number(value) || 0).toFixed(2)}x`;
+            }
+
+            function updateBalanceDisplay() {
+                const formatted = formatCurrency(state.balance);
+                balanceEls.forEach(el => {
+                    el.textContent = formatted;
+                });
+            }
+
+            function setStatus(label, message, tone = 'neutral') {
+                const toneClasses = {
+                    neutral: 'text-gray-400',
+                    live: 'text-primary',
+                    success: 'text-accent',
+                    danger: 'text-red-400'
+                };
+
+                if (statusEl) {
+                    statusEl.textContent = label;
+                    statusEl.className = 'text-xs uppercase tracking-[0.35em] transition-colors duration-200';
+                    statusEl.classList.add(toneClasses[tone] || toneClasses.neutral);
+                }
+
+                if (messageEl) {
+                    messageEl.textContent = message;
+                }
+            }
+
+            function setActionButtonState(mode) {
+                if (!actionButton) {
+                    return;
+                }
+
+                if (mode === 'cashout') {
+                    actionButton.disabled = false;
+                    actionButton.textContent = 'Cash Out';
+                    actionButton.className = 'w-full py-3 rounded-lg font-bold transition bg-accent text-dark hover:brightness-110';
+                } else if (mode === 'waiting') {
+                    actionButton.disabled = true;
+                    actionButton.textContent = 'Waiting for crash...';
+                    actionButton.className = 'w-full py-3 rounded-lg font-bold transition bg-gray-800 text-gray-500 cursor-not-allowed';
+                } else {
+                    actionButton.disabled = false;
+                    actionButton.textContent = 'Place Bet';
+                    actionButton.className = 'gradient-btn w-full py-3 rounded-lg font-bold text-white hover:shadow-lg transition';
+                }
+            }
+
+            function setControlsDisabled(disabled) {
+                [betInput, decreaseBetButton, increaseBetButton].forEach(control => {
+                    if (control) {
+                        control.disabled = disabled;
+                        control.classList.toggle('opacity-60', disabled);
+                        control.classList.toggle('cursor-not-allowed', disabled);
+                    }
+                });
+
+                quickButtons.forEach(btn => {
+                    btn.disabled = disabled;
+                    btn.classList.toggle('opacity-60', disabled);
+                    btn.classList.toggle('cursor-not-allowed', disabled);
+                });
+            }
+
+            function showBetError(message) {
+                if (betErrorEl) {
+                    betErrorEl.textContent = message;
+                }
+
+                betInput.classList.toggle('border-red-500', Boolean(message));
+                betInput.classList.toggle('focus:border-red-500', Boolean(message));
+            }
+
+            function updateMultiplierDisplay() {
+                if (multiplierEl) {
+                    multiplierEl.textContent = formatMultiplier(state.multiplier);
+                }
+
+                if (progressEl) {
+                    if (!state.crashPoint || state.crashPoint <= 1) {
+                        progressEl.style.width = '0%';
+                    } else {
+                        const progress = ((state.multiplier - 1) / (state.crashPoint - 1)) * 100;
+                        progressEl.style.width = `${Math.max(0, Math.min(progress, 100))}%`;
+                    }
+                }
+            }
+
+            function generateCrashPoint() {
+                const raw = -Math.log(1 - Math.random());
+                const scaled = 1 + raw * 1.6;
+                return Math.min(20, Math.max(1.02, Number(scaled.toFixed(2))));
+            }
+
+            function generateGameId() {
+                const randomPart = Math.random().toString(16).slice(2, 8);
+                return `#${randomPart}`;
+            }
+
+            function renderHistory() {
+                if (!historyBody) {
+                    return;
+                }
+
+                historyBody.innerHTML = '';
+
+                if (!state.history.length) {
+                    historyBody.innerHTML = `
+                        <tr class="empty-state">
+                            <td colspan="5" class="px-6 py-6 text-center text-sm text-gray-500">No rounds played yet. Place a bet to begin.</td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                state.history.forEach(entry => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">${entry.id}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">You</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">${formatCurrency(entry.bet)}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm ${entry.cashedOut ? 'text-accent' : 'text-red-400'}">${entry.resultText}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm ${entry.cashedOut ? 'text-accent' : 'text-gray-400'}">${entry.payoutText}</td>
+                    `;
+                    historyBody.appendChild(row);
+                });
+            }
+
+            function recordHistoryEntry(entry) {
+                const resultText = entry.cashedOut && entry.cashOutMultiplier != null
+                    ? `${entry.cashOutMultiplier.toFixed(2)}x`
+                    : `Busted @ ${entry.crashMultiplier.toFixed(2)}x`;
+                const payoutText = entry.cashedOut ? formatCurrency(entry.payout) : formatCurrency(0);
+
+                state.history.unshift({
+                    ...entry,
+                    resultText,
+                    payoutText
+                });
+
+                if (state.history.length > 10) {
+                    state.history.pop();
+                }
+
+                renderHistory();
+            }
+            function resetRoundState() {
+                setActionButtonState('place');
+                setControlsDisabled(false);
+
+                state.currentBet = 0;
+                state.cashedOut = false;
+                state.cashedOutAt = null;
+                state.payout = 0;
+                state.crashPoint = null;
+
+                if (state.resetTimeoutId) {
+                    clearTimeout(state.resetTimeoutId);
+                }
+
+                state.resetTimeoutId = setTimeout(() => {
+                    if (state.running) {
+                        return;
+                    }
+                    state.multiplier = 1;
+                    if (progressEl) {
+                        progressEl.style.width = '0%';
+                    }
+                    updateMultiplierDisplay();
+                    setStatus('WAITING', 'Place your bet to start the next round.', 'neutral');
+                    state.resetTimeoutId = null;
+                }, 1800);
+            }
+
+            function completeRound() {
+                if (state.intervalId) {
+                    clearInterval(state.intervalId);
+                    state.intervalId = null;
+                }
+
+                state.running = false;
+                state.multiplier = state.crashPoint || state.multiplier;
+                updateMultiplierDisplay();
+
+                const crashValue = state.crashPoint || state.multiplier;
+                const crashText = crashValue.toFixed(2);
+
+                if (state.cashedOut) {
+                    setStatus('ROUND COMPLETE', `Rocket crashed at ${crashText}x. You cashed out with ${formatCurrency(state.payout)}.`, 'success');
+                } else {
+                    setStatus('BUSTED', `Rocket crashed at ${crashText}x. You lost ${formatCurrency(state.currentBet)}.`, 'danger');
+                }
+
+                if (lastResultEl) {
+                    lastResultEl.textContent = `${crashText}x`;
+                }
+
+                recordHistoryEntry({
+                    id: generateGameId(),
+                    bet: state.currentBet,
+                    crashMultiplier: crashValue,
+                    cashedOut: state.cashedOut,
+                    cashOutMultiplier: state.cashedOutAt,
+                    payout: state.cashedOut ? state.payout : 0
+                });
+
+                resetRoundState();
+            }
+
+            function startRound() {
+                const rawValue = parseFloat(betInput.value);
+
+                if (Number.isNaN(rawValue) || rawValue <= 0) {
+                    showBetError('Enter a valid bet amount.');
+                    return;
+                }
+
+                if (rawValue > state.balance) {
+                    showBetError('Insufficient balance for this bet.');
+                    return;
+                }
+
+                const bet = Math.max(0.1, Number(rawValue.toFixed(2)));
+
+                if (state.intervalId) {
+                    clearInterval(state.intervalId);
+                    state.intervalId = null;
+                }
+                if (state.resetTimeoutId) {
+                    clearTimeout(state.resetTimeoutId);
+                    state.resetTimeoutId = null;
+                }
+
+                state.currentBet = bet;
+                state.balance = parseFloat((state.balance - bet).toFixed(2));
+                if (state.balance < 0) {
+                    state.balance = 0;
+                }
+
+                state.multiplier = 1;
+                state.crashPoint = generateCrashPoint();
+                state.running = true;
+                state.cashedOut = false;
+                state.cashedOutAt = null;
+                state.payout = 0;
+
+                betInput.value = bet.toFixed(2);
+                updateBalanceDisplay();
+                showBetError('');
+                setControlsDisabled(true);
+                setActionButtonState('cashout');
+                setStatus('LIVE', 'Rocket launching — cash out before it crashes!', 'live');
+                if (progressEl) {
+                    progressEl.style.width = '0%';
+                }
+                updateMultiplierDisplay();
+
+                const growthFactor = 1.015;
+                state.intervalId = setInterval(() => {
+                    state.multiplier *= growthFactor;
+                    state.multiplier = Math.min(state.multiplier, state.crashPoint + 0.5);
+                    updateMultiplierDisplay();
+
+                    if (state.multiplier >= state.crashPoint) {
+                        completeRound();
+                    }
+                }, 75);
+            }
+
+            function cashOut() {
+                if (!state.running || state.cashedOut) {
+                    return;
+                }
+
+                const currentMultiplier = parseFloat(state.multiplier.toFixed(2));
+                state.cashedOut = true;
+                state.cashedOutAt = currentMultiplier;
+                state.payout = parseFloat((state.currentBet * currentMultiplier).toFixed(2));
+                state.balance = parseFloat((state.balance + state.payout).toFixed(2));
+                updateBalanceDisplay();
+                setStatus('CASHED OUT', `You secured ${formatCurrency(state.payout)} at ${currentMultiplier.toFixed(2)}x. Hang tight for the crash.`, 'success');
+                setActionButtonState('waiting');
+            }
+
+            function adjustBet(delta) {
+                if (state.running) {
+                    return;
+                }
+                const current = parseFloat(betInput.value) || 0;
+                let updated = current + delta;
+                if (updated < 0.1) {
+                    updated = 0.1;
+                }
+                betInput.value = updated.toFixed(2);
+                showBetError('');
+            }
+
+            decreaseBetButton?.addEventListener('click', () => adjustBet(-1));
+            increaseBetButton?.addEventListener('click', () => adjustBet(1));
+
+            quickButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    if (state.running) {
+                        return;
+                    }
+
+                    const action = btn.dataset.quick;
+                    let current = parseFloat(betInput.value) || 0;
+
+                    if (action === 'half') {
+                        current = Math.max(0.1, current / 2);
+                    } else if (action === 'double') {
+                        current = current * 2;
+                    } else if (action === 'max') {
+                        current = state.balance;
+                    }
+
+                    if (current <= 0) {
+                        current = 0.1;
+                    }
+
+                    betInput.value = current.toFixed(2);
+                    showBetError('');
+                });
+            });
+
+            betInput.addEventListener('input', () => showBetError(''));
+            betInput.addEventListener('blur', () => {
+                const value = parseFloat(betInput.value);
+                if (!Number.isNaN(value) && value > 0) {
+                    betInput.value = value.toFixed(2);
+                }
+            });
+
+            actionButton.addEventListener('click', () => {
+                if (state.running) {
+                    if (!state.cashedOut) {
+                        cashOut();
+                    }
+                } else {
+                    startRound();
+                }
+            });
+
+            updateBalanceDisplay();
+            renderHistory();
+            setControlsDisabled(false);
+            setActionButtonState('place');
+            setStatus('WAITING', 'Place your bet to start the next round.', 'neutral');
+            state.multiplier = 1;
+            updateMultiplierDisplay();
+            betInput.value = (parseFloat(betInput.value) || 10).toFixed(2);
+        })();
     </script>
+
 </body>
 </html>
