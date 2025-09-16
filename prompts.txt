@@ -1,0 +1,76 @@
+Build a responsive, dark-mode casino demo site inspired by Roobet.
+No real money features — this is visual only.
+
+Overall style
+
+Dark background (#0e0f13) with glassmorphism cards and neon accents.
+
+Accent colors: electric blue (#00c2ff), purple (#7c3aed), lime green (#2bd975).
+
+Rounded corners (xl–2xl), soft shadows, subtle glow effects.
+
+Clean sans font (Inter or Poppins).
+
+Navigation
+
+Sticky top navbar with:
+
+Left: logo text “NEON CASINO” (blue + white).
+
+Center links: Home, Games, Promotions, Provably Fair, Leaderboard.
+
+Right: wallet balance pill + sign in button.
+
+On mobile, collapse links into hamburger menu.
+
+Home Page
+
+Hero section: large centered text “Play & Win with Provably Fair Games”, CTA button “Play Games”. Background: gradient glow or neon effect.
+
+Featured Games grid: 3–6 cards with game icons (Crash, Mines, Plinko, Limbo, Dice, Roulette). Each card: neon outline, icon, name, “Play Now” button.
+
+Trending Bets ticker (visual only): horizontally scrolling fake bets like “User123 won 5,000 ROO on Crash (12x)”.
+
+Promotions carousel: wide cards with neon banners, e.g. “Daily Bonus”, “Leaderboard Rewards”.
+
+Provably Fair teaser: card with lock icon and “Verify every game outcome”.
+
+Games Page
+
+Sidebar: vertical list of games with icons (Crash, Mines, Plinko, Limbo, Dice). Active game is highlighted neon.
+
+Main panel: large placeholder area that says e.g. “CRASH — Demo Preview” with a styled frame.
+
+For each game selection, just swap the header text and maybe show a themed image or background (no logic required).
+
+Keep balance pill and “Place Bet” button visible for visual effect (not functional).
+
+Footer
+
+Split layout:
+
+Left: mini logo + text “Demo site. No real-money gambling.”
+
+Center: small uppercase links (Terms, Privacy, Responsible Play, Contact).
+
+Right: “© 2025 Neon Casino Demo • 18+ Only”.
+
+Extra polish
+
+Hover animations: cards lift 2px, neon glows intensify.
+
+Buttons: gradient backgrounds with glow.
+
+Animations: fade-in sections, smooth scrolling.
+
+Mobile responsive: featured games collapse to 1–2 per row, sidebar becomes horizontal scroll.
+
+Deliverables
+
+Two pages: index.html (Home) and games.html (Games).
+
+TailwindCSS for styling.
+
+Use placeholder images/icons (Feather or Lucide icons).
+
+Include basic JS only for page transitions (no game logic).

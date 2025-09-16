@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEON CASINO | Games</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        dark: '#0e0f13',
+                        primary: '#00c2ff',
+                        secondary: '#7c3aed',
+                        accent: '#2bd975',
+                    },
+                    boxShadow: {
+                        'neon-blue': '0 0 10px rgba(0, 194, 255, 0.5)',
+                        'neon-purple': '0 0 10px rgba(124, 58, 237, 0.5)',
+                        'neon-green': '0 0 10px rgba(43, 217, 117, 0.5)',
+                        'glow-blue': '0 0 15px rgba(0, 194, 255, 0.7)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0e0f13;
+            color: #fff;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .gradient-btn {
+            background: linear-gradient(45deg, #00c2ff, #7c3aed);
+        }
+        .gradient-btn:hover {
+            box-shadow: 0 0 15px rgba(0, 194, 255, 0.7);
+        }
+        .game-sidebar-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .game-sidebar-item.active {
+            background: rgba(0, 194, 255, 0.1);
+            border-left: 3px solid #00c2ff;
+        }
+        @media (max-width: 768px) {
+            .game-sidebar {
+                overflow-x: auto;
+                flex-direction: row;
+                padding: 0.5rem;
+            }
+            .game-sidebar-item {
+                min-width: 100px;
+                border-left: none;
+                border-bottom: 3px solid transparent;
+            }
+            .game-sidebar-item.active {
+                border-left: none;
+                border-bottom: 3px solid #00c2ff;
+            }
+        }
+    </style>
+</head>
+<body class="font-sans min-h-screen">
+    <!-- Navbar -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-dark/80 backdrop-blur-md border-b border-gray-800">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <div class="flex items-center space-x-2">
+                    <span class="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">NEON CASINO</span>
+                </div>
+
+                <!-- Desktop Nav Links -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html" class="text-white hover:text-primary transition">Home</a>
+                    <a href="#" class="text-primary transition">Games</a>
+                    <a href="#" class="text-white hover:text-primary transition">Promotions</a>
+                    <a href="#" class="text-white hover:text-primary transition">Provably Fair</a>
+                    <a href="#" class="text-white hover:text-primary transition">Leaderboard</a>
+                </div>
+
+                <!-- Wallet & Auth -->
+                <div class="hidden md:flex items-center space-x-4">
+                    <div class="bg-gray-800 rounded-full px-4 py-1.5 flex items-center space-x-2">
+                        <i data-feather="dollar-sign" class="w-4 h-4 text-accent"></i>
+                        <span class="font-medium">1,000.00</span>
+                    </div>
+                    <button class="gradient-btn rounded-full px-6 py-2 font-medium text-white hover:shadow-lg transition">
+                        Sign In
+                    </button>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden text-white focus:outline-none">
+                    <i data-feather="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 pt-32 pb-16 flex flex-col md:flex-row">
+        <!-- Sidebar -->
+        <div class="md:w-1/5 mb-8 md:mb-0 md:pr-4">
+            <div class="game-sidebar glass-card rounded-xl p-2 flex flex-col md:overflow-y-auto">
+                <a href="#" class="game-sidebar-item active flex items-center space-x-3 p-3 rounded-lg transition">
+                    <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                        <i data-feather="trending-up" class="w-4 h-4 text-primary"></i>
+                    </div>
+                    <span class="font-medium">Crash</span>
+                </a>
+                <a href="#" class="game-sidebar-item flex items-center space-x-3 p-3 rounded-lg transition">
+                    <div class="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center">
+                        <i data-feather="flag" class="w-4 h-4 text-secondary"></i>
+                    </div>
+                    <span class="font-medium">Mines</span>
+                </a>
+                <a href="#" class="game-sidebar-item flex items-center space-x-3 p-3 rounded-lg transition">
+                    <div class="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center">
+                        <i data-feather="droplet" class="w-4 h-4 text-accent"></i>
+                    </div>
+                    <span class="font-medium">Plinko</span>
+                </a>
+                <a href="#" class="game-sidebar-item flex items-center space-x-3 p-3 rounded-lg transition">
+                    <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                        <i data-feather="bar-chart-2" class="w-4 h-4 text-primary"></i>
+                    </div>
+                    <span class="font-medium">Limbo</span>
+                </a>
+                <a href="#" class="game-sidebar-item flex items-center space-x-3 p-3 rounded-lg transition">
+                    <div class="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center">
+                        <i data-feather="dice-5" class="w-4 h-4 text-secondary"></i>
+                    </div>
+                    <span class="font-medium">Dice</span>
+                </a>
+                <a href="#" class="game-sidebar-item flex items-center space-x-3 p-3 rounded-lg transition">
+                    <div class="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center">
+                        <i data-feather="circle" class="w-4 h-4 text-accent"></i>
+                    </div>
+                    <span class="font-medium">Roulette</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Game Area -->
+        <div class="md:w-4/5">
+            <div class="glass-card rounded-xl p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold">CRASH — Demo Preview</h2>
+                    <div class="flex items-center space-x-4">
+                        <div class="bg-gray-800 rounded-full px-4 py-1.5 flex items-center space-x-2">
+                            <i data-feather="dollar-sign" class="w-4 h-4 text-accent"></i>
+                            <span class="font-medium">1,000.00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Game Preview -->
+                <div class="bg-gray-800 rounded-xl p-8 mb-6 flex flex-col items-center justify-center" style="min-height: 400px;">
+                    <div class="relative w-full max-w-lg mb-8">
+                        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-primary/20 to-transparent opacity-30 blur-lg"></div>
+                        <div class="relative bg-dark border border-primary/20 rounded-xl p-8 text-center">
+                            <i data-feather="trending-up" class="w-16 h-16 text-primary mx-auto mb-4"></i>
+                            <h3 class="text-2xl font-bold mb-2">Crash Game</h3>
+                            <p class="text-gray-400">Place your bet and cash out before the rocket crashes!</p>
+                        </div>
+                    </div>
+                    <div class="w-full max-w-md">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-gray-400">Bet Amount</span>
+                            <div class="flex items-center space-x-2">
+                                <button class="bg-gray-700 hover:bg-gray-600 text-white w-8 h-8 rounded-lg transition">-</button>
+                                <input type="text" class="bg-gray-800 border border-gray-700 rounded-lg w-24 px-3 py-1 text-center" value="10.00">
+                                <button class="bg-gray-700 hover:bg-gray-600 text-white w-8 h-8 rounded-lg transition">+</button>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2 mb-4">
+                            <button class="bg-gray-800 hover:bg-gray-700 text-white py-2 rounded-lg transition">1/2</button>
+                            <button class="bg-gray-800 hover:bg-gray-700 text-white py-2 rounded-lg transition">2x</button>
+                            <button class="bg-gray-800 hover:bg-gray-700 text-white py-2 rounded-lg transition">Max</button>
+                        </div>
+                        <button class="gradient-btn w-full py-3 rounded-lg font-bold text-white hover:shadow-lg transition">
+                            Place Bet
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Game Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="glass-card rounded-lg p-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-400">Last Result</span>
+                            <span class="font-bold text-primary">3.42x</span>
+                        </div>
+                    </div>
+                    <div class="glass-card rounded-lg p-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-400">Players</span>
+                            <span class="font-bold text-secondary">1,253</span>
+                        </div>
+                    </div>
+                    <div class="glass-card rounded-lg p-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-400">Active Bets</span>
+                            <span class="font-bold text-accent">87</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Games -->
+            <div class="mt-8">
+                <h3 class="text-xl font-bold mb-4">Recent Games</h3>
+                <div class="glass-card rounded-xl overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gray-800/50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Game ID</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Player</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Bet</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Multiplier</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Payout</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-800">
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">#a7b3c9</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">Player123</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">10.00</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">5.32x</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-accent">53.20</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">#b4c8d2</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">Gamer456</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">25.00</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">1.87x</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-accent">46.75</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">#c5d9e3</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">Lucky777</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">5.00</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">12.45x</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-accent">62.25</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">#d6eaf4</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">Newbie001</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">2.00</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-primary">1.01x</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-accent">2.02</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900/50 border-t border-gray-800 py-8 px-4">
+        <div class="container mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <span class="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">NEON CASINO</span>
+                    <p class="text-gray-500 text-sm mt-1">Demo site. No real-money gambling.</p>
+                </div>
+                <div class="flex flex-wrap justify-center gap-4 md:gap-6 mb-4 md:mb-0">
+                    <a href="#" class="text-gray-400 hover:text-white text-xs uppercase">Terms</a>
+                    <a href="#" class="text-gray-400 hover:text-white text-xs uppercase">Privacy</a>
+                    <a href="#" class="text-gray-400 hover:text-white text-xs uppercase">Responsible Play</a>
+                    <a href="#" class="text-gray-400 hover:text-white text-xs uppercase">Contact</a>
+                </div>
+                <div class="text-gray-500 text-sm">
+                    © 2025 Neon Casino Demo • 18+ Only
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+        feather.replace();
+        
+        // Simple game sidebar interaction
+        document.querySelectorAll('.game-sidebar-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector('.game-sidebar-item.active').classList.remove('active');
+                this.classList.add('active');
+                
+                // Update game title (demo only)
+                const gameName = this.querySelector('span').textContent;
+                document.querySelector('h2').textContent = `${gameName.toUpperCase()} — Demo Preview`;
+                
+                // Update game icon (demo only)
+                const gameIcon = this.querySelector('i').getAttribute('data-feather');
+                document.querySelector('.game-preview i').setAttribute('data-feather', gameIcon);
+                feather.replace();
+            });
+        });
+    </script>
+</body>
+</html>
