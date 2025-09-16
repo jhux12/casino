@@ -250,10 +250,15 @@ CASINO</span>
 
         (function initNavigation() {
             const BALANCE_STORAGE_KEY = 'neonCasinoBalance';
-            const balanceTargets = Array.from(document.querySelectorAll('[data-balance]')).map(element => ({
-                element,
-                fallback: element.getAttribute('data-default-balance') ?? (element.textContent || '').trim() || '0.00'
-            }));
+            const balanceTargets = Array.from(document.querySelectorAll('[data-balance]')).map(element => {
+                const attributeFallback = element.getAttribute('data-default-balance');
+                const textFallback = (element.textContent || '').trim();
+                const fallback = attributeFallback != null && attributeFallback !== ''
+                    ? attributeFallback
+                    : (textFallback || '0.00');
+
+                return { element, fallback };
+            });
             const formatCurrency = value => value.toLocaleString('en-US', {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2
