@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NEON CASINO | Account Access</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
@@ -54,16 +56,78 @@
         .gradient-btn:hover {
             box-shadow: 0 0 18px rgba(0, 194, 255, 0.45);
         }
+        .mobile-nav-toggle {
+            transition: border-color 0.2s ease, background-color 0.2s ease;
+        }
+        .mobile-nav-toggle .mobile-nav-icon--close {
+            display: none;
+        }
+        .mobile-nav-toggle.is-open {
+            border-color: rgba(59, 130, 246, 0.45);
+            background-color: rgba(15, 23, 42, 0.65);
+        }
+        .mobile-nav-toggle.is-open .mobile-nav-icon--open {
+            display: none;
+        }
+        .mobile-nav-toggle.is-open .mobile-nav-icon--close {
+            display: inline;
+        }
+        .mobile-nav-panel {
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.45);
+        }
     </style>
 </head>
 <body class="font-sans min-h-screen">
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-dark/80 backdrop-blur-md border-b border-gray-800">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <span class="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">NEON CASINO</span>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html" class="text-white hover:text-primary transition">Home</a>
+                    <a href="games.html" class="text-white hover:text-primary transition">Games</a>
+                    <a href="index.html#promotions" class="text-white hover:text-primary transition">Promotions</a>
+                    <a href="index.html#provably-fair" class="text-white hover:text-primary transition">Provably Fair</a>
+                    <a href="games.html#recent-games" class="text-white hover:text-primary transition">Leaderboard</a>
+                </div>
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="games.html" class="gradient-btn rounded-full px-6 py-2 font-medium text-white hover:shadow-lg transition">Play Crash</a>
+                </div>
+                <div class="md:hidden flex items-center space-x-3">
+                    <button id="mobileNavToggle" type="button" class="mobile-nav-toggle text-white focus:outline-none flex items-center justify-center rounded-lg border border-transparent p-2 transition hover:border-primary/60" aria-controls="mobileNavPanel" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <i data-feather="menu" class="w-6 h-6 mobile-nav-icon mobile-nav-icon--open"></i>
+                        <i data-feather="x" class="w-6 h-6 mobile-nav-icon mobile-nav-icon--close"></i>
+                    </button>
+                    <a href="games.html" class="gradient-btn px-4 py-2 text-sm font-semibold text-white hover:shadow-lg transition">Play Crash</a>
+                </div>
+            </div>
+        </div>
+        <div id="mobileNavPanel" class="mobile-nav-panel md:hidden hidden border-t border-gray-800 bg-dark/95">
+            <div class="container mx-auto px-4 py-4 space-y-4">
+                <div class="grid gap-2">
+                    <a href="index.html" class="block rounded-lg px-4 py-2 text-white/90 hover:bg-white/5 transition">Home</a>
+                    <a href="games.html" class="block rounded-lg px-4 py-2 text-white/90 hover:bg-white/5 transition">Games</a>
+                    <a href="index.html#promotions" class="block rounded-lg px-4 py-2 text-white/90 hover:bg-white/5 transition">Promotions</a>
+                    <a href="index.html#provably-fair" class="block rounded-lg px-4 py-2 text-white/90 hover:bg-white/5 transition">Provably Fair</a>
+                    <a href="games.html#recent-games" class="block rounded-lg px-4 py-2 text-white/90 hover:bg-white/5 transition">Leaderboard</a>
+                </div>
+                <div class="grid gap-2 border-t border-white/10 pt-4">
+                    <a href="games.html" class="gradient-btn w-full rounded-full px-4 py-2 text-sm font-semibold text-white hover:shadow-lg transition">Play Crash</a>
+                </div>
+            </div>
+        </div>
+    </nav>
     <div class="relative min-h-screen overflow-hidden">
         <div class="absolute inset-0 -z-10">
             <div class="absolute -top-24 -left-24 h-80 w-80 rounded-full bg-primary/40 blur-3xl"></div>
             <div class="absolute top-1/2 left-1/3 h-72 w-72 rounded-full bg-secondary/30 blur-3xl"></div>
             <div class="absolute bottom-0 right-0 h-[26rem] w-[26rem] rounded-full bg-primary/25 blur-3xl"></div>
         </div>
-        <div class="relative z-10 flex min-h-screen items-center justify-center px-4 py-12">
+        <div class="relative z-10 flex min-h-screen items-center justify-center px-4 py-12 pt-24 pb-16">
             <div class="glass-panel w-full max-w-xl rounded-3xl border border-primary/20 px-8 py-10">
                 <div class="text-center">
                     <span class="inline-block rounded-full border border-primary/40 bg-primary/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.35em] text-primary">Neon Casino</span>
@@ -138,6 +202,11 @@
         });
 
         const firebaseConfigWarnings = { missingAppId: false };
+
+        initNavigation();
+        if (window.feather) {
+            window.feather.replace();
+        }
 
         const services = initFirebase();
         if (!services) {
@@ -542,6 +611,56 @@
             });
 
             setMode('signin');
+        }
+
+        function initNavigation() {
+            const toggle = document.getElementById('mobileNavToggle');
+            const panel = document.getElementById('mobileNavPanel');
+            const nav = document.querySelector('nav');
+            if (!toggle || !panel || !nav) {
+                return;
+            }
+
+            const body = document.body;
+            let isOpen = false;
+
+            function setOpen(open) {
+                isOpen = open;
+                panel.classList.toggle('hidden', !open);
+                toggle.classList.toggle('is-open', open);
+                toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+                body.classList.toggle('overflow-hidden', open);
+            }
+
+            toggle.addEventListener('click', () => {
+                setOpen(!isOpen);
+            });
+
+            panel.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => setOpen(false));
+            });
+
+            window.addEventListener('resize', () => {
+                if (window.innerWidth >= 768) {
+                    setOpen(false);
+                }
+            });
+
+            document.addEventListener('keydown', event => {
+                if (event.key === 'Escape') {
+                    setOpen(false);
+                }
+            });
+
+            document.addEventListener('click', event => {
+                if (!isOpen) {
+                    return;
+                }
+                if (nav.contains(event.target)) {
+                    return;
+                }
+                setOpen(false);
+            });
         }
 
         function parseFirebaseError(error) {

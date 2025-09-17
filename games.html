@@ -247,6 +247,7 @@
             transform: translate(-50%, 50%) scale(0.35);
             pointer-events: none;
             z-index: 3;
+            will-change: transform, opacity;
         }
         .crash-explosion::before,
         .crash-explosion::after {
@@ -446,6 +447,10 @@
                 height: 17rem;
                 padding: 1.15rem 1.1rem 2.6rem 1.75rem;
             }
+            .crash-explosion {
+                width: 5.5rem;
+                height: 5.5rem;
+            }
             .crash-status-dock {
                 position: static;
                 width: 100%;
@@ -513,10 +518,10 @@
                 <!-- Desktop Nav Links -->
                 <div class="hidden md:flex items-center space-x-8">
                     <a href="index.html" class="text-white hover:text-primary transition">Home</a>
-                    <a href="#" class="text-primary transition">Games</a>
-                    <a href="#" class="text-white hover:text-primary transition">Promotions</a>
-                    <a href="#" class="text-white hover:text-primary transition">Provably Fair</a>
-                    <a href="#" class="text-white hover:text-primary transition">Leaderboard</a>
+                    <a href="games.html" class="text-primary transition">Games</a>
+                    <a href="index.html#promotions" class="text-white hover:text-primary transition">Promotions</a>
+                    <a href="index.html#provably-fair" class="text-white hover:text-primary transition">Provably Fair</a>
+                    <a href="#recent-games" class="text-white hover:text-primary transition">Leaderboard</a>
                 </div>
 
                 <!-- Wallet & Auth -->
@@ -561,10 +566,10 @@
             <div class="container mx-auto px-4 py-4 space-y-4">
                 <div class="grid gap-2">
                     <a href="index.html" class="block rounded-lg px-4 py-2 text-white/90 hover:bg-white/5 transition">Home</a>
-                    <a href="#" class="block rounded-lg px-4 py-2 text-primary hover:bg-primary/10 transition">Games</a>
-                    <a href="#" class="block rounded-lg px-4 py-2 text-white/90 hover:bg-white/5 transition">Promotions</a>
-                    <a href="#" class="block rounded-lg px-4 py-2 text-white/90 hover:bg-white/5 transition">Provably Fair</a>
-                    <a href="#" class="block rounded-lg px-4 py-2 text-white/90 hover:bg-white/5 transition">Leaderboard</a>
+                    <a href="games.html" class="block rounded-lg px-4 py-2 text-primary hover:bg-primary/10 transition">Games</a>
+                    <a href="index.html#promotions" class="block rounded-lg px-4 py-2 text-white/90 hover:bg-white/5 transition">Promotions</a>
+                    <a href="index.html#provably-fair" class="block rounded-lg px-4 py-2 text-white/90 hover:bg-white/5 transition">Provably Fair</a>
+                    <a href="#recent-games" class="block rounded-lg px-4 py-2 text-white/90 hover:bg-white/5 transition">Leaderboard</a>
                 </div>
                 <div class="grid gap-2 border-t border-white/10 pt-4">
                     <button data-auth-trigger="sign-in" data-auth-guest class="gradient-btn w-full rounded-full px-4 py-2 text-sm font-semibold text-white hover:shadow-lg transition">
@@ -737,7 +742,7 @@
             </div>
 
             <!-- Recent Games -->
-            <div class="mt-8">
+            <div class="mt-8" id="recent-games">
                 <h3 class="text-xl font-bold mb-4">Recent Games</h3>
                 <div class="glass-card rounded-xl overflow-hidden">
                     <div class="overflow-x-auto">
@@ -1935,20 +1940,29 @@
                 explosionEl.style.left = `${metrics.leftPercent}%`;
                 explosionEl.style.bottom = `${metrics.bottomPercent}%`;
                 explosionEl.classList.remove('active');
-                // Force reflow so the animation restarts on consecutive crashes.
+                explosionEl.style.animation = 'none';
+                // Force reflow so browsers like Mobile Safari restart the keyframes reliably.
                 void explosionEl.offsetWidth;
-                explosionEl.classList.add('active');
-
                 updatePathHighlight(progress);
 
                 if (explosionTimeoutId) {
                     clearTimeout(explosionTimeoutId);
+                    explosionTimeoutId = null;
                 }
 
-                explosionTimeoutId = window.setTimeout(() => {
-                    explosionEl.classList.remove('active');
-                    explosionTimeoutId = null;
-                }, 900);
+                window.requestAnimationFrame(() => {
+                    explosionEl.style.animation = '';
+                    explosionEl.classList.add('active');
+
+                    explosionTimeoutId = window.setTimeout(() => {
+                        explosionEl.classList.remove('active');
+                        explosionEl.style.animation = 'none';
+                        window.requestAnimationFrame(() => {
+                            explosionEl.style.animation = '';
+                        });
+                        explosionTimeoutId = null;
+                    }, 900);
+                });
             }
 
             function getCrashChance(multiplier) {
