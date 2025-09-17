@@ -63,6 +63,27 @@
         .gradient-btn:hover {
             box-shadow: 0 0 15px rgba(0, 194, 255, 0.7);
         }
+        .mobile-nav-toggle {
+            transition: border-color 0.2s ease, background-color 0.2s ease;
+        }
+        .mobile-nav-toggle .mobile-nav-icon--close {
+            display: none;
+        }
+        .mobile-nav-toggle.is-open {
+            border-color: rgba(59, 130, 246, 0.45);
+            background-color: rgba(15, 23, 42, 0.65);
+        }
+        .mobile-nav-toggle.is-open .mobile-nav-icon--open {
+            display: none;
+        }
+        .mobile-nav-toggle.is-open .mobile-nav-icon--close {
+            display: inline;
+        }
+        .mobile-nav-panel {
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.45);
+        }
         .game-sidebar-item:hover {
             background: rgba(255, 255, 255, 0.05);
         }
@@ -220,17 +241,85 @@
             position: absolute;
             width: 7rem;
             height: 7rem;
-            background: radial-gradient(circle, rgba(251, 191, 36, 0.85) 0%, rgba(248, 113, 113, 0.6) 45%, rgba(14, 14, 22, 0) 70%);
             border-radius: 50%;
+            background: radial-gradient(circle, rgba(251, 191, 36, 0.9) 0%, rgba(248, 113, 113, 0.55) 48%, rgba(14, 14, 22, 0) 75%);
             opacity: 0;
-            transform: translate(-50%, 50%) scale(0.2);
-            transition: opacity 0.2s ease, transform 0.25s ease;
+            transform: translate(-50%, 50%) scale(0.35);
             pointer-events: none;
             z-index: 3;
         }
+        .crash-explosion::before,
+        .crash-explosion::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            opacity: 0;
+        }
+        .crash-explosion::before {
+            background: radial-gradient(circle, rgba(250, 204, 21, 0.6) 0%, rgba(250, 204, 21, 0) 70%);
+            transform: scale(0.5);
+        }
+        .crash-explosion::after {
+            border: 3px solid rgba(250, 204, 21, 0.3);
+            box-shadow: 0 0 25px rgba(250, 204, 21, 0.35);
+            transform: scale(0.4);
+        }
         .crash-explosion.active {
             opacity: 1;
-            transform: translate(-50%, 50%) scale(1);
+            animation: crash-explosion-core 0.9s ease-out;
+        }
+        .crash-explosion.active::before {
+            animation: crash-explosion-shockwave 0.9s ease-out;
+        }
+        .crash-explosion.active::after {
+            animation: crash-explosion-ring 0.9s ease-out;
+        }
+        @keyframes crash-explosion-core {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, 50%) scale(0.25);
+            }
+            25% {
+                opacity: 1;
+                transform: translate(-50%, 50%) scale(1.05);
+            }
+            55% {
+                opacity: 1;
+                transform: translate(-50%, 50%) scale(1.25);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, 50%) scale(0.35);
+            }
+        }
+        @keyframes crash-explosion-shockwave {
+            0% {
+                opacity: 0.75;
+                transform: scale(0.65);
+            }
+            60% {
+                opacity: 0.4;
+                transform: scale(1.35);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(1.5);
+            }
+        }
+        @keyframes crash-explosion-ring {
+            0% {
+                opacity: 0.6;
+                transform: scale(0.55);
+            }
+            50% {
+                opacity: 0.6;
+                transform: scale(1.4);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(1.65);
+            }
         }
         .crash-ship {
             position: absolute;
@@ -450,8 +539,10 @@
 
                 <!-- Mobile Controls -->
                 <div class="md:hidden flex items-center space-x-3">
-                    <button class="text-white focus:outline-none">
-                        <i data-feather="menu" class="w-6 h-6"></i>
+                    <button id="mobileNavToggle" type="button" class="mobile-nav-toggle text-white focus:outline-none flex items-center justify-center rounded-lg border border-transparent p-2 transition hover:border-primary/60" aria-controls="mobileNavPanel" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <i data-feather="menu" class="w-6 h-6 mobile-nav-icon mobile-nav-icon--open"></i>
+                        <i data-feather="x" class="w-6 h-6 mobile-nav-icon mobile-nav-icon--close"></i>
                     </button>
                     <div class="bg-gray-800 rounded-full px-3 py-1 flex items-center space-x-1.5">
                         <i data-feather="dollar-sign" class="w-4 h-4 text-accent"></i>
@@ -461,6 +552,25 @@
                         Sign In
                     </button>
                     <button data-auth-trigger="sign-out" data-auth-user class="hidden rounded-full border border-gray-700 px-4 py-2 text-xs font-semibold text-white transition hover:border-primary">
+                        Sign Out
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobileNavPanel" class="mobile-nav-panel md:hidden hidden border-t border-gray-800 bg-dark/95">
+            <div class="container mx-auto px-4 py-4 space-y-4">
+                <div class="grid gap-2">
+                    <a href="index.html" class="block rounded-lg px-4 py-2 text-white/90 hover:bg-white/5 transition">Home</a>
+                    <a href="#" class="block rounded-lg px-4 py-2 text-primary hover:bg-primary/10 transition">Games</a>
+                    <a href="#" class="block rounded-lg px-4 py-2 text-white/90 hover:bg-white/5 transition">Promotions</a>
+                    <a href="#" class="block rounded-lg px-4 py-2 text-white/90 hover:bg-white/5 transition">Provably Fair</a>
+                    <a href="#" class="block rounded-lg px-4 py-2 text-white/90 hover:bg-white/5 transition">Leaderboard</a>
+                </div>
+                <div class="grid gap-2 border-t border-white/10 pt-4">
+                    <button data-auth-trigger="sign-in" data-auth-guest class="gradient-btn w-full rounded-full px-4 py-2 text-sm font-semibold text-white hover:shadow-lg transition">
+                        Sign In
+                    </button>
+                    <button data-auth-trigger="sign-out" data-auth-user class="hidden w-full rounded-full border border-gray-700 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white transition hover:border-primary">
                         Sign Out
                     </button>
                 </div>
@@ -579,13 +689,6 @@
                         <div id="crashAuthNotice" data-auth-guest class="rounded-xl border border-primary/30 bg-primary/10 px-4 py-3 text-sm text-primary flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                             <span class="font-semibold text-primary/90">Sign in to place bets and launch missions.</span>
                             <button data-auth-trigger="sign-in" class="w-full sm:w-auto gradient-btn px-4 py-2 rounded-full text-white font-semibold transition hover:shadow-lg">Sign In</button>
-                        </div>
-                        <div id="crashPlayerTag" data-auth-user class="hidden flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 rounded-xl border border-primary/20 bg-primary/5 px-4 py-3 text-sm text-gray-300">
-                            <div class="flex items-center gap-2">
-                                <i data-feather="user" class="w-4 h-4 text-primary"></i>
-                                <span>Commander <span class="text-white font-semibold" data-username></span></span>
-                            </div>
-                            <button data-auth-trigger="sign-out" class="text-xs font-semibold uppercase tracking-wide text-primary hover:text-white transition">Sign Out</button>
                         </div>
                         <div class="flex items-center justify-between">
                             <span class="text-gray-400">Bet Amount</span>
@@ -759,6 +862,7 @@
             once: true
         });
         feather.replace();
+        initNavigation();
 
         const DEFAULT_BALANCE = 1000;
         const currencyFormatter = new Intl.NumberFormat('en-US', {
@@ -939,6 +1043,72 @@
 
         function formatCurrency(value) {
             return currencyFormatter.format(Math.max(0, Number(value) || 0));
+        }
+
+        function initNavigation() {
+            const toggle = document.getElementById('mobileNavToggle');
+            const panel = document.getElementById('mobileNavPanel');
+            const nav = document.querySelector('nav');
+            if (!toggle || !panel || !nav) {
+                return;
+            }
+
+            const body = document.body;
+            let isOpen = false;
+
+            function setOpen(open) {
+                isOpen = open;
+                panel.classList.toggle('hidden', !open);
+                toggle.classList.toggle('is-open', open);
+                toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+                body.classList.toggle('overflow-hidden', open);
+            }
+
+            function openPanel() {
+                if (!isOpen) {
+                    setOpen(true);
+                }
+            }
+
+            function closePanel() {
+                if (isOpen) {
+                    setOpen(false);
+                }
+            }
+
+            toggle.addEventListener('click', () => {
+                if (isOpen) {
+                    closePanel();
+                } else {
+                    openPanel();
+                }
+            });
+
+            panel.querySelectorAll('a, button[data-auth-trigger]').forEach(item => {
+                item.addEventListener('click', () => closePanel());
+            });
+
+            window.addEventListener('resize', () => {
+                if (window.innerWidth >= 768) {
+                    closePanel();
+                }
+            });
+
+            document.addEventListener('keydown', event => {
+                if (event.key === 'Escape') {
+                    closePanel();
+                }
+            });
+
+            document.addEventListener('click', event => {
+                if (!isOpen) {
+                    return;
+                }
+                if (nav.contains(event.target)) {
+                    return;
+                }
+                closePanel();
+            });
         }
 
         function initSidebarPreview() {
@@ -1764,6 +1934,9 @@
 
                 explosionEl.style.left = `${metrics.leftPercent}%`;
                 explosionEl.style.bottom = `${metrics.bottomPercent}%`;
+                explosionEl.classList.remove('active');
+                // Force reflow so the animation restarts on consecutive crashes.
+                void explosionEl.offsetWidth;
                 explosionEl.classList.add('active');
 
                 updatePathHighlight(progress);
@@ -1946,6 +2119,9 @@
 
                 if (state.crashPoint != null && !state.cashedOut) {
                     triggerExplosion(state.crashPoint);
+                    if (shipEl) {
+                        shipEl.classList.add('crash-ship--stalled');
+                    }
                 }
 
                 const crashMultiplier = state.crashPoint != null ? state.crashPoint : state.multiplier;
