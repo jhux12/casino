@@ -71,10 +71,10 @@ CASINO</span>
                 <div class="hidden md:flex items-center space-x-8">
                     <a href="index.html" class="text-white hover:text-primary transition">Home</a>
                     <a href="games.html" class="text-white hover:text-primary transition">Games</a>
-
-                    <a href="#" class="text-white hover:text-primary transition">Promotions</a>
-                    <a href="#" class="text-white hover:text-primary transition">Provably Fair</a>
-                    <a href="#" class="text-white hover:text-primary transition">Leaderboard</a>
+                    <a href="index.html#promotions" class="text-white hover:text-primary transition">Promotions</a>
+                    <a href="index.html#provably-fair" class="text-white hover:text-primary transition">Provably Fair</a>
+                    <a href="games.html#recent-games" class="text-white hover:text-primary transition">Leaderboard</a>
+                    <a href="admin.html" class="text-white hover:text-primary transition">Admin</a>
                 </div>
                 <div class="hidden md:flex items-center space-x-4">
                     <div class="bg-gray-800 rounded-full px-4 py-1.5 flex items-center space-x-2">
@@ -93,9 +93,10 @@ CASINO</span>
                 <div class="flex flex-col space-y-3">
                     <a href="index.html" class="text-white hover:text-primary transition">Home</a>
                     <a href="games.html" class="text-white hover:text-primary transition">Games</a>
-                    <a href="#" class="text-white hover:text-primary transition">Promotions</a>
-                    <a href="#" class="text-white hover:text-primary transition">Provably Fair</a>
-                    <a href="#" class="text-white hover:text-primary transition">Leaderboard</a>
+                    <a href="index.html#promotions" class="text-white hover:text-primary transition">Promotions</a>
+                    <a href="index.html#provably-fair" class="text-white hover:text-primary transition">Provably Fair</a>
+                    <a href="games.html#recent-games" class="text-white hover:text-primary transition">Leaderboard</a>
+                    <a href="admin.html" class="text-white hover:text-primary transition">Admin</a>
                 </div>
                 <div class="space-y-3 border-t border-gray-800 pt-4">
                     <div class="space-y-2">
@@ -374,6 +375,7 @@ CASINO</span>
             doc,
             getDoc,
             setDoc,
+            updateDoc,
             serverTimestamp
         } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js';
 
@@ -391,6 +393,7 @@ CASINO</span>
 
         const STORAGE_USER_KEY = 'neonCasinoUser';
         const STORAGE_BALANCE_KEY = 'neonCasinoBalance';
+        const ADMIN_EMAIL = 'jhuxf12@outlook.com';
 
         const tabButtons = document.querySelectorAll('[data-auth-tab]');
         const forms = document.querySelectorAll('[data-form]');
@@ -553,7 +556,7 @@ CASINO</span>
             setFormLoading(loginForm, true);
             try {
                 const { user } = await signInWithEmailAndPassword(auth, email, password);
-                await setDoc(doc(db, 'users', user.uid), { lastLoginAt: serverTimestamp() }, { merge: true });
+                await setDoc(doc(db, 'users', user.uid), { lastLoginAt: serverTimestamp(), updatedAt: serverTimestamp() }, { merge: true });
                 showAlert('Signed in successfully!', 'success');
             } catch (error) {
                 console.error(error);
@@ -587,12 +590,27 @@ CASINO</span>
                 if (displayName) {
                     await updateProfile(user, { displayName });
                 }
+                const isAdminAccount = (email || '').toLowerCase() === ADMIN_EMAIL.toLowerCase();
                 await setDoc(doc(db, 'users', user.uid), {
                     displayName: displayName || null,
                     email,
                     balance: 100,
                     createdAt: serverTimestamp(),
-                    lastLoginAt: serverTimestamp()
+                    lastLoginAt: serverTimestamp(),
+                    updatedAt: serverTimestamp(),
+                    role: isAdminAccount ? 'Administrator' : 'Player',
+                    status: 'Active',
+                    vipTier: isAdminAccount ? 'Executive' : 'Bronze',
+                    riskLevel: 'Low',
+                    lifetimeDeposits: 0,
+                    lifetimeWagered: 0,
+                    lifetimePayouts: 0,
+                    segments: isAdminAccount ? ['Admin'] : [],
+                    notes: '',
+                    twoFactor: false,
+                    emailVerified: false,
+                    payoutHold: false,
+                    isAdmin: isAdminAccount
                 });
                 showAlert('Account created! $100 has been added to your wallet.', 'success');
             } catch (error) {
@@ -626,24 +644,114 @@ CASINO</span>
                 try {
                     const userRef = doc(db, 'users', user.uid);
                     const snapshot = await getDoc(userRef);
+                    const emailLower = (user.email || '').toLowerCase();
+                    const isAdminAccount = emailLower === ADMIN_EMAIL.toLowerCase();
+                    let profileData = snapshot.exists() ? snapshot.data() || {} : {};
                     let balance = 100;
 
-                    if (snapshot.exists()) {
-                        const data = snapshot.data();
-                        if (typeof data.balance === 'number') {
-                            balance = data.balance;
-                        }
-                    } else {
-                        await setDoc(userRef, {
+                    if (!snapshot.exists()) {
+                        const initialProfile = {
                             displayName: user.displayName ?? null,
                             email: user.email ?? null,
                             balance,
                             createdAt: serverTimestamp(),
-                            lastLoginAt: serverTimestamp()
-                        });
+                            lastLoginAt: serverTimestamp(),
+                            updatedAt: serverTimestamp(),
+                            role: isAdminAccount ? 'Administrator' : 'Player',
+                            status: 'Active',
+                            vipTier: isAdminAccount ? 'Executive' : 'Bronze',
+                            riskLevel: 'Low',
+                            lifetimeDeposits: 0,
+                            lifetimeWagered: 0,
+                            lifetimePayouts: 0,
+                            segments: isAdminAccount ? ['Admin'] : [],
+                            notes: '',
+                            twoFactor: false,
+                            emailVerified: user.emailVerified ?? false,
+                            payoutHold: false,
+                            isAdmin: isAdminAccount
+                        };
+                        await setDoc(userRef, initialProfile);
+                        profileData = initialProfile;
+                    } else {
+                        if (typeof profileData.balance === 'number') {
+                            balance = profileData.balance;
+                        }
+                        const updates = {};
+                        if (!profileData.displayName && user.displayName) {
+                            updates.displayName = user.displayName;
+                        }
+                        if (!profileData.status) {
+                            updates.status = 'Active';
+                        }
+                        if (!profileData.vipTier) {
+                            updates.vipTier = isAdminAccount ? 'Executive' : 'Bronze';
+                        }
+                        if (!profileData.riskLevel) {
+                            updates.riskLevel = 'Low';
+                        }
+                        if (!Array.isArray(profileData.segments)) {
+                            updates.segments = isAdminAccount ? ['Admin'] : [];
+                        }
+                        if (typeof profileData.lifetimeDeposits !== 'number') {
+                            updates.lifetimeDeposits = 0;
+                        }
+                        if (typeof profileData.lifetimeWagered !== 'number') {
+                            updates.lifetimeWagered = 0;
+                        }
+                        if (typeof profileData.lifetimePayouts !== 'number') {
+                            updates.lifetimePayouts = 0;
+                        }
+                        if (typeof profileData.emailVerified !== 'boolean') {
+                            updates.emailVerified = user.emailVerified ?? false;
+                        }
+                        if (typeof profileData.payoutHold !== 'boolean') {
+                            updates.payoutHold = false;
+                        }
+                        if (!profileData.role) {
+                            updates.role = isAdminAccount ? 'Administrator' : 'Player';
+                        }
+                        if (isAdminAccount && profileData.role !== 'Administrator') {
+                            updates.role = 'Administrator';
+                            updates.isAdmin = true;
+                            updates.vipTier = 'Executive';
+                            updates.segments = Array.isArray(profileData.segments)
+                                ? Array.from(new Set([...profileData.segments, 'Admin']))
+                                : ['Admin'];
+                        }
+                        if (Object.keys(updates).length) {
+                            updates.updatedAt = serverTimestamp();
+                            await updateDoc(userRef, updates);
+                            profileData = { ...profileData, ...updates };
+                        }
                     }
 
-                    await setDoc(userRef, { lastLoginAt: serverTimestamp() }, { merge: true });
+                    balance = typeof profileData.balance === 'number' ? profileData.balance : balance;
+                    await updateDoc(userRef, {
+                        lastLoginAt: serverTimestamp(),
+                        updatedAt: serverTimestamp(),
+                        email: user.email ?? profileData.email ?? null
+                    });
+
+                    if (isAdminAccount && !profileData.isAdmin) {
+                        const adminSegments = Array.isArray(profileData.segments)
+                            ? Array.from(new Set([...profileData.segments, 'Admin']))
+                            : ['Admin'];
+                        await updateDoc(userRef, {
+                            isAdmin: true,
+                            role: 'Administrator',
+                            vipTier: 'Executive',
+                            segments: adminSegments,
+                            updatedAt: serverTimestamp()
+                        });
+                        profileData = {
+                            ...profileData,
+                            isAdmin: true,
+                            role: 'Administrator',
+                            vipTier: 'Executive',
+                            segments: adminSegments
+                        };
+                    }
                     updateUserPanel(user, balance);
                     toggleForms(false);
                     persistSession(user, balance);
