@@ -1,0 +1,1543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NEON CASINO | Admin Control Center</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js" defer></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Poppins', 'sans-serif'],
+          },
+          colors: {
+            dark: '#0e0f13',
+            primary: '#00c2ff',
+            secondary: '#7c3aed',
+            accent: '#2bd975',
+          },
+          boxShadow: {
+            'neon-blue': '0 0 15px rgba(0, 194, 255, 0.5)',
+            'neon-purple': '0 0 15px rgba(124, 58, 237, 0.5)',
+            'neon-green': '0 0 15px rgba(43, 217, 117, 0.5)',
+            'glow-blue': '0 0 20px rgba(0, 194, 255, 0.65)',
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    body {
+      background: radial-gradient(circle at top left, rgba(0, 194, 255, 0.12), transparent 45%),
+        radial-gradient(circle at bottom right, rgba(124, 58, 237, 0.1), transparent 50%),
+        #070b15;
+      color: #f8fafc;
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .gradient-btn {
+      background: linear-gradient(45deg, #00c2ff, #7c3aed);
+    }
+    .gradient-btn:hover {
+      box-shadow: 0 0 18px rgba(0, 194, 255, 0.6);
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      line-height: 1;
+      padding: 0.35rem 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+    .scroll-shadow {
+      position: relative;
+    }
+    .scroll-shadow::after {
+      content: '';
+      pointer-events: none;
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 36px;
+      background: linear-gradient(90deg, rgba(7, 11, 21, 0), rgba(7, 11, 21, 1));
+    }
+  </style>
+</head>
+<body class="font-sans min-h-screen">
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-dark/80 backdrop-blur-md border-b border-gray-800">
+    <div class="container mx-auto px-4 py-3">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <span class="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">NEON CASINO</span>
+        </div>
+        <div class="hidden md:flex items-center space-x-8">
+          <a href="index.html" class="text-white hover:text-primary transition">Home</a>
+          <a href="games.html" class="text-white hover:text-primary transition">Games</a>
+          <a href="index.html#promotions" class="text-white hover:text-primary transition">Promotions</a>
+          <a href="index.html#provably-fair" class="text-white hover:text-primary transition">Provably Fair</a>
+          <a href="games.html#recent-games" class="text-white hover:text-primary transition">Leaderboard</a>
+          <a href="admin.html" class="text-primary font-semibold transition">Admin</a>
+        </div>
+        <div class="hidden md:flex items-center space-x-4">
+          <div class="bg-gray-800 rounded-full px-4 py-1.5 flex items-center space-x-2">
+            <i data-feather="dollar-sign" class="w-4 h-4 text-accent"></i>
+            <span class="font-medium" data-balance data-default-balance="1000.00">1,000.00</span>
+          </div>
+          <a href="auth.html" class="gradient-btn rounded-full px-6 py-2 font-medium text-white hover:shadow-lg transition">
+            Sign In
+          </a>
+        </div>
+        <button type="button" class="md:hidden text-white focus:outline-none" data-mobile-toggle aria-expanded="false" aria-controls="mobile-menu">
+          <span class="sr-only">Toggle navigation</span>
+          <i data-feather="menu" class="w-6 h-6" data-icon-closed></i>
+          <i data-feather="x" class="w-6 h-6 hidden" data-icon-open></i>
+        </button>
+      </div>
+      <div id="mobile-menu" class="md:hidden hidden flex-col space-y-4 pt-4 border-t border-gray-800" data-mobile-menu>
+        <div class="flex flex-col space-y-3">
+          <a href="index.html" class="text-white hover:text-primary transition">Home</a>
+          <a href="games.html" class="text-white hover:text-primary transition">Games</a>
+          <a href="index.html#promotions" class="text-white hover:text-primary transition">Promotions</a>
+          <a href="index.html#provably-fair" class="text-white hover:text-primary transition">Provably Fair</a>
+          <a href="games.html#recent-games" class="text-white hover:text-primary transition">Leaderboard</a>
+          <a href="admin.html" class="text-primary font-semibold transition">Admin</a>
+        </div>
+        <div class="space-y-3 border-t border-gray-800 pt-4">
+          <div class="space-y-2">
+            <span class="text-xs uppercase tracking-wide text-gray-400">Wallet Balance</span>
+            <div class="bg-gray-800 rounded-full px-4 py-1.5 flex items-center space-x-2">
+              <i data-feather="dollar-sign" class="w-4 h-4 text-accent"></i>
+              <span class="font-medium" data-balance data-default-balance="1000.00">1,000.00</span>
+            </div>
+          </div>
+          <a href="auth.html" class="gradient-btn rounded-full px-6 py-2 font-medium text-white text-center hover:shadow-lg transition">
+            Sign In
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="pt-32 pb-16 px-4 relative overflow-hidden">
+    <div class="absolute inset-0 opacity-20" aria-hidden="true">
+      <div class="absolute top-1/5 left-1/4 w-72 h-72 rounded-full bg-primary blur-3xl"></div>
+      <div class="absolute bottom-1/5 right-1/5 w-72 h-72 rounded-full bg-secondary blur-3xl"></div>
+    </div>
+    <div class="container mx-auto relative z-10 space-y-12">
+      <section class="space-y-6" data-aos="fade-up">
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+          <div class="space-y-4 max-w-2xl">
+            <span class="inline-flex items-center rounded-full border border-primary/50 bg-primary/10 px-3 py-1 text-xs uppercase tracking-[0.3em] text-primary/80">Operations Console</span>
+            <h1 class="text-3xl md:text-4xl font-bold leading-tight">Admin Control Center</h1>
+            <p class="text-gray-300 text-base md:text-lg">Monitor player sentiment, orchestrate wallet balances, and resolve compliance events without leaving the Neon aesthetic. Every interaction is recorded in the audit trail for total transparency.</p>
+            <div class="flex flex-wrap items-center gap-3 text-xs text-gray-400">
+              <div class="flex items-center gap-2">
+                <span class="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_0_4px_rgba(16,185,129,0.15)]"></span>
+                <span>Realtime ledger sync active</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="h-2 w-2 rounded-full bg-sky-400 shadow-[0_0_0_4px_rgba(14,165,233,0.15)]"></span>
+                <span>Risk engine connected</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="h-2 w-2 rounded-full bg-purple-400 shadow-[0_0_0_4px_rgba(139,92,246,0.15)]"></span>
+                <span>Last sync <span data-last-sync class="font-medium text-gray-300">—</span></span>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-col sm:flex-row items-stretch gap-3">
+            <button type="button" class="gradient-btn px-5 py-3 rounded-2xl text-sm font-semibold text-white shadow-neon-blue" data-add-user>
+              Create new user
+            </button>
+            <button type="button" class="px-5 py-3 rounded-2xl text-sm font-semibold text-primary border border-primary/40 bg-primary/5 hover:bg-primary/10 transition" data-export-users>
+              Export snapshot
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="grid gap-4 md:grid-cols-2 xl:grid-cols-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="glass-card rounded-2xl p-6 relative overflow-hidden">
+          <div class="absolute -top-10 -right-10 h-32 w-32 bg-primary/20 rounded-full blur-3xl"></div>
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-xs uppercase tracking-widest text-gray-400">Total users</p>
+              <p class="text-3xl font-bold text-white" data-summary="total-users">0</p>
+              <p class="text-xs text-gray-500 mt-1">Active now: <span class="text-primary font-semibold" data-summary="active-now">0</span></p>
+            </div>
+            <div class="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center border border-primary/40">
+              <i data-feather="users" class="w-5 h-5 text-primary"></i>
+            </div>
+          </div>
+        </div>
+        <div class="glass-card rounded-2xl p-6 relative overflow-hidden">
+          <div class="absolute -bottom-8 -left-10 h-32 w-32 bg-secondary/20 rounded-full blur-3xl"></div>
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-xs uppercase tracking-widest text-gray-400">Wallet float</p>
+              <p class="text-3xl font-bold text-white" data-summary="total-balance">$0.00</p>
+              <p class="text-xs text-gray-500 mt-1">Includes promotional credit</p>
+            </div>
+            <div class="h-12 w-12 rounded-full bg-secondary/10 flex items-center justify-center border border-secondary/40">
+              <i data-feather="database" class="w-5 h-5 text-secondary"></i>
+            </div>
+          </div>
+        </div>
+        <div class="glass-card rounded-2xl p-6 relative overflow-hidden">
+          <div class="absolute top-0 right-0 h-20 w-20 bg-accent/20 rounded-full blur-3xl"></div>
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-xs uppercase tracking-widest text-gray-400">New signups · 7d</p>
+              <p class="text-3xl font-bold text-white" data-summary="new-signups">0</p>
+              <p class="text-xs text-gray-500 mt-1">Auto welcome bonus sent</p>
+            </div>
+            <div class="h-12 w-12 rounded-full bg-accent/10 flex items-center justify-center border border-accent/30">
+              <i data-feather="user-plus" class="w-5 h-5 text-accent"></i>
+            </div>
+          </div>
+        </div>
+        <div class="glass-card rounded-2xl p-6 relative overflow-hidden">
+          <div class="absolute -bottom-12 -right-6 h-28 w-28 bg-blue-500/20 rounded-full blur-3xl"></div>
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-xs uppercase tracking-widest text-gray-400">Admin accounts</p>
+              <p class="text-3xl font-bold text-white" data-summary="admin-count">0</p>
+              <p class="text-xs text-gray-500 mt-1">Flagged accounts: <span data-summary="flagged" class="font-medium text-amber-200">0</span></p>
+            </div>
+            <div class="h-12 w-12 rounded-full bg-blue-500/10 flex items-center justify-center border border-blue-500/30">
+              <i data-feather="shield" class="w-5 h-5 text-blue-400"></i>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="grid gap-8 xl:grid-cols-[minmax(0,1.8fr)_minmax(0,1fr)] items-start">
+        <section class="glass-card rounded-3xl p-6 lg:p-8 space-y-6" data-aos="fade-up" data-aos-delay="150">
+          <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            <div>
+              <h2 class="text-2xl font-semibold text-white">Player directory</h2>
+              <p class="text-sm text-gray-400 mt-1">Search, filter, and select any profile to reveal full wallet controls and compliance notes.</p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <button type="button" class="px-4 py-2 rounded-xl text-xs font-semibold text-gray-300 border border-gray-700 hover:border-primary/40 hover:text-primary transition" data-refresh-users>Refresh data</button>
+              <button type="button" class="px-4 py-2 rounded-xl text-xs font-semibold text-gray-300 border border-gray-700 hover:border-secondary/40 hover:text-secondary transition" data-open-audit>Audit log</button>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-4 lg:flex-row lg:items-center">
+            <div class="relative flex-1">
+              <span class="absolute inset-y-0 left-3 flex items-center text-gray-500">
+                <i data-feather="search" class="w-4 h-4"></i>
+              </span>
+              <input type="search" placeholder="Search by name, email, or tag" class="w-full bg-black/30 border border-gray-800 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder:text-gray-500 focus:border-primary/60 focus:ring-2 focus:ring-primary/20" data-user-search />
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full lg:w-auto">
+              <select class="bg-black/30 border border-gray-800 rounded-xl px-3 py-2 text-sm text-gray-200 focus:border-primary/50 focus:ring-2 focus:ring-primary/20" data-filter="status">
+                <option value="all">All statuses</option>
+                <option value="Active">Active</option>
+                <option value="Cooling Off">Cooling off</option>
+                <option value="Under Review">Under review</option>
+                <option value="Suspended">Suspended</option>
+              </select>
+              <select class="bg-black/30 border border-gray-800 rounded-xl px-3 py-2 text-sm text-gray-200 focus:border-primary/50 focus:ring-2 focus:ring-primary/20" data-filter="role">
+                <option value="all">All roles</option>
+                <option value="Player">Player</option>
+                <option value="VIP">VIP</option>
+                <option value="Moderator">Moderator</option>
+                <option value="Administrator">Administrator</option>
+              </select>
+              <select class="bg-black/30 border border-gray-800 rounded-xl px-3 py-2 text-sm text-gray-200 focus:border-primary/50 focus:ring-2 focus:ring-primary/20" data-filter="vip">
+                <option value="all">All VIP tiers</option>
+                <option value="Bronze">Bronze</option>
+                <option value="Silver">Silver</option>
+                <option value="Gold">Gold</option>
+                <option value="Platinum">Platinum</option>
+                <option value="Diamond">Diamond</option>
+                <option value="Obsidian">Obsidian</option>
+                <option value="Executive">Executive</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto rounded-2xl border border-gray-800/80">
+            <table class="min-w-full divide-y divide-gray-800/80 text-sm">
+              <thead class="bg-black/40 text-gray-400 uppercase text-xs tracking-wide">
+                <tr>
+                  <th scope="col" class="px-4 py-3 text-left">User</th>
+                  <th scope="col" class="px-4 py-3 text-left">Status</th>
+                  <th scope="col" class="px-4 py-3 text-left">Wallet</th>
+                  <th scope="col" class="px-4 py-3 text-left">VIP &amp; Role</th>
+                  <th scope="col" class="px-4 py-3 text-left">Last active</th>
+                  <th scope="col" class="px-4 py-3 text-left">Risk</th>
+                </tr>
+              </thead>
+              <tbody data-user-table class="bg-black/20 divide-y divide-gray-800/70"></tbody>
+            </table>
+          </div>
+
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between text-xs text-gray-500">
+            <span>Showing <span class="text-white font-semibold" data-table-count>0</span> of <span class="text-white font-semibold" data-table-total>0</span> profiles</span>
+            <span class="text-gray-500">Click a row to open full management controls</span>
+          </div>
+        </section>
+
+        <aside class="glass-card rounded-3xl p-6 lg:p-8 space-y-6" data-detail-panel data-aos="fade-up" data-aos-delay="200">
+          <div data-empty-view class="text-sm text-gray-400 space-y-3 hidden">
+            <p class="font-semibold text-white">Select a player</p>
+            <p>Choose a profile from the directory to unlock wallet controls, compliance flags, and communication utilities.</p>
+          </div>
+
+          <div data-selected-view class="space-y-7 hidden">
+            <div class="flex flex-col gap-4">
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <p class="text-xs uppercase tracking-widest text-gray-500">Selected profile</p>
+                  <h2 class="text-2xl font-semibold text-white" data-detail-name>—</h2>
+                  <div class="flex flex-wrap gap-2 mt-3">
+                    <span class="badge border border-gray-700 text-gray-300" data-detail-role>—</span>
+                    <span class="badge border border-gray-700 text-gray-300" data-detail-status>—</span>
+                    <span class="badge border border-gray-700 text-gray-300" data-detail-vip>—</span>
+                  </div>
+                </div>
+                <div class="text-right space-y-3">
+                  <div>
+                    <p class="text-[11px] uppercase tracking-[0.25em] text-gray-500">User ID</p>
+                    <p class="font-mono text-sm text-gray-300" data-detail-id>—</p>
+                  </div>
+                  <button type="button" class="px-3 py-1.5 rounded-xl text-xs font-semibold border border-gray-700 text-gray-300 hover:text-primary hover:border-primary/40 transition" data-action-message="Impersonation session started in a sandbox window." data-action-tone="warning">
+                    Impersonate (demo)
+                  </button>
+                </div>
+              </div>
+              <div class="space-y-2 text-sm text-gray-400">
+                <a href="#" class="text-primary hover:text-primary/80 transition" data-detail-email>—</a>
+                <p><span class="text-gray-500">Location:</span> <span data-detail-location>—</span></p>
+                <p><span class="text-gray-500">Last active:</span> <span data-detail-last-active>—</span></p>
+              </div>
+              <div class="flex flex-wrap gap-2" data-detail-tags></div>
+              <div class="rounded-2xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-xs text-amber-200 hidden" data-detail-cooldown>
+                <p class="font-semibold">Cooling-off period in effect</p>
+                <p data-detail-cooldown-text class="mt-1 text-amber-100/80">—</p>
+              </div>
+            </div>
+
+            <div class="grid gap-3 sm:grid-cols-3">
+              <div class="rounded-2xl border border-primary/30 bg-primary/10 px-4 py-3">
+                <p class="text-[11px] uppercase tracking-[0.3em] text-primary/70">Wallet balance</p>
+                <p class="text-xl font-semibold text-white mt-1" data-detail-balance>$0.00</p>
+              </div>
+              <div class="rounded-2xl border border-secondary/30 bg-secondary/10 px-4 py-3">
+                <p class="text-[11px] uppercase tracking-[0.3em] text-secondary/70">Lifetime deposits</p>
+                <p class="text-xl font-semibold text-white mt-1" data-detail-deposits>$0.00</p>
+              </div>
+              <div class="rounded-2xl border border-emerald-400/30 bg-emerald-500/10 px-4 py-3">
+                <p class="text-[11px] uppercase tracking-[0.3em] text-emerald-200/80">Lifetime wagered</p>
+                <p class="text-xl font-semibold text-white mt-1" data-detail-wagered>$0.00</p>
+              </div>
+              <div class="rounded-2xl border border-blue-400/30 bg-blue-500/10 px-4 py-3">
+                <p class="text-[11px] uppercase tracking-[0.3em] text-blue-200/80">Lifetime payouts</p>
+                <p class="text-xl font-semibold text-white mt-1" data-detail-payouts>$0.00</p>
+              </div>
+            </div>
+
+            <form data-user-form class="space-y-7">
+              <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                  <h3 class="text-sm font-semibold text-white uppercase tracking-[0.3em]">General profile</h3>
+                  <button type="button" class="text-xs text-gray-400 hover:text-primary transition" data-reset-user>Reset</button>
+                </div>
+                <div class="grid gap-4 sm:grid-cols-2">
+                  <label class="space-y-2 text-sm text-gray-300">
+                    <span class="text-xs uppercase tracking-widest text-gray-500">Display name</span>
+                    <input name="userName" type="text" class="w-full bg-black/30 border border-gray-800 rounded-xl px-3 py-2.5 text-sm text-white focus:border-primary/60 focus:ring-2 focus:ring-primary/20" required />
+                  </label>
+                  <label class="space-y-2 text-sm text-gray-300">
+                    <span class="text-xs uppercase tracking-widest text-gray-500">Email</span>
+                    <input name="userEmail" type="email" class="w-full bg-black/30 border border-gray-800 rounded-xl px-3 py-2.5 text-sm text-white focus:border-primary/60 focus:ring-2 focus:ring-primary/20" required />
+                  </label>
+                  <label class="space-y-2 text-sm text-gray-300">
+                    <span class="text-xs uppercase tracking-widest text-gray-500">Role</span>
+                    <select name="userRole" class="w-full bg-black/30 border border-gray-800 rounded-xl px-3 py-2.5 text-sm text-gray-200 focus:border-primary/60 focus:ring-2 focus:ring-primary/20">
+                      <option value="Player">Player</option>
+                      <option value="VIP">VIP</option>
+                      <option value="Moderator">Moderator</option>
+                      <option value="Administrator">Administrator</option>
+                    </select>
+                  </label>
+                  <label class="space-y-2 text-sm text-gray-300">
+                    <span class="text-xs uppercase tracking-widest text-gray-500">Status</span>
+                    <select name="userStatus" class="w-full bg-black/30 border border-gray-800 rounded-xl px-3 py-2.5 text-sm text-gray-200 focus:border-primary/60 focus:ring-2 focus:ring-primary/20">
+                      <option value="Active">Active</option>
+                      <option value="Cooling Off">Cooling off</option>
+                      <option value="Under Review">Under review</option>
+                      <option value="Suspended">Suspended</option>
+                    </select>
+                  </label>
+                  <label class="space-y-2 text-sm text-gray-300">
+                    <span class="text-xs uppercase tracking-widest text-gray-500">VIP tier</span>
+                    <select name="userVip" class="w-full bg-black/30 border border-gray-800 rounded-xl px-3 py-2.5 text-sm text-gray-200 focus:border-primary/60 focus:ring-2 focus:ring-primary/20">
+                      <option value="Bronze">Bronze</option>
+                      <option value="Silver">Silver</option>
+                      <option value="Gold">Gold</option>
+                      <option value="Platinum">Platinum</option>
+                      <option value="Diamond">Diamond</option>
+                      <option value="Obsidian">Obsidian</option>
+                      <option value="Executive">Executive</option>
+                    </select>
+                  </label>
+                  <label class="space-y-2 text-sm text-gray-300">
+                    <span class="text-xs uppercase tracking-widest text-gray-500">Risk level</span>
+                    <select name="userRisk" class="w-full bg-black/30 border border-gray-800 rounded-xl px-3 py-2.5 text-sm text-gray-200 focus:border-primary/60 focus:ring-2 focus:ring-primary/20">
+                      <option value="Low">Low</option>
+                      <option value="Medium">Medium</option>
+                      <option value="Elevated">Elevated</option>
+                      <option value="Critical">Critical</option>
+                    </select>
+                  </label>
+                  <label class="space-y-2 text-sm text-gray-300">
+                    <span class="text-xs uppercase tracking-widest text-gray-500">Location</span>
+                    <input name="userLocation" type="text" class="w-full bg-black/30 border border-gray-800 rounded-xl px-3 py-2.5 text-sm text-white focus:border-primary/60 focus:ring-2 focus:ring-primary/20" placeholder="City, Country" />
+                  </label>
+                </div>
+              </div>
+
+              <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                  <h3 class="text-sm font-semibold text-white uppercase tracking-[0.3em]">Wallet controls</h3>
+                  <button type="button" class="text-xs text-gray-400 hover:text-primary transition" data-balance-reset>Reset balance</button>
+                </div>
+                <div class="grid gap-4 sm:grid-cols-2">
+                  <label class="space-y-2 text-sm text-gray-300">
+                    <span class="text-xs uppercase tracking-widest text-gray-500">Current balance (USD)</span>
+                    <input name="userBalance" type="number" step="0.01" min="0" class="w-full bg-black/30 border border-gray-800 rounded-xl px-3 py-2.5 text-sm text-white focus:border-primary/60 focus:ring-2 focus:ring-primary/20" data-balance-input />
+                  </label>
+                  <div class="space-y-2 text-sm text-gray-300">
+                    <span class="text-xs uppercase tracking-widest text-gray-500">Quick adjustments</span>
+                    <div class="flex flex-wrap gap-2">
+                      <button type="button" class="px-3 py-1.5 rounded-lg border border-primary/40 text-primary text-xs font-semibold hover:bg-primary/10 transition" data-balance-adjust="25">+ $25</button>
+                      <button type="button" class="px-3 py-1.5 rounded-lg border border-primary/40 text-primary text-xs font-semibold hover:bg-primary/10 transition" data-balance-adjust="100">+ $100</button>
+                      <button type="button" class="px-3 py-1.5 rounded-lg border border-primary/40 text-primary text-xs font-semibold hover:bg-primary/10 transition" data-balance-adjust="500">+ $500</button>
+                      <button type="button" class="px-3 py-1.5 rounded-lg border border-rose-400/40 text-rose-200 text-xs font-semibold hover:bg-rose-500/10 transition" data-balance-adjust="-25">- $25</button>
+                      <button type="button" class="px-3 py-1.5 rounded-lg border border-rose-400/40 text-rose-200 text-xs font-semibold hover:bg-rose-500/10 transition" data-balance-adjust="-100">- $100</button>
+                      <button type="button" class="px-3 py-1.5 rounded-lg border border-gray-700 text-gray-300 text-xs font-semibold hover:bg-gray-800/60 transition" data-balance-action="zero">Set to $0</button>
+                    </div>
+                  </div>
+                  <label class="space-y-2 text-sm text-gray-300">
+                    <span class="text-xs uppercase tracking-widest text-gray-500">Lifetime deposits</span>
+                    <input name="userDeposits" type="number" step="0.01" min="0" class="w-full bg-black/30 border border-gray-800 rounded-xl px-3 py-2.5 text-sm text-white focus:border-primary/60 focus:ring-2 focus:ring-primary/20" />
+                  </label>
+                  <label class="space-y-2 text-sm text-gray-300">
+                    <span class="text-xs uppercase tracking-widest text-gray-500">Lifetime wagered</span>
+                    <input name="userWagered" type="number" step="0.01" min="0" class="w-full bg-black/30 border border-gray-800 rounded-xl px-3 py-2.5 text-sm text-white focus:border-primary/60 focus:ring-2 focus:ring-primary/20" />
+                  </label>
+                  <label class="space-y-2 text-sm text-gray-300">
+                    <span class="text-xs uppercase tracking-widest text-gray-500">Lifetime payouts</span>
+                    <input name="userPayouts" type="number" step="0.01" min="0" class="w-full bg-black/30 border border-gray-800 rounded-xl px-3 py-2.5 text-sm text-white focus:border-primary/60 focus:ring-2 focus:ring-primary/20" />
+                  </label>
+                </div>
+              </div>
+
+              <div class="space-y-3">
+                <h3 class="text-sm font-semibold text-white uppercase tracking-[0.3em]">Security &amp; compliance</h3>
+                <label class="flex items-center gap-3 text-sm text-gray-300">
+                  <input type="checkbox" name="userTwoFactor" class="h-4 w-4 rounded border-gray-700 bg-black/40 text-primary focus:ring-primary/40" />
+                  <span>Two-factor authentication enabled</span>
+                </label>
+                <label class="flex items-center gap-3 text-sm text-gray-300">
+                  <input type="checkbox" name="userEmailVerified" class="h-4 w-4 rounded border-gray-700 bg-black/40 text-primary focus:ring-primary/40" />
+                  <span>Email verified</span>
+                </label>
+                <label class="flex items-center gap-3 text-sm text-gray-300">
+                  <input type="checkbox" name="userPayoutHold" class="h-4 w-4 rounded border-gray-700 bg-black/40 text-primary focus:ring-primary/40" />
+                  <span>Withdrawal hold active</span>
+                </label>
+                <div class="grid gap-2 sm:grid-cols-2">
+                  <button type="button" class="px-3 py-2 rounded-xl text-xs font-semibold border border-gray-700 text-gray-300 hover:text-accent hover:border-accent/50 transition" data-action-message="Password reset email queued for delivery.">Send reset email</button>
+                  <button type="button" class="px-3 py-2 rounded-xl text-xs font-semibold border border-gray-700 text-gray-300 hover:text-secondary hover:border-secondary/50 transition" data-action-message="Account summary emailed to player." data-action-tone="success">Send account summary</button>
+                  <button type="button" class="px-3 py-2 rounded-xl text-xs font-semibold border border-rose-500/40 text-rose-200 hover:bg-rose-500/10 transition" data-action-message="Account suspended. Player notified automatically." data-action-tone="danger">Suspend account</button>
+                  <button type="button" class="px-3 py-2 rounded-xl text-xs font-semibold border border-emerald-500/40 text-emerald-200 hover:bg-emerald-500/10 transition" data-action-message="Responsible gaming check-in scheduled.">Schedule wellbeing call</button>
+                </div>
+              </div>
+
+              <div class="space-y-3">
+                <h3 class="text-sm font-semibold text-white uppercase tracking-[0.3em]">Internal notes</h3>
+                <textarea name="userNotes" rows="4" class="w-full bg-black/30 border border-gray-800 rounded-2xl px-4 py-3 text-sm text-white focus:border-primary/60 focus:ring-2 focus:ring-primary/20" placeholder="Add retention plans, compliance reminders, or player preferences."></textarea>
+                <div class="flex items-center justify-end gap-3">
+                  <button type="button" class="px-4 py-2 rounded-xl text-xs font-semibold border border-gray-700 text-gray-300 hover:text-primary hover:border-primary/40 transition" data-reset-user>Revert changes</button>
+                  <button type="submit" class="gradient-btn px-4 py-2 rounded-xl text-xs font-semibold text-white shadow-neon-blue">Save changes</button>
+                </div>
+              </div>
+            </form>
+
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <h3 class="text-sm font-semibold text-white uppercase tracking-[0.3em]">Recent activity</h3>
+                <button type="button" class="text-xs text-gray-400 hover:text-primary transition" data-action-message="Activity feed synced." data-action-tone="success">Refresh</button>
+              </div>
+              <ul class="space-y-3 max-h-60 overflow-y-auto pr-1" data-activity-list></ul>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <section class="glass-card rounded-3xl p-6 lg:p-8 space-y-6" data-aos="fade-up" data-aos-delay="250">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <h2 class="text-2xl font-semibold text-white">Audit timeline</h2>
+            <p class="text-sm text-gray-400 mt-1">Every balance adjustment, verification event, and status change is captured for accountability.</p>
+          </div>
+          <button type="button" class="px-4 py-2 rounded-xl text-xs font-semibold border border-gray-700 text-gray-300 hover:text-primary hover:border-primary/40 transition" data-refresh-audit>Refresh timeline</button>
+        </div>
+        <div class="space-y-6" data-audit-list></div>
+      </section>
+    </div>
+  </main>
+
+  <div class="hidden fixed bottom-6 right-6 z-50 max-w-xs px-5 py-4 rounded-2xl border text-sm shadow-lg backdrop-blur" data-toast>
+    <div class="flex items-center justify-between gap-4">
+      <p data-toast-message class="font-medium">Action completed.</p>
+      <button type="button" class="text-xs uppercase tracking-widest text-gray-400 hover:text-white transition" data-toast-close>&times;</button>
+    </div>
+  </div>
+
+  <script>
+    function initNavigation() {
+      const BALANCE_STORAGE_KEY = 'neonCasinoBalance';
+      const resolveFallbackBalance = (element) => {
+        const attributeValue = element.getAttribute('data-default-balance');
+        if (attributeValue != null && attributeValue !== '') return attributeValue;
+        const textValue = (element.textContent || '').trim();
+        if (textValue) return textValue;
+        return '0.00';
+      };
+
+      const balanceTargets = Array.from(document.querySelectorAll('[data-balance]')).map((element) => ({
+        element,
+        fallback: resolveFallbackBalance(element),
+      }));
+
+      const formatCurrency = (value) => value.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+
+      const updateBalanceFromStorage = () => {
+        if (!balanceTargets.length) return;
+        let storedBalance = null;
+        try {
+          storedBalance = window.localStorage.getItem(BALANCE_STORAGE_KEY);
+        } catch (error) {
+          storedBalance = null;
+        }
+        if (storedBalance == null) {
+          balanceTargets.forEach(({ element, fallback }) => {
+            element.textContent = fallback;
+          });
+          return;
+        }
+        const numericValue = Number.parseFloat(storedBalance);
+        if (Number.isFinite(numericValue)) {
+          const formatted = formatCurrency(numericValue);
+          balanceTargets.forEach(({ element }) => {
+            element.textContent = formatted;
+          });
+        } else {
+          balanceTargets.forEach(({ element, fallback }) => {
+            element.textContent = fallback;
+          });
+        }
+      };
+
+      updateBalanceFromStorage();
+      window.addEventListener('storage', (event) => {
+        if (event.key === BALANCE_STORAGE_KEY) updateBalanceFromStorage();
+      });
+      document.addEventListener('neonCasinoBalanceUpdated', updateBalanceFromStorage);
+
+      const toggleButton = document.querySelector('[data-mobile-toggle]');
+      const mobileMenu = document.querySelector('[data-mobile-menu]');
+      if (toggleButton && mobileMenu) {
+        const setMenuState = (isOpen) => {
+          mobileMenu.classList.toggle('hidden', !isOpen);
+          toggleButton.setAttribute('aria-expanded', String(isOpen));
+          const openIcon = toggleButton.querySelector('[data-icon-open]');
+          const closedIcon = toggleButton.querySelector('[data-icon-closed]');
+          if (openIcon) openIcon.classList.toggle('hidden', !isOpen);
+          if (closedIcon) closedIcon.classList.toggle('hidden', isOpen);
+          document.body.classList.toggle('overflow-hidden', isOpen);
+        };
+
+        toggleButton.addEventListener('click', () => {
+          const currentlyOpen = !mobileMenu.classList.contains('hidden');
+          setMenuState(!currentlyOpen);
+        });
+
+        mobileMenu.querySelectorAll('a, button').forEach((el) => {
+          el.addEventListener('click', () => setMenuState(false));
+        });
+
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape') setMenuState(false);
+        });
+
+        const mq = window.matchMedia('(min-width: 768px)');
+        const handleMediaChange = (e) => {
+          if (e.matches) setMenuState(false);
+        };
+        if (typeof mq.addEventListener === 'function') mq.addEventListener('change', handleMediaChange);
+        else if (typeof mq.addListener === 'function') mq.addListener(handleMediaChange);
+        setMenuState(false);
+      }
+    }
+
+    function initAdminPanel() {
+      const tableBody = document.querySelector('[data-user-table]');
+      const searchInput = document.querySelector('[data-user-search]');
+      const filterControls = {
+        status: document.querySelector('[data-filter="status"]'),
+        role: document.querySelector('[data-filter="role"]'),
+        vip: document.querySelector('[data-filter="vip"]'),
+      };
+      const tableMeta = {
+        visible: document.querySelector('[data-table-count]'),
+        total: document.querySelector('[data-table-total]'),
+      };
+      const summaryTargets = {
+        totalUsers: document.querySelector('[data-summary="total-users"]'),
+        totalBalance: document.querySelector('[data-summary="total-balance"]'),
+        newSignups: document.querySelector('[data-summary="new-signups"]'),
+        adminCount: document.querySelector('[data-summary="admin-count"]'),
+        activeNow: document.querySelector('[data-summary="active-now"]'),
+        flagged: document.querySelector('[data-summary="flagged"]'),
+      };
+      const detailPanel = document.querySelector('[data-detail-panel]');
+      const selectedView = detailPanel ? detailPanel.querySelector('[data-selected-view]') : null;
+      const emptyView = detailPanel ? detailPanel.querySelector('[data-empty-view]') : null;
+      const detailRefs = detailPanel
+        ? {
+            name: detailPanel.querySelector('[data-detail-name]'),
+            email: detailPanel.querySelector('[data-detail-email]'),
+            id: detailPanel.querySelector('[data-detail-id]'),
+            role: detailPanel.querySelector('[data-detail-role]'),
+            status: detailPanel.querySelector('[data-detail-status]'),
+            vip: detailPanel.querySelector('[data-detail-vip]'),
+            balance: detailPanel.querySelector('[data-detail-balance]'),
+            deposits: detailPanel.querySelector('[data-detail-deposits]'),
+            wagered: detailPanel.querySelector('[data-detail-wagered]'),
+            payouts: detailPanel.querySelector('[data-detail-payouts]'),
+            lastActive: detailPanel.querySelector('[data-detail-last-active]'),
+            location: detailPanel.querySelector('[data-detail-location]'),
+            tags: detailPanel.querySelector('[data-detail-tags]'),
+            cooldown: detailPanel.querySelector('[data-detail-cooldown]'),
+            cooldownText: detailPanel.querySelector('[data-detail-cooldown-text]'),
+            activityList: detailPanel.querySelector('[data-activity-list]'),
+          }
+        : null;
+      const userForm = detailPanel ? detailPanel.querySelector('[data-user-form]') : null;
+      const formRefs = userForm
+        ? {
+            name: userForm.querySelector('[name="userName"]'),
+            email: userForm.querySelector('[name="userEmail"]'),
+            role: userForm.querySelector('[name="userRole"]'),
+            status: userForm.querySelector('[name="userStatus"]'),
+            vip: userForm.querySelector('[name="userVip"]'),
+            risk: userForm.querySelector('[name="userRisk"]'),
+            location: userForm.querySelector('[name="userLocation"]'),
+            balance: userForm.querySelector('[name="userBalance"]'),
+            deposits: userForm.querySelector('[name="userDeposits"]'),
+            wagered: userForm.querySelector('[name="userWagered"]'),
+            payouts: userForm.querySelector('[name="userPayouts"]'),
+            notes: userForm.querySelector('[name="userNotes"]'),
+            twoFactor: userForm.querySelector('[name="userTwoFactor"]'),
+            emailVerified: userForm.querySelector('[name="userEmailVerified"]'),
+            payoutHold: userForm.querySelector('[name="userPayoutHold"]'),
+          }
+        : null;
+      const toastElement = document.querySelector('[data-toast]');
+      const toastMessage = toastElement ? toastElement.querySelector('[data-toast-message]') : null;
+      const toastClose = toastElement ? toastElement.querySelector('[data-toast-close]') : null;
+      const lastSync = document.querySelector('[data-last-sync]');
+      const balanceResetButton = detailPanel ? detailPanel.querySelector('[data-balance-reset]') : null;
+      const balanceButtons = detailPanel ? detailPanel.querySelectorAll('[data-balance-adjust]') : [];
+      const balanceZeroButton = detailPanel ? detailPanel.querySelector('[data-balance-action="zero"]') : null;
+      const activityList = detailRefs ? detailRefs.activityList : null;
+      const toastStyleMap = {
+        success: ['border-emerald-500/40', 'bg-emerald-500/10', 'text-emerald-200'],
+        warning: ['border-amber-500/40', 'bg-amber-500/10', 'text-amber-200'],
+        danger: ['border-rose-500/40', 'bg-rose-500/10', 'text-rose-200'],
+        info: ['border-primary/40', 'bg-primary/10', 'text-primary'],
+      };
+
+      if (!tableBody || !detailPanel || !detailRefs || !userForm) return;
+
+      const currencyFormatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+      const numberFormatter = new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+      const state = {
+        users: [
+          {
+            id: 'ADM-2048',
+            name: 'Jhuxf Operations',
+            email: 'jhuxf12@outlook.com',
+            role: 'Administrator',
+            status: 'Active',
+            balance: 0,
+            vipTier: 'Executive',
+            riskLevel: 'Low',
+            lastActive: 'Moments ago',
+            lastActiveMinutes: 0,
+            createdAt: '2024-12-14',
+            lifetimeDeposits: 0,
+            lifetimeWagered: 0,
+            lifetimePayouts: 0,
+            location: 'Austin, United States',
+            notes: 'Primary site administrator with full permissions. Oversees payouts and security reviews.',
+            twoFactor: true,
+            emailVerified: true,
+            payoutHold: false,
+            segments: ['Admin', 'Security'],
+            activity: [
+              { timestamp: 'Just now', description: 'Promoted to administrator role via request automation.' },
+              { timestamp: '4h ago', description: 'Reviewed weekly risk score summary (all clear).' },
+              { timestamp: '1d ago', description: 'Approved payout batch for high tier players.' },
+            ],
+          },
+          {
+            id: 'USR-1093',
+            name: 'Avery Collins',
+            email: 'avery.collins@neoncasino.com',
+            role: 'VIP',
+            status: 'Active',
+            balance: 12780.45,
+            vipTier: 'Diamond',
+            riskLevel: 'Low',
+            lastActive: '2 minutes ago',
+            lastActiveMinutes: 2,
+            createdAt: '2024-06-22',
+            lifetimeDeposits: 18600,
+            lifetimeWagered: 152400,
+            lifetimePayouts: 48200,
+            location: 'Toronto, Canada',
+            notes: 'High-value crash player with consistent VIP engagement. Enjoys manual balance reviews weekly.',
+            twoFactor: true,
+            emailVerified: true,
+            payoutHold: false,
+            segments: ['Crash Pro', 'VIP Diamond'],
+            activity: [
+              { timestamp: '8m ago', description: 'Withdrew $620 to Solana wallet.' },
+              { timestamp: '26m ago', description: 'Crash cashout at 14.7x for $5,340.' },
+              { timestamp: '1d ago', description: 'Activated two-factor authentication.' },
+            ],
+          },
+          {
+            id: 'USR-2044',
+            name: 'Maya Fernandez',
+            email: 'maya.fernandez@neoncasino.com',
+            role: 'Player',
+            status: 'Cooling Off',
+            balance: 320,
+            vipTier: 'Gold',
+            riskLevel: 'Medium',
+            lastActive: '1 hour ago',
+            lastActiveMinutes: 65,
+            createdAt: '2024-10-18',
+            lifetimeDeposits: 2400,
+            lifetimeWagered: 18300,
+            lifetimePayouts: 2100,
+            location: 'Madrid, Spain',
+            notes: 'Requested 24h cooldown after extended session. Monitor re-entry behavior.',
+            twoFactor: false,
+            emailVerified: true,
+            payoutHold: false,
+            segments: ['Strategy', 'Responsible Play'],
+            cooldownEnds: 'Reopens in 18 hours',
+            activity: [
+              { timestamp: '1h ago', description: 'Self-imposed 24h cooldown initiated.' },
+              { timestamp: '2d ago', description: 'Deposited €400 via card (converted to $430).' },
+              { timestamp: '4d ago', description: 'Joined live dealer Blackjack stream.' },
+            ],
+          },
+          {
+            id: 'USR-1785',
+            name: 'Landon Price',
+            email: 'landon.price@neoncasino.com',
+            role: 'Player',
+            status: 'Under Review',
+            balance: 5120.5,
+            vipTier: 'Platinum',
+            riskLevel: 'Elevated',
+            lastActive: '14 minutes ago',
+            lastActiveMinutes: 14,
+            createdAt: '2024-08-30',
+            lifetimeDeposits: 9600,
+            lifetimeWagered: 68400,
+            lifetimePayouts: 24100,
+            location: 'Seattle, United States',
+            notes: 'Flagged for rapid payout requests. Compliance reviewing documents.',
+            twoFactor: true,
+            emailVerified: true,
+            payoutHold: true,
+            segments: ['High Velocity', 'Manual Review'],
+            activity: [
+              { timestamp: '14m ago', description: 'Attempted withdrawal of $2,400 (on hold).' },
+              { timestamp: '3h ago', description: 'Wagered $900 in Crash with early cashout.' },
+              { timestamp: '1d ago', description: 'Uploaded proof-of-address document.' },
+            ],
+          },
+          {
+            id: 'USR-1654',
+            name: 'Sora Ishikawa',
+            email: 'sora.ishikawa@neoncasino.com',
+            role: 'Moderator',
+            status: 'Active',
+            balance: 840.75,
+            vipTier: 'Platinum',
+            riskLevel: 'Low',
+            lastActive: '7 minutes ago',
+            lastActiveMinutes: 7,
+            createdAt: '2023-12-02',
+            lifetimeDeposits: 5300,
+            lifetimeWagered: 31200,
+            lifetimePayouts: 9800,
+            location: 'Osaka, Japan',
+            notes: 'Community moderator focusing on chat moderation during peak hours.',
+            twoFactor: true,
+            emailVerified: true,
+            payoutHold: false,
+            segments: ['Moderator', 'Evening Shift'],
+            activity: [
+              { timestamp: '7m ago', description: 'Cleared two chat reports in live crash room.' },
+              { timestamp: '45m ago', description: 'Granted $50 goodwill credit to player 1824.' },
+              { timestamp: '5d ago', description: 'Completed AML refresher training.' },
+            ],
+          },
+          {
+            id: 'USR-1940',
+            name: 'Oliver Brooks',
+            email: 'oliver.brooks@neoncasino.com',
+            role: 'Player',
+            status: 'Active',
+            balance: 95.2,
+            vipTier: 'Silver',
+            riskLevel: 'Low',
+            lastActive: '4 minutes ago',
+            lastActiveMinutes: 4,
+            createdAt: '2025-01-11',
+            lifetimeDeposits: 320,
+            lifetimeWagered: 890,
+            lifetimePayouts: 120,
+            location: 'Manchester, United Kingdom',
+            notes: 'New player exploring Plinko with low stakes. Encourage retention offers.',
+            twoFactor: false,
+            emailVerified: false,
+            payoutHold: false,
+            segments: ['New Player', 'Plinko Explorer'],
+            activity: [
+              { timestamp: '4m ago', description: 'Claimed 10 free spins welcome promo.' },
+              { timestamp: '2h ago', description: 'Deposited $60 via debit card.' },
+              { timestamp: '1d ago', description: 'Completed onboarding tutorial.' },
+            ],
+          },
+          {
+            id: 'USR-1578',
+            name: 'Ivy Mendez',
+            email: 'ivy.mendez@neoncasino.com',
+            role: 'VIP',
+            status: 'Suspended',
+            balance: 0,
+            vipTier: 'Obsidian',
+            riskLevel: 'Critical',
+            lastActive: '3 days ago',
+            lastActiveMinutes: 4320,
+            createdAt: '2024-02-05',
+            lifetimeDeposits: 45200,
+            lifetimeWagered: 382000,
+            lifetimePayouts: 206000,
+            location: 'Miami, United States',
+            notes: 'Account suspended pending source-of-funds review. Awaiting compliance documents.',
+            twoFactor: true,
+            emailVerified: true,
+            payoutHold: true,
+            segments: ['Whale', 'AML Review'],
+            activity: [
+              { timestamp: '3d ago', description: 'Account suspended pending KYC escalation.' },
+              { timestamp: '4d ago', description: 'Requested $25,000 withdrawal (flagged).' },
+              { timestamp: '1w ago', description: 'Reached Obsidian VIP milestone.' },
+            ],
+          },
+          {
+            id: 'USR-2112',
+            name: 'Noah Carter',
+            email: 'noah.carter@neoncasino.com',
+            role: 'Player',
+            status: 'Active',
+            balance: 642.3,
+            vipTier: 'Gold',
+            riskLevel: 'Medium',
+            lastActive: '21 minutes ago',
+            lastActiveMinutes: 21,
+            createdAt: '2024-12-29',
+            lifetimeDeposits: 1450,
+            lifetimeWagered: 5400,
+            lifetimePayouts: 880,
+            location: 'Denver, United States',
+            notes: 'Prefers Mines with medium volatility. Tracking for VIP upgrade prospects.',
+            twoFactor: false,
+            emailVerified: true,
+            payoutHold: false,
+            segments: ['Mines', 'Loyalty Prospect'],
+            activity: [
+              { timestamp: '21m ago', description: 'Completed Mines run at 5.2x multiplier.' },
+              { timestamp: '3h ago', description: 'Deposited $150 via crypto (ETH).' },
+              { timestamp: '6d ago', description: 'Participated in leaderboard challenge.' },
+            ],
+          },
+        ],
+        activeUserId: null,
+        filters: {
+          search: '',
+          status: 'all',
+          role: 'all',
+          vip: 'all',
+        },
+        visibleUsers: [],
+      };
+
+      const statusStyles = {
+        Active: 'text-emerald-200 bg-emerald-500/15 border border-emerald-500/40',
+        'Cooling Off': 'text-amber-200 bg-amber-500/15 border border-amber-500/40',
+        'Under Review': 'text-orange-200 bg-orange-500/15 border border-orange-500/40',
+        Suspended: 'text-rose-200 bg-rose-500/15 border border-rose-500/40',
+      };
+
+      const roleStyles = {
+        Administrator: 'text-primary bg-primary/10 border border-primary/40',
+        VIP: 'text-secondary bg-secondary/10 border border-secondary/40',
+        Moderator: 'text-sky-200 bg-sky-500/10 border border-sky-500/40',
+        Player: 'text-gray-200 bg-gray-700/40 border border-gray-600/50',
+      };
+
+      const vipStyles = {
+        Bronze: 'text-amber-200 bg-amber-500/10 border border-amber-500/40',
+        Silver: 'text-slate-200 bg-slate-500/10 border border-slate-400/40',
+        Gold: 'text-yellow-200 bg-yellow-500/10 border border-yellow-500/40',
+        Platinum: 'text-sky-200 bg-sky-500/10 border border-sky-400/40',
+        Diamond: 'text-indigo-200 bg-indigo-500/10 border border-indigo-500/40',
+        Obsidian: 'text-purple-200 bg-purple-500/10 border border-purple-500/40',
+        Executive: 'text-primary bg-primary/15 border border-primary/50',
+      };
+
+      const riskStyles = {
+        Low: 'text-emerald-200 bg-emerald-500/10 border border-emerald-500/40',
+        Medium: 'text-amber-200 bg-amber-500/10 border border-amber-500/40',
+        Elevated: 'text-orange-200 bg-orange-500/10 border border-orange-500/40',
+        Critical: 'text-rose-200 bg-rose-500/10 border border-rose-500/40',
+      };
+
+      const statusIndicators = {
+        Active: 'bg-emerald-400',
+        'Cooling Off': 'bg-amber-400',
+        'Under Review': 'bg-orange-400',
+        Suspended: 'bg-rose-500',
+      };
+
+      const auditTrail = [
+        {
+          id: 'audit-01',
+          icon: '↗',
+          tone: 'emerald',
+          title: 'Balance adjustment',
+          description: 'Credited $250 to Avery Collins (VIP Diamond).',
+          timestamp: '12 minutes ago',
+          actor: 'Jhuxf Operations',
+        },
+        {
+          id: 'audit-02',
+          icon: '✔',
+          tone: 'sky',
+          title: 'Verification cleared',
+          description: 'Updated Landon Price proof-of-address to verified.',
+          timestamp: '45 minutes ago',
+          actor: 'Compliance bot',
+        },
+        {
+          id: 'audit-03',
+          icon: '⚠',
+          tone: 'amber',
+          title: 'Payout hold applied',
+          description: 'Applied withdrawal hold on Ivy Mendez pending AML review.',
+          timestamp: '3 hours ago',
+          actor: 'Risk engine',
+        },
+        {
+          id: 'audit-04',
+          icon: '🗒',
+          tone: 'violet',
+          title: 'Note added',
+          description: 'Documented responsible gaming outreach for Maya Fernandez.',
+          timestamp: '6 hours ago',
+          actor: 'Support specialist',
+        },
+      ];
+
+      const toneStyles = {
+        emerald: 'border border-emerald-500/40 bg-emerald-500/10 text-emerald-200',
+        sky: 'border border-sky-500/40 bg-sky-500/10 text-sky-200',
+        amber: 'border border-amber-500/40 bg-amber-500/10 text-amber-200',
+        rose: 'border border-rose-500/40 bg-rose-500/10 text-rose-200',
+        violet: 'border border-purple-500/40 bg-purple-500/10 text-purple-200',
+      };
+
+      const setBadgeClasses = (element, styles) => {
+        if (!element) return;
+        element.className = `badge ${styles || 'border border-gray-700 text-gray-300 bg-gray-800/40'}`;
+      };
+
+      const formatCurrency = (value) => currencyFormatter.format(value || 0);
+      const formatNumber = (value) => numberFormatter.format(value || 0);
+      const getInitials = (name) => {
+        const parts = String(name || '')
+          .trim()
+          .split(/\s+/)
+          .filter(Boolean);
+        if (!parts.length) return 'NC';
+        if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+        return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
+      };
+
+      const parseNumberInput = (value) => {
+        if (value == null) return 0;
+        const numeric = Number.parseFloat(String(value).replace(/,/g, ''));
+        return Number.isFinite(numeric) ? numeric : 0;
+      };
+
+      const updateSummary = () => {
+        const totalUsers = state.users.length;
+        const totalBalance = state.users.reduce((sum, user) => sum + (user.balance || 0), 0);
+        const newSignups = state.users.filter((user) => {
+          const created = new Date(user.createdAt);
+          if (Number.isNaN(created.valueOf())) return false;
+          const diffDays = (Date.now() - created.getTime()) / (1000 * 60 * 60 * 24);
+          return diffDays <= 7;
+        }).length;
+        const adminCount = state.users.filter((user) => user.role === 'Administrator').length;
+        const activeNow = state.users.filter((user) => user.lastActiveMinutes <= 5).length;
+        const flagged = state.users.filter((user) => user.payoutHold || user.riskLevel === 'Critical').length;
+
+        if (summaryTargets.totalUsers) summaryTargets.totalUsers.textContent = totalUsers.toLocaleString();
+        if (summaryTargets.totalBalance) summaryTargets.totalBalance.textContent = formatCurrency(totalBalance);
+        if (summaryTargets.newSignups) summaryTargets.newSignups.textContent = newSignups.toLocaleString();
+        if (summaryTargets.adminCount) summaryTargets.adminCount.textContent = adminCount.toLocaleString();
+        if (summaryTargets.activeNow) summaryTargets.activeNow.textContent = activeNow.toLocaleString();
+        if (summaryTargets.flagged) summaryTargets.flagged.textContent = flagged.toLocaleString();
+      };
+
+      const applyFilters = () => {
+        const search = state.filters.search;
+        return state.users
+          .filter((user) => {
+            const query = search;
+            if (query && !(
+              user.name.toLowerCase().includes(query) ||
+              user.email.toLowerCase().includes(query) ||
+              (Array.isArray(user.segments) && user.segments.some((segment) => segment.toLowerCase().includes(query)))
+            )) {
+              return false;
+            }
+            if (state.filters.status !== 'all' && user.status !== state.filters.status) return false;
+            if (state.filters.role !== 'all' && user.role !== state.filters.role) return false;
+            if (state.filters.vip !== 'all' && user.vipTier !== state.filters.vip) return false;
+            return true;
+          })
+          .sort((a, b) => a.lastActiveMinutes - b.lastActiveMinutes);
+      };
+
+      const renderTable = () => {
+        const users = state.visibleUsers;
+        if (!users.length) {
+          tableBody.innerHTML = '<tr><td colspan="6" class="px-4 py-6 text-center text-sm text-gray-400">No matching players. Adjust your filters or create a new user profile.</td></tr>';
+          return;
+        }
+
+        const rows = users
+          .map((user) => {
+            const isActive = user.id === state.activeUserId;
+            const badgeStatus = statusStyles[user.status] || 'border border-gray-700 text-gray-300 bg-gray-800/40';
+            const vipBadge = vipStyles[user.vipTier] || 'border border-gray-700 text-gray-300 bg-gray-800/40';
+            const riskBadge = riskStyles[user.riskLevel] || 'border border-gray-700 text-gray-300 bg-gray-800/40';
+            const statusIndicator = statusIndicators[user.status] || 'bg-gray-500';
+            const rowClasses = [
+              'group',
+              'cursor-pointer',
+              'transition',
+              'border-l-2',
+              'border-transparent',
+              'hover:bg-gray-900/40',
+              isActive ? 'bg-primary/5 border-primary/70 shadow-[0_0_20px_rgba(0,194,255,0.12)]' : '',
+            ]
+              .filter(Boolean)
+              .join(' ');
+
+            const segments = Array.isArray(user.segments)
+              ? user.segments
+                  .map(
+                    (segment) => `
+                        <span class="text-[11px] uppercase tracking-[0.2em] text-gray-500 bg-gray-800/70 border border-gray-700/80 rounded-full px-2 py-0.5">${segment}</span>
+                      `
+                  )
+                  .join('')
+              : '';
+
+            return `
+              <tr data-user-row data-user-id="${user.id}" class="${rowClasses}">
+                <td class="px-4 py-3">
+                  <div class="flex items-start gap-3">
+                    <div class="relative">
+                      <span class="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-primary/30 to-secondary/30 font-semibold text-white">${getInitials(
+                        user.name
+                      )}</span>
+                      <span class="absolute -bottom-1 -right-1 h-2.5 w-2.5 rounded-full ${statusIndicator} ring-2 ring-gray-900"></span>
+                    </div>
+                    <div>
+                      <p class="font-semibold text-white">${user.name}</p>
+                      <p class="text-xs text-gray-400">${user.email}</p>
+                      <div class="flex flex-wrap gap-1 mt-1">${segments}</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-4 py-3">
+                  <span class="badge ${badgeStatus}">${user.status}</span>
+                </td>
+                <td class="px-4 py-3">
+                  <div class="space-y-1">
+                    <p class="font-semibold text-white">${formatCurrency(user.balance)}</p>
+                    <p class="text-[11px] text-gray-500">Payouts: ${formatCurrency(user.lifetimePayouts)}</p>
+                  </div>
+                </td>
+                <td class="px-4 py-3">
+                  <div class="flex flex-col gap-2">
+                    <span class="badge ${vipBadge}">${user.vipTier} VIP</span>
+                    <span class="badge ${(roleStyles[user.role] || 'border border-gray-700 text-gray-300 bg-gray-800/40')}">${user.role}</span>
+                  </div>
+                </td>
+                <td class="px-4 py-3">
+                  <p class="font-medium text-white">${user.lastActive}</p>
+                  <p class="text-[11px] text-gray-500">Joined ${new Date(user.createdAt).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                  })}</p>
+                </td>
+                <td class="px-4 py-3">
+                  <span class="badge ${riskBadge}">${user.riskLevel}</span>
+                </td>
+              </tr>
+            `;
+          })
+          .join('');
+
+        tableBody.innerHTML = rows;
+        tableBody.querySelectorAll('[data-user-row]').forEach((row) => {
+          row.addEventListener('click', () => {
+            const id = row.getAttribute('data-user-id');
+            if (id) {
+              state.activeUserId = id;
+              renderTable();
+              renderDetail();
+            }
+          });
+        });
+      };
+
+      const updateVisibleUsers = () => {
+        state.visibleUsers = applyFilters();
+        if (state.visibleUsers.length) {
+          if (!state.activeUserId || !state.visibleUsers.some((user) => user.id === state.activeUserId)) {
+            state.activeUserId = state.visibleUsers[0].id;
+          }
+        } else {
+          state.activeUserId = null;
+        }
+        renderTable();
+        renderDetail();
+        if (tableMeta.visible) tableMeta.visible.textContent = state.visibleUsers.length.toLocaleString();
+        if (tableMeta.total) tableMeta.total.textContent = state.users.length.toLocaleString();
+      };
+
+      const renderActivity = (user) => {
+        if (!activityList) return;
+        if (!user || !Array.isArray(user.activity) || !user.activity.length) {
+          activityList.innerHTML = '<li class="text-xs text-gray-500">No recent actions recorded yet.</li>';
+          return;
+        }
+        activityList.innerHTML = user.activity
+          .slice(0, 8)
+          .map(
+            (item) => `
+              <li class="rounded-2xl border border-gray-800/80 bg-black/30 px-4 py-3">
+                <p class="text-sm font-medium text-white">${item.description}</p>
+                <p class="text-[11px] text-gray-500 mt-1 uppercase tracking-[0.3em]">${item.timestamp}</p>
+              </li>
+            `
+          )
+          .join('');
+      };
+
+      const renderDetail = () => {
+        const user = state.users.find((item) => item.id === state.activeUserId);
+        if (!selectedView || !emptyView || !detailRefs) return;
+
+        if (!user) {
+          selectedView.classList.add('hidden');
+          emptyView.classList.remove('hidden');
+          userForm.querySelectorAll('input, select, textarea, button').forEach((element) => {
+            element.disabled = true;
+          });
+          renderActivity(null);
+          return;
+        }
+
+        selectedView.classList.remove('hidden');
+        emptyView.classList.add('hidden');
+        userForm.querySelectorAll('input, select, textarea, button').forEach((element) => {
+          element.disabled = false;
+        });
+
+        detailRefs.name.textContent = user.name;
+        detailRefs.email.textContent = user.email;
+        detailRefs.email.setAttribute('href', `mailto:${user.email}`);
+        detailRefs.id.textContent = user.id;
+        detailRefs.lastActive.textContent = user.lastActive;
+        detailRefs.location.textContent = user.location || '—';
+        detailRefs.balance.textContent = formatCurrency(user.balance);
+        detailRefs.deposits.textContent = formatCurrency(user.lifetimeDeposits);
+        detailRefs.wagered.textContent = formatCurrency(user.lifetimeWagered);
+        detailRefs.payouts.textContent = formatCurrency(user.lifetimePayouts);
+
+        setBadgeClasses(detailRefs.role, roleStyles[user.role]);
+        detailRefs.role.textContent = user.role;
+        setBadgeClasses(detailRefs.status, statusStyles[user.status]);
+        detailRefs.status.textContent = user.status;
+        setBadgeClasses(detailRefs.vip, vipStyles[user.vipTier]);
+        detailRefs.vip.textContent = `${user.vipTier} VIP`;
+
+        if (detailRefs.tags) {
+          const tags = [];
+          if (user.twoFactor) tags.push({ label: '2FA enabled', style: 'border border-emerald-500/40 bg-emerald-500/10 text-emerald-200' });
+          if (user.emailVerified) tags.push({ label: 'Email verified', style: 'border border-primary/40 bg-primary/10 text-primary' });
+          if (user.payoutHold) tags.push({ label: 'Payout hold', style: 'border border-amber-500/40 bg-amber-500/10 text-amber-200' });
+          if (user.riskLevel === 'Critical') tags.push({ label: 'High risk', style: 'border border-rose-500/40 bg-rose-500/10 text-rose-200' });
+          if (Array.isArray(user.segments)) {
+            user.segments.forEach((segment) => {
+              tags.push({ label: segment, style: 'border border-gray-700/80 bg-gray-800/60 text-gray-300 uppercase tracking-[0.25em] text-[11px]' });
+            });
+          }
+          if (!tags.length) {
+            detailRefs.tags.innerHTML = '<span class="text-xs text-gray-500">No special tags assigned.</span>';
+          } else {
+            detailRefs.tags.innerHTML = tags
+              .map((tag) => `<span class="badge ${tag.style}">${tag.label}</span>`)
+              .join('');
+          }
+        }
+
+        if (detailRefs.cooldown) {
+          if (user.status === 'Cooling Off' && user.cooldownEnds) {
+            detailRefs.cooldown.classList.remove('hidden');
+            detailRefs.cooldownText.textContent = user.cooldownEnds;
+          } else {
+            detailRefs.cooldown.classList.add('hidden');
+          }
+        }
+
+        formRefs.name.value = user.name;
+        formRefs.email.value = user.email;
+        formRefs.role.value = user.role;
+        formRefs.status.value = user.status;
+        formRefs.vip.value = user.vipTier;
+        formRefs.risk.value = user.riskLevel;
+        formRefs.location.value = user.location || '';
+        formRefs.balance.value = formatNumber(user.balance);
+        formRefs.deposits.value = formatNumber(user.lifetimeDeposits);
+        formRefs.wagered.value = formatNumber(user.lifetimeWagered);
+        formRefs.payouts.value = formatNumber(user.lifetimePayouts);
+        formRefs.notes.value = user.notes || '';
+        formRefs.twoFactor.checked = Boolean(user.twoFactor);
+        formRefs.emailVerified.checked = Boolean(user.emailVerified);
+        formRefs.payoutHold.checked = Boolean(user.payoutHold);
+
+        renderActivity(user);
+      };
+
+      const showToast = (message, tone = 'success') => {
+        if (!toastElement || !toastMessage) return;
+        const styles = toastStyleMap[tone] || toastStyleMap.success;
+        toastElement.className = 'fixed bottom-6 right-6 z-50 max-w-xs px-5 py-4 rounded-2xl border text-sm shadow-lg backdrop-blur';
+        toastElement.classList.add(...styles);
+        toastMessage.textContent = message;
+        toastElement.classList.remove('hidden');
+        window.clearTimeout(showToast.timeoutId);
+        showToast.timeoutId = window.setTimeout(() => {
+          toastElement.classList.add('hidden');
+        }, 3600);
+      };
+
+      if (toastClose) {
+        toastClose.addEventListener('click', () => {
+          toastElement.classList.add('hidden');
+        });
+      }
+
+      const syncLastSync = () => {
+        if (!lastSync) return;
+        lastSync.textContent = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+      };
+
+      const updateFilters = () => {
+        state.filters.search = (searchInput.value || '').trim().toLowerCase();
+        state.filters.status = filterControls.status ? filterControls.status.value : 'all';
+        state.filters.role = filterControls.role ? filterControls.role.value : 'all';
+        state.filters.vip = filterControls.vip ? filterControls.vip.value : 'all';
+        updateVisibleUsers();
+      };
+
+      if (searchInput) {
+        searchInput.addEventListener('input', () => {
+          updateFilters();
+        });
+      }
+      Object.values(filterControls).forEach((select) => {
+        if (!select) return;
+        select.addEventListener('change', updateFilters);
+      });
+
+      if (userForm) {
+        userForm.addEventListener('submit', (event) => {
+          event.preventDefault();
+          const user = state.users.find((item) => item.id === state.activeUserId);
+          if (!user) return;
+
+          const previousBalance = user.balance;
+          user.name = formRefs.name.value.trim() || user.name;
+          user.email = formRefs.email.value.trim() || user.email;
+          user.role = formRefs.role.value;
+          user.status = formRefs.status.value;
+          user.vipTier = formRefs.vip.value;
+          user.riskLevel = formRefs.risk.value;
+          user.location = formRefs.location.value.trim();
+          user.balance = Math.max(0, parseNumberInput(formRefs.balance.value));
+          user.lifetimeDeposits = Math.max(0, parseNumberInput(formRefs.deposits.value));
+          user.lifetimeWagered = Math.max(0, parseNumberInput(formRefs.wagered.value));
+          user.lifetimePayouts = Math.max(0, parseNumberInput(formRefs.payouts.value));
+          user.notes = formRefs.notes.value.trim();
+          user.twoFactor = formRefs.twoFactor.checked;
+          user.emailVerified = formRefs.emailVerified.checked;
+          user.payoutHold = formRefs.payoutHold.checked;
+
+          if (!Array.isArray(user.activity)) user.activity = [];
+          if (Math.abs(user.balance - previousBalance) >= 0.01) {
+            const delta = user.balance - previousBalance;
+            const direction = delta >= 0 ? 'Credited' : 'Debited';
+            user.activity.unshift({
+              timestamp: 'Moments ago',
+              description: `${direction} ${formatCurrency(Math.abs(delta))} by administrator.`,
+            });
+            user.lastActive = 'Moments ago';
+            user.lastActiveMinutes = 0;
+          }
+
+          user.activity.unshift({
+            timestamp: 'Moments ago',
+            description: 'Profile updated via admin console.',
+          });
+          if (user.activity.length > 12) user.activity = user.activity.slice(0, 12);
+
+          updateSummary();
+          updateVisibleUsers();
+          showToast('Profile saved and synced.', 'success');
+        });
+      }
+
+      if (detailPanel) {
+        detailPanel.querySelectorAll('[data-reset-user]').forEach((button) => {
+          button.addEventListener('click', () => {
+            renderDetail();
+            showToast('Changes reverted for this session.', 'info');
+          });
+        });
+      }
+
+      if (balanceResetButton) {
+        balanceResetButton.addEventListener('click', () => {
+          const user = state.users.find((item) => item.id === state.activeUserId);
+          if (!user) return;
+          formRefs.balance.value = formatNumber(user.balance);
+          showToast('Balance field reset to stored value.', 'info');
+        });
+      }
+
+      balanceButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          const amount = Number(button.getAttribute('data-balance-adjust'));
+          if (!Number.isFinite(amount)) return;
+          const currentValue = parseNumberInput(formRefs.balance.value);
+          const updated = Math.max(0, currentValue + amount);
+          formRefs.balance.value = formatNumber(updated);
+        });
+      });
+
+      if (balanceZeroButton) {
+        balanceZeroButton.addEventListener('click', () => {
+          formRefs.balance.value = formatNumber(0);
+        });
+      }
+
+      document.querySelectorAll('[data-action-message]').forEach((button) => {
+        button.addEventListener('click', () => {
+          const message = button.getAttribute('data-action-message') || 'Action completed.';
+          const tone = button.getAttribute('data-action-tone') || 'success';
+          showToast(message, tone);
+        });
+      });
+
+      const addUserButton = document.querySelector('[data-add-user]');
+      if (addUserButton) {
+        addUserButton.addEventListener('click', () => {
+          const newId = (() => {
+            let id;
+            do {
+              id = `USR-${Math.floor(1000 + Math.random() * 9000)}`;
+            } while (state.users.some((user) => user.id === id));
+            return id;
+          })();
+          const newUser = {
+            id: newId,
+            name: 'New Player',
+            email: `player${Math.floor(Math.random() * 9000) + 1000}@neoncasino.com`,
+            role: 'Player',
+            status: 'Active',
+            balance: 0,
+            vipTier: 'Bronze',
+            riskLevel: 'Low',
+            lastActive: 'Just created',
+            lastActiveMinutes: 0,
+            createdAt: new Date().toISOString().slice(0, 10),
+            lifetimeDeposits: 0,
+            lifetimeWagered: 0,
+            lifetimePayouts: 0,
+            location: '',
+            notes: 'New profile created via admin console. Complete onboarding details.',
+            twoFactor: false,
+            emailVerified: false,
+            payoutHold: false,
+            segments: ['New Signup'],
+            activity: [
+              { timestamp: 'Just now', description: 'Profile created via admin console.' },
+            ],
+          };
+          state.users.unshift(newUser);
+          state.activeUserId = newUser.id;
+          updateSummary();
+          updateVisibleUsers();
+          showToast('New user profile created. Fill in the details and save.', 'success');
+        });
+      }
+
+      const exportButton = document.querySelector('[data-export-users]');
+      if (exportButton) {
+        exportButton.addEventListener('click', () => {
+          showToast('Export started. You will receive a CSV in your inbox (demo).', 'info');
+        });
+      }
+
+      const refreshUsersButton = document.querySelector('[data-refresh-users]');
+      if (refreshUsersButton) {
+        refreshUsersButton.addEventListener('click', () => {
+          syncLastSync();
+          showToast('Directory refreshed with the latest metrics.', 'success');
+        });
+      }
+
+      const auditButton = document.querySelector('[data-open-audit]');
+      if (auditButton) {
+        auditButton.addEventListener('click', () => {
+          document.querySelector('[data-audit-list]')?.scrollIntoView({ behavior: 'smooth' });
+          showToast('Navigated to audit timeline.', 'info');
+        });
+      }
+
+      const refreshAuditButton = document.querySelector('[data-refresh-audit]');
+      if (refreshAuditButton) {
+        refreshAuditButton.addEventListener('click', () => {
+          renderAuditTrail();
+          showToast('Audit timeline refreshed.', 'success');
+        });
+      }
+
+      const renderAuditTrail = () => {
+        const container = document.querySelector('[data-audit-list]');
+        if (!container) return;
+        container.innerHTML = auditTrail
+          .map((entry, index) => {
+            const toneStyle = toneStyles[entry.tone] || toneStyles.emerald;
+            const isLast = index === auditTrail.length - 1;
+            return `
+              <div class="flex items-start gap-4">
+                <div class="relative flex flex-col items-center">
+                  <span class="flex h-10 w-10 items-center justify-center rounded-full ${toneStyle} text-base font-semibold">${entry.icon}</span>
+                  <span class="${
+                    isLast ? 'hidden' : 'block'
+                  } h-full w-px bg-gray-800/70 mt-2"></span>
+                </div>
+                <div class="flex-1 space-y-1 border border-gray-800/70 bg-black/30 rounded-2xl px-4 py-3">
+                  <p class="text-sm font-semibold text-white">${entry.title}</p>
+                  <p class="text-xs text-gray-400">${entry.description}</p>
+                  <div class="flex flex-wrap gap-3 text-[11px] uppercase tracking-[0.25em] text-gray-500">
+                    <span>${entry.timestamp}</span>
+                    <span>${entry.actor}</span>
+                  </div>
+                </div>
+              </div>
+            `;
+          })
+          .join('');
+      };
+
+      if (toastElement) {
+        toastElement.classList.add('hidden');
+      }
+
+      syncLastSync();
+      updateSummary();
+      updateVisibleUsers();
+      renderAuditTrail();
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      if (window.AOS) {
+        window.AOS.init({ duration: 800, easing: 'ease-in-out', once: true });
+      }
+      if (window.feather) {
+        window.feather.replace();
+      }
+      initNavigation();
+      initAdminPanel();
+    });
+  </script>
+</body>
+</html>
