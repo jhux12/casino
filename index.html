@@ -66,6 +66,27 @@
             transform: translateY(-2px);
             box-shadow: 0 0 15px rgba(0, 194, 255, 0.5);
         }
+        .mobile-nav-toggle {
+            transition: border-color 0.2s ease, background-color 0.2s ease;
+        }
+        .mobile-nav-toggle .mobile-nav-icon--close {
+            display: none;
+        }
+        .mobile-nav-toggle.is-open {
+            border-color: rgba(59, 130, 246, 0.45);
+            background-color: rgba(15, 23, 42, 0.65);
+        }
+        .mobile-nav-toggle.is-open .mobile-nav-icon--open {
+            display: none;
+        }
+        .mobile-nav-toggle.is-open .mobile-nav-icon--close {
+            display: inline;
+        }
+        .mobile-nav-panel {
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.45);
+        }
     </style>
 </head>
 <body class="font-sans min-h-screen">
@@ -80,28 +101,55 @@
 
                 <!-- Desktop Nav Links -->
                 <div class="hidden md:flex items-center space-x-8">
-                    <a href="#" class="text-white hover:text-primary transition">Home</a>
+                    <a href="index.html" class="text-primary transition">Home</a>
                     <a href="games.html" class="text-white hover:text-primary transition">Games</a>
-                    <a href="#" class="text-white hover:text-primary transition">Promotions</a>
-                    <a href="#" class="text-white hover:text-primary transition">Provably Fair</a>
-                    <a href="#" class="text-white hover:text-primary transition">Leaderboard</a>
+                    <a href="#promotions" class="text-white hover:text-primary transition">Promotions</a>
+                    <a href="#provably-fair" class="text-white hover:text-primary transition">Provably Fair</a>
+                    <a href="games.html#recent-games" class="text-white hover:text-primary transition">Leaderboard</a>
                 </div>
 
                 <!-- Wallet & Auth -->
                 <div class="hidden md:flex items-center space-x-4">
                     <div class="bg-gray-800 rounded-full px-4 py-1.5 flex items-center space-x-2">
                         <i data-feather="dollar-sign" class="w-4 h-4 text-accent"></i>
-                        <span class="font-medium">1,000.00</span>
+                        <span class="font-medium" data-balance>1,000.00</span>
                     </div>
-                    <button class="gradient-btn rounded-full px-6 py-2 font-medium text-white hover:shadow-lg transition">
+                    <a href="auth.html" class="gradient-btn rounded-full px-6 py-2 font-medium text-white hover:shadow-lg transition">
                         Sign In
-                    </button>
+                    </a>
                 </div>
 
-                <!-- Mobile Menu Button -->
-                <button class="md:hidden text-white focus:outline-none">
-                    <i data-feather="menu" class="w-6 h-6"></i>
-                </button>
+                <!-- Mobile Controls -->
+                <div class="md:hidden flex items-center space-x-3">
+                    <button id="mobileNavToggle" type="button" class="mobile-nav-toggle text-white focus:outline-none flex items-center justify-center rounded-lg border border-transparent p-2 transition hover:border-primary/60" aria-controls="mobileNavPanel" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <i data-feather="menu" class="w-6 h-6 mobile-nav-icon mobile-nav-icon--open"></i>
+                        <i data-feather="x" class="w-6 h-6 mobile-nav-icon mobile-nav-icon--close"></i>
+                    </button>
+                    <div class="bg-gray-800 rounded-full px-3 py-1 flex items-center space-x-1.5">
+                        <i data-feather="dollar-sign" class="w-4 h-4 text-accent"></i>
+                        <span class="text-sm font-medium" data-balance>1,000.00</span>
+                    </div>
+                    <a href="auth.html" class="gradient-btn px-4 py-2 text-sm font-semibold text-white hover:shadow-lg transition">
+                        Sign In
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div id="mobileNavPanel" class="mobile-nav-panel md:hidden hidden border-t border-gray-800 bg-dark/95">
+            <div class="container mx-auto px-4 py-4 space-y-4">
+                <div class="grid gap-2">
+                    <a href="index.html" class="block rounded-lg px-4 py-2 text-primary hover:bg-primary/10 transition">Home</a>
+                    <a href="games.html" class="block rounded-lg px-4 py-2 text-white/90 hover:bg-white/5 transition">Games</a>
+                    <a href="#promotions" class="block rounded-lg px-4 py-2 text-white/90 hover:bg-white/5 transition">Promotions</a>
+                    <a href="#provably-fair" class="block rounded-lg px-4 py-2 text-white/90 hover:bg-white/5 transition">Provably Fair</a>
+                    <a href="games.html#recent-games" class="block rounded-lg px-4 py-2 text-white/90 hover:bg-white/5 transition">Leaderboard</a>
+                </div>
+                <div class="grid gap-2 border-t border-white/10 pt-4">
+                    <a href="auth.html" class="gradient-btn w-full rounded-full px-4 py-2 text-sm font-semibold text-white hover:shadow-lg transition">
+                        Sign In
+                    </a>
+                </div>
             </div>
         </div>
     </nav>
@@ -190,7 +238,7 @@
     </section>
 
     <!-- Promotions Carousel -->
-    <section class="py-16 px-4">
+    <section id="promotions" class="py-16 px-4">
         <div class="container mx-auto">
             <h2 class="text-3xl font-bold mb-8 text-center" data-aos="fade-up">Promotions</h2>
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -246,7 +294,7 @@
     </section>
 
     <!-- Provably Fair Section -->
-    <section class="py-16 px-4">
+    <section id="provably-fair" class="py-16 px-4">
         <div class="container mx-auto">
             <div class="glass-card rounded-2xl p-8 md:p-12 flex flex-col md:flex-row items-center" data-aos="fade-up">
                 <div class="md:w-1/2 mb-8 md:mb-0 md:pr-8">
@@ -304,6 +352,57 @@
             once: true
         });
         feather.replace();
+        initNavigation();
+
+        function initNavigation() {
+            const toggle = document.getElementById('mobileNavToggle');
+            const panel = document.getElementById('mobileNavPanel');
+            const nav = document.querySelector('nav');
+            if (!toggle || !panel || !nav) {
+                return;
+            }
+
+            const body = document.body;
+            let isOpen = false;
+
+            function setOpen(open) {
+                isOpen = open;
+                panel.classList.toggle('hidden', !open);
+                toggle.classList.toggle('is-open', open);
+                toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+                body.classList.toggle('overflow-hidden', open);
+            }
+
+            toggle.addEventListener('click', () => {
+                setOpen(!isOpen);
+            });
+
+            panel.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => setOpen(false));
+            });
+
+            window.addEventListener('resize', () => {
+                if (window.innerWidth >= 768) {
+                    setOpen(false);
+                }
+            });
+
+            document.addEventListener('keydown', event => {
+                if (event.key === 'Escape') {
+                    setOpen(false);
+                }
+            });
+
+            document.addEventListener('click', event => {
+                if (!isOpen) {
+                    return;
+                }
+                if (nav.contains(event.target)) {
+                    return;
+                }
+                setOpen(false);
+            });
+        }
     </script>
 </body>
 </html>
