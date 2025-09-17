@@ -626,6 +626,27 @@
             color: rgba(248, 113, 113, 1);
         }
 
+        .mines-layout {
+            align-items: flex-start;
+        }
+
+        .mines-panel,
+        .mines-board-panel {
+            position: relative;
+        }
+
+        .mines-board {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: clamp(0.5rem, 1.5vw, 1rem);
+            width: min(100%, 24rem);
+            margin: 0 auto;
+        }
+
+        .mines-board-header {
+            width: 100%;
+        }
+
         .control-tab {
             position: relative;
             display: inline-flex;
@@ -659,6 +680,28 @@
             .mines-cell__icon {
                 width: 2.35rem;
                 height: 2.35rem;
+            }
+
+            .mines-panel,
+            .mines-board-panel {
+                padding: 1.5rem;
+                border-radius: 1.75rem;
+            }
+
+            .mines-board {
+                width: min(100%, calc(100vw - 5rem));
+                gap: clamp(0.4rem, 3vw, 0.6rem);
+            }
+
+            .mines-board-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .mines-board {
+                width: min(100%, calc(100vw - 3.5rem));
             }
         }
         @keyframes flame-flicker {
@@ -742,16 +785,14 @@
                 flex: 1;
             }
             .crash-controls {
-                padding-bottom: 2.25rem;
+                padding-bottom: 1.5rem;
             }
             .crash-mobile-action {
-                position: sticky;
-                bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
-                margin: 1.25rem auto 0;
+                position: static;
+                margin: 0;
                 width: 100%;
                 border-radius: 999px;
-                box-shadow: 0 12px 26px rgba(15, 23, 42, 0.4);
-                z-index: 5;
+                box-shadow: 0 12px 26px rgba(15, 23, 42, 0.35);
             }
             .crash-mobile-action:not(:disabled) {
                 box-shadow: 0 18px 36px rgba(14, 165, 233, 0.45);
@@ -959,15 +1000,15 @@ CASINO</span>
                             </div>
                         </div>
                         <p id="betError" class="text-xs text-red-400 min-h-[1.5rem]"></p>
-                        <div class="grid grid-cols-3 gap-2">
+                        <button data-crash-action type="button" class="crash-action-button crash-mobile-action flex sm:hidden w-full py-3 font-bold text-white transition gradient-btn">
+                            Place Bet
+                        </button>
+                        <div class="grid grid-cols-3 gap-2 crash-quick-actions">
                             <button class="bg-gray-800 hover:bg-gray-700 text-white py-2 rounded-lg transition" type="button" data-quick="half">1/2</button>
                             <button class="bg-gray-800 hover:bg-gray-700 text-white py-2 rounded-lg transition" type="button" data-quick="double">2x</button>
                             <button class="bg-gray-800 hover:bg-gray-700 text-white py-2 rounded-lg transition" type="button" data-quick="max">Max</button>
                         </div>
                         <button id="crashActionButton" data-crash-action type="button" class="crash-action-button hidden sm:flex w-full py-3 rounded-lg font-bold text-white transition gradient-btn hover:shadow-lg">
-                            Place Bet
-                        </button>
-                        <button data-crash-action type="button" class="crash-action-button crash-mobile-action flex sm:hidden w-full py-3 font-bold text-white transition gradient-btn">
                             Place Bet
                         </button>
                     </div>
@@ -1029,21 +1070,28 @@ CASINO</span>
                             <p class="mt-2 max-w-xl text-sm text-slate-300">Reveal gems on the grid to build your multiplier. Cash out before hitting a mine and secure your profit.</p>
                         </div>
                         <div class="rounded-2xl border border-white/10 bg-white/10 px-4 py-3 text-[0.7rem] uppercase tracking-[0.35em] text-slate-300 text-right shadow-[0_0_30px_rgba(14,165,233,0.18)]">
-                            Demo credits only · No real wagers
+                            Wallet linked to your demo balance
                         </div>
                     </div>
                 </div>
 
-                <div class="grid gap-6 lg:grid-cols-[minmax(0,320px)_1fr]">
-                    <aside class="glass-panel rounded-3xl p-6 lg:sticky lg:top-24 lg:h-max">
-                        <div class="flex items-center justify-between">
+                <div class="grid gap-6 lg:grid-cols-[minmax(0,320px)_1fr] mines-layout">
+                    <aside class="glass-panel rounded-3xl p-6 lg:sticky lg:top-24 lg:h-max mines-panel">
+                        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                             <div class="rounded-full border border-white/10 bg-slate-950/60 p-1">
                                 <button type="button" data-mode-button="manual" class="control-tab is-active">Manual</button>
                                 <button type="button" data-mode-button="auto" class="control-tab">Auto</button>
                             </div>
-                            <span class="text-xs font-semibold uppercase tracking-widest text-slate-400">Demo Balance</span>
+                            <div class="flex flex-col items-start text-left sm:items-end sm:text-right">
+                                <span class="text-xs font-semibold uppercase tracking-widest text-slate-400">Wallet Balance</span>
+                                <span class="text-lg font-semibold text-white" data-balance data-default-balance="1000.00">1,000.00</span>
+                            </div>
                         </div>
-                        <div class="mt-6 space-y-6">
+                        <div id="minesAuthNotice" data-auth-guest class="mt-6 rounded-xl border border-primary/30 bg-primary/10 px-4 py-3 text-sm text-primary flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                            <span class="font-semibold text-primary/90">Sign in to play Mines with your balance.</span>
+                            <button data-auth-trigger="sign-in" class="w-full sm:w-auto gradient-btn px-4 py-2 rounded-full text-white font-semibold transition hover:shadow-lg">Sign In</button>
+                        </div>
+                        <div class="mt-6 space-y-6 hidden" data-auth-user data-mines-controls>
                             <section>
                                 <div class="flex items-center justify-between text-xs font-semibold uppercase tracking-wide text-slate-400">
                                     <span>Bet Amount</span>
@@ -1090,11 +1138,11 @@ CASINO</span>
                             <p id="statusLabel" class="status-message">Set your bet to begin.</p>
                         </div>
                     </aside>
-                    <section class="glass-panel rounded-3xl p-6">
+                    <section class="glass-panel rounded-3xl p-6 mines-board-panel">
                         <div class="relative overflow-hidden rounded-2xl border border-white/10 bg-slate-950/40 p-6">
                             <div class="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/10"></div>
                             <div class="relative z-10 flex flex-col gap-6">
-                                <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                                <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mines-board-header">
                                     <div>
                                         <h2 class="text-2xl font-semibold text-white">Mines Grid</h2>
                                         <p class="text-sm text-slate-300">Reveal gems to build your payout. Each successful pick raises the multiplier.</p>
@@ -1104,7 +1152,7 @@ CASINO</span>
                                         <span class="rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1 text-emerald-200">Manual Mode</span>
                                     </div>
                                 </div>
-                                <div id="minesBoard" class="grid grid-cols-5 gap-2 sm:gap-3 md:gap-4"></div>
+                                <div id="minesBoard" class="mines-board"></div>
                                 <div class="grid gap-3 text-sm sm:grid-cols-3">
                                     <div class="glass-panel--light rounded-2xl border border-white/10 px-4 py-3">
                                         <span class="text-xs font-semibold uppercase tracking-wide text-slate-400">Safe Picks</span>
@@ -1240,7 +1288,7 @@ CASINO</span>
         const authUI = initAuthUI(authController);
         initSidebarPreview();
         initCrashGame(authController, authUI);
-        initMinesGame();
+        initMinesGame(authController, authUI);
 
         function initFirebase() {
             const config = readFirebaseConfig();
@@ -2928,7 +2976,7 @@ CASINO</span>
             betInput.value = (parseFloat(betInput.value) || 10).toFixed(2);
         }
 
-        function initMinesGame() {
+        function initMinesGame(authController, authUI) {
             const TILE_COUNT = 25;
             const MIN_MINES = 1;
             const MAX_MINES = 24;
@@ -2957,10 +3005,25 @@ CASINO</span>
             const nextChanceDisplay = document.getElementById('nextChanceDisplay');
             const potentialPayoutDisplay = document.getElementById('potentialPayoutDisplay');
             const modeButtons = document.querySelectorAll('[data-mode-button]');
+            const controlsContainer = document.querySelector('[data-mines-controls]');
+            const authNotice = document.getElementById('minesAuthNotice');
             const boardTiles = [];
 
             if (!boardElement || !betInput || !minesInput || !randomButton || !actionButton) {
                 return;
+            }
+
+            const useBalance = Boolean(authController && !authController.isDisabled);
+            const balanceEls = useBalance ? document.querySelectorAll('[data-balance]') : [];
+            const state = {
+                useBalance,
+                authenticated: false,
+                balance: 0
+            };
+
+            if (!useBalance) {
+                controlsContainer?.classList.remove('hidden');
+                authNotice?.classList.add('hidden');
             }
 
             const GEM_SVG = `<svg viewBox="0 0 64 64" aria-hidden="true" class="mines-cell__icon"><path fill="currentColor" d="M12.2 24.4 28.8 7.1c1.7-1.8 4.7-1.8 6.4 0l16.6 17.3c1.3 1.4 1.6 3.6.6 5.3L35.5 55c-.9 1.6-2.4 2.6-4.1 2.6s-3.2-1-4.1-2.6L11.6 29.7c-1-1.7-.7-3.9.6-5.3z" opacity=".35"></path><path fill="currentColor" d="M32 8.7 46.3 24 32 55.2 17.7 24z"></path><path fill="currentColor" d="M12.8 25.3 24.6 12l7.4 12.1-8.7 20.8z" opacity=".6"></path><path fill="currentColor" d="M51.2 25.3 39.4 12l-7.4 12.1 8.7 20.8z" opacity=".6"></path></svg>`;
@@ -2968,9 +3031,79 @@ CASINO</span>
 
             let round = null;
 
+            const initialUser = useBalance ? authController?.getUser?.() : null;
+
+            function persistBalance(balance) {
+                if (!state.useBalance || !state.authenticated || !authController || typeof authController.updateBalance !== 'function') {
+                    return;
+                }
+                authController.updateBalance(balance).catch(error => {
+                    console.error('Failed to persist balance', error);
+                });
+            }
+
+            function updateBalanceDisplay() {
+                if (!state.useBalance) {
+                    return;
+                }
+                const formatted = formatCurrency(state.balance);
+                balanceEls.forEach(el => {
+                    el.textContent = formatted;
+                });
+            }
+
+            function applyBalanceDelta(delta) {
+                if (!state.useBalance || !state.authenticated) {
+                    return;
+                }
+                const next = Number.isFinite(delta) ? state.balance + delta : state.balance;
+                state.balance = parseFloat(Math.max(0, next).toFixed(2));
+                updateBalanceDisplay();
+                persistBalance(state.balance);
+            }
+
+            function applyAuth(user) {
+                if (!state.useBalance) {
+                    return;
+                }
+
+                const wasAuthenticated = state.authenticated;
+                state.authenticated = Boolean(user);
+                state.balance = state.authenticated && Number.isFinite(user.balance)
+                    ? parseFloat(user.balance.toFixed(2))
+                    : 0;
+
+                updateBalanceDisplay();
+                updateBetDisplay();
+
+                if (!state.authenticated) {
+                    if (round?.active) {
+                        finishRound('bust');
+                    }
+                    if (actionButton) {
+                        actionButton.disabled = true;
+                    }
+                    if (!round?.active) {
+                        setStatus('Sign in to play Mines with your balance.', 'info');
+                    }
+                    return;
+                }
+
+                if (actionButton) {
+                    actionButton.disabled = false;
+                }
+
+                if (!round?.active) {
+                    if (state.balance < BET_MIN) {
+                        setStatus('Your balance is below the minimum bet. Add funds to play.', 'warning');
+                    } else if (!wasAuthenticated || statusLabel?.textContent === 'Your balance is below the minimum bet. Add funds to play.') {
+                        setStatus('Adjust your bet, choose how many mines to place and start a round.', 'info');
+                    }
+                }
+            }
+
             initBoard();
             setActionMode('start');
-            setStatus('Adjust your bet, choose how many mines to place and start a round.', 'info');
             updateMinesValue(parseInt(minesInput.value, 10) || 3);
             updateBetDisplay();
             updateProfitUI(1, 0);
@@ -2980,6 +3113,15 @@ CASINO</span>
                 payout: sanitizeBet(parseFloat(betInput.value) || DEFAULT_BET)
             });
             updateRandomButtonState();
+
+            if (state.useBalance) {
+                if (authController && typeof authController.subscribe === 'function') {
+                    authController.subscribe(applyAuth);
+                }
+                applyAuth(initialUser);
+            } else {
+                setStatus('Adjust your bet, choose how many mines to place and start a round.', 'info');
+            }
 
             modeButtons.forEach(button => {
                 button.addEventListener('click', () => {
@@ -3012,6 +3154,10 @@ CASINO</span>
 
             quickBetButtons.forEach(button => {
                 button.addEventListener('click', () => {
+                    if (state.useBalance && !state.authenticated) {
+                        authUI?.openSignIn?.();
+                        return;
+                    }
                     const action = button.getAttribute('data-bet-action');
                     const current = sanitizeBet(parseFloat(betInput.value));
                     let next = current;
@@ -3045,8 +3191,18 @@ CASINO</span>
             minesMinus?.addEventListener('click', () => stepMines(-1));
             minesPlus?.addEventListener('click', () => stepMines(1));
 
-            randomButton.addEventListener('click', () => pickRandomTile());
+            randomButton.addEventListener('click', () => {
+                if (state.useBalance && !state.authenticated) {
+                    authUI?.openSignIn?.();
+                    return;
+                }
+                pickRandomTile();
+            });
             actionButton.addEventListener('click', () => {
+                if (state.useBalance && !state.authenticated) {
+                    authUI?.openSignIn?.();
+                    return;
+                }
                 if (actionButton.dataset.state === 'cashout') {
                     cashOut();
                 } else {
@@ -3069,10 +3225,22 @@ CASINO</span>
             }
 
             function startRound() {
+                if (state.useBalance && !state.authenticated) {
+                    authUI?.openSignIn?.();
+                    return;
+                }
                 sanitizeBetInput();
                 const bet = sanitizeBet(parseFloat(betInput.value));
                 if (!Number.isFinite(bet) || bet < BET_MIN) {
                     setBetError(`Minimum bet is €${currencyFormatter.format(BET_MIN)}.`);
+                    return;
+                }
+                if (state.useBalance && state.balance < BET_MIN) {
+                    setBetError(`Minimum bet is €${currencyFormatter.format(BET_MIN)}. Add funds to continue.`);
+                    return;
+                }
+                if (state.useBalance && bet > state.balance) {
+                    setBetError('Insufficient balance for that bet.');
                     return;
                 }
                 clearBetError();
@@ -3091,6 +3259,10 @@ CASINO</span>
                     remainingTiles: TILE_COUNT,
                     remainingMines: minesCount
                 };
+
+                if (state.useBalance) {
+                    applyBalanceDelta(-bet);
+                }
 
                 boardTiles.forEach(tile => {
                     tile.className = 'mines-cell mines-cell--hidden';
@@ -3229,9 +3401,13 @@ CASINO</span>
                         chance: 0,
                         payout
                     });
+                    if (state.useBalance && state.authenticated) {
+                        applyBalanceDelta(payout);
+                    }
                 }
 
                 updateGemsDisplay(TILE_COUNT - clamp(parseInt(minesInput.value, 10), MIN_MINES, MAX_MINES));
+                updateBetDisplay();
             }
 
             function pickRandomTile() {
@@ -3277,22 +3453,26 @@ CASINO</span>
             }
 
             function adjustBet(delta) {
+                if (state.useBalance && !state.authenticated) {
+                    return;
+                }
                 sanitizeBetInput();
                 const current = sanitizeBet(parseFloat(betInput.value));
                 const next = sanitizeBet(current + delta);
                 betInput.value = next.toFixed(2);
+                updateBetDisplay();
                 if (!round || !round.active) {
+                    const payoutBase = sanitizeBet(parseFloat(betInput.value));
                     updateBoardStats({
                         safePicks: 0,
                         chance: calculateInitialChance(parseInt(minesInput.value, 10) || 3),
-                        payout: sanitizeBet(parseFloat(betInput.value))
+                        payout: payoutBase
                     });
                 }
             }
 
             function sanitizeBetInput() {
-                const value = sanitizeBet(parseFloat(betInput.value));
-                betInput.value = value.toFixed(2);
+                updateBetDisplay();
             }
 
             function sanitizeBet(raw) {
@@ -3404,7 +3584,11 @@ CASINO</span>
             }
 
             function updateBetDisplay() {
-                const sanitized = sanitizeBet(parseFloat(betInput.value));
+                let sanitized = sanitizeBet(parseFloat(betInput.value));
+                if (state.useBalance && state.authenticated) {
+                    sanitized = Math.min(sanitized, state.balance);
+                    sanitized = Math.max(sanitized, BET_MIN);
+                }
                 betInput.value = sanitized.toFixed(2);
             }
 
@@ -3414,10 +3598,12 @@ CASINO</span>
                     actionButton.dataset.state = 'cashout';
                     actionButton.textContent = 'Cashout';
                     actionButton.className = `${base} bg-emerald-500 text-slate-900 shadow-[0_0_35px_rgba(16,185,129,0.35)] hover:bg-emerald-400`;
+                    actionButton.disabled = false;
                 } else {
                     actionButton.dataset.state = 'start';
                     actionButton.textContent = 'Start Round';
                     actionButton.className = `${base} bg-sky-500 text-slate-900 shadow-[0_0_30px_rgba(14,165,233,0.25)] hover:bg-sky-400`;
+                    actionButton.disabled = state.useBalance && !state.authenticated;
                 }
             }
 
