@@ -783,10 +783,11 @@ CASINO</span>
                 <!-- Desktop Nav Links -->
                 <div class="hidden md:flex items-center space-x-8">
                     <a href="index.html" class="text-white hover:text-primary transition">Home</a>
-                    <a href="#" class="text-primary transition" aria-current="page">Games</a>
-                    <a href="#" class="text-white hover:text-primary transition">Promotions</a>
-                    <a href="#" class="text-white hover:text-primary transition">Provably Fair</a>
-                  <a href="#" class="text-white hover:text-primary transition">Leaderboard</a>
+                    <a href="games.html" class="text-primary transition" aria-current="page">Games</a>
+                    <a href="index.html#promotions" class="text-white hover:text-primary transition">Promotions</a>
+                    <a href="index.html#provably-fair" class="text-white hover:text-primary transition">Provably Fair</a>
+                    <a href="#recent-games" class="text-white hover:text-primary transition">Leaderboard</a>
+                    <a href="admin.html" class="text-white hover:text-primary transition">Admin</a>
                 </div>
 
                 <!-- Wallet & Auth -->
@@ -812,10 +813,11 @@ CASINO</span>
             <div id="mobile-menu" class="md:hidden hidden flex-col space-y-4 pt-4 border-t border-gray-800" data-mobile-menu>
                 <div class="flex flex-col space-y-3">
                     <a href="index.html" class="text-white hover:text-primary transition">Home</a>
-                    <a href="#" class="text-primary transition font-semibold" aria-current="page">Games</a>
-                    <a href="#" class="text-white hover:text-primary transition">Promotions</a>
-                    <a href="#" class="text-white hover:text-primary transition">Provably Fair</a>
-                    <a href="#" class="text-white hover:text-primary transition">Leaderboard</a>
+                    <a href="games.html" class="text-primary transition font-semibold" aria-current="page">Games</a>
+                    <a href="index.html#promotions" class="text-white hover:text-primary transition">Promotions</a>
+                    <a href="index.html#provably-fair" class="text-white hover:text-primary transition">Provably Fair</a>
+                    <a href="#recent-games" class="text-white hover:text-primary transition">Leaderboard</a>
+                    <a href="admin.html" class="text-white hover:text-primary transition">Admin</a>
                 </div>
                 <div class="space-y-3 border-t border-gray-800 pt-4">
                     <div class="space-y-2">
@@ -1228,6 +1230,7 @@ CASINO</span>
         initNavigation();
 
         const DEFAULT_BALANCE = 1000;
+        const ADMIN_EMAIL = 'jhuxf12@outlook.com';
         const currencyFormatter = new Intl.NumberFormat('en-US', {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
@@ -1553,19 +1556,38 @@ CASINO</span>
             async function ensureProfile(user, options = {}) {
                 const userDocRef = doc(db, 'users', user.uid);
                 const snapshot = await getDoc(userDocRef);
-                const desiredName = options.displayName || deriveDisplayName(user, snapshot.data() || {});
+                const existingData = snapshot.exists() ? snapshot.data() || {} : {};
+                const desiredName = options.displayName || deriveDisplayName(user, existingData);
+                const emailLower = (user.email || '').toLowerCase();
+                const isAdminAccount = emailLower === ADMIN_EMAIL.toLowerCase();
 
                 if (!snapshot.exists()) {
-                    await setDoc(userDocRef, {
+                    const initialProfile = {
                         balance: defaultBalance,
                         displayName: desiredName,
                         email: user.email ?? null,
-                        updatedAt: serverTimestamp()
-                    });
-                    return { balance: defaultBalance, displayName: desiredName };
+                        createdAt: serverTimestamp(),
+                        lastLoginAt: serverTimestamp(),
+                        updatedAt: serverTimestamp(),
+                        role: isAdminAccount ? 'Administrator' : 'Player',
+                        status: 'Active',
+                        vipTier: isAdminAccount ? 'Executive' : 'Bronze',
+                        riskLevel: 'Low',
+                        lifetimeDeposits: 0,
+                        lifetimeWagered: 0,
+                        lifetimePayouts: 0,
+                        segments: isAdminAccount ? ['Admin'] : [],
+                        notes: '',
+                        twoFactor: false,
+                        emailVerified: user.emailVerified ?? false,
+                        payoutHold: false,
+                        isAdmin: isAdminAccount
+                    };
+                    await setDoc(userDocRef, initialProfile);
+                    return { ...initialProfile };
                 }
 
-                const data = snapshot.data() || {};
+                const data = { ...existingData };
                 const updates = {};
                 if (typeof data.balance !== 'number') {
                     updates.balance = defaultBalance;
@@ -1573,10 +1595,70 @@ CASINO</span>
                 if (!data.displayName && desiredName) {
                     updates.displayName = desiredName;
                 }
+                if (!data.status) {
+                    updates.status = 'Active';
+                }
+                if (!data.vipTier) {
+                    updates.vipTier = isAdminAccount ? 'Executive' : 'Bronze';
+                }
+                if (!data.riskLevel) {
+                    updates.riskLevel = 'Low';
+                }
+                if (!Array.isArray(data.segments)) {
+                    updates.segments = isAdminAccount ? ['Admin'] : [];
+                }
+                if (typeof data.lifetimeDeposits !== 'number') {
+                    updates.lifetimeDeposits = 0;
+                }
+                if (typeof data.lifetimeWagered !== 'number') {
+                    updates.lifetimeWagered = 0;
+                }
+                if (typeof data.lifetimePayouts !== 'number') {
+                    updates.lifetimePayouts = 0;
+                }
+                if (typeof data.emailVerified !== 'boolean') {
+                    updates.emailVerified = user.emailVerified ?? false;
+                }
+                if (typeof data.payoutHold !== 'boolean') {
+                    updates.payoutHold = false;
+                }
+                if (!data.role) {
+                    updates.role = isAdminAccount ? 'Administrator' : 'Player';
+                }
+                if (isAdminAccount) {
+                    const normalizedRole = (data.role || '').toLowerCase();
+                    if (normalizedRole !== 'administrator') {
+                        updates.role = 'Administrator';
+                    }
+                    if (data.vipTier !== 'Executive') {
+                        updates.vipTier = 'Executive';
+                    }
+                    if (data.isAdmin !== true) {
+                        updates.isAdmin = true;
+                    }
+                    const segmentSource = Object.prototype.hasOwnProperty.call(updates, 'segments')
+                        ? updates.segments
+                        : data.segments;
+                    const currentSegments = Array.isArray(segmentSource) ? segmentSource : [];
+                    if (!currentSegments.includes('Admin')) {
+                        updates.segments = Array.from(new Set([...currentSegments, 'Admin']));
+                    }
+                }
+                if (!data.createdAt) {
+                    updates.createdAt = serverTimestamp();
+                }
+                if (!data.lastLoginAt) {
+                    updates.lastLoginAt = serverTimestamp();
+                }
                 if (Object.keys(updates).length) {
                     updates.updatedAt = serverTimestamp();
                     await updateDoc(userDocRef, updates);
                 }
+                await updateDoc(userDocRef, {
+                    lastLoginAt: serverTimestamp(),
+                    updatedAt: serverTimestamp(),
+                    email: user.email ?? data.email ?? null
+                });
                 return { ...data, ...updates };
             }
 
