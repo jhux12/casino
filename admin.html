@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NEON CASINO | Admin Control Center</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js" defer></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script type="application/json" id="firebase-config">
+    {
+      "apiKey": "AIzaSyB_Dj7URsA_5N1okSuxCN5m2c7q7H9098o",
+      "authDomain": "casino-cd04e.firebaseapp.com",
+      "projectId": "casino-cd04e",
+      "storageBucket": "casino-cd04e.appspot.com",
+      "messagingSenderId": "237834419290"
+    }
+  </script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Poppins', 'sans-serif'],
+          },
+          colors: {
+            dark: '#0e0f13',
+            primary: '#00c2ff',
+            secondary: '#7c3aed',
+            accent: '#2bd975',
+          },
+          boxShadow: {
+            'neon-blue': '0 0 15px rgba(0, 194, 255, 0.5)',
+            'neon-purple': '0 0 15px rgba(124, 58, 237, 0.5)',
+            'neon-green': '0 0 15px rgba(43, 217, 117, 0.5)',
+            'glow-blue': '0 0 20px rgba(0, 194, 255, 0.65)',
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    body {
+      background: radial-gradient(circle at top left, rgba(0, 194, 255, 0.12), transparent 45%),
+        radial-gradient(circle at bottom right, rgba(124, 58, 237, 0.1), transparent 50%),
+        #070b15;
+      color: #f8fafc;
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .gradient-btn {
+      background: linear-gradient(45deg, #00c2ff, #7c3aed);
+    }
+    .gradient-btn:hover {
+      box-shadow: 0 0 18px rgba(0, 194, 255, 0.6);
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      line-height: 1;
+      padding: 0.35rem 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+    .scroll-shadow {
+      position: relative;
+    }
+    .scroll-shadow::after {
+      content: '';
+      pointer-events: none;
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 36px;
+      background: linear-gradient(90deg, rgba(7, 11, 21, 0), rgba(7, 11, 21, 1));
+    }
+  </style>
+</head>
+<body class="font-sans min-h-screen">
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-dark/80 backdrop-blur-md border-b border-gray-800">
+    <div class="container mx-auto px-4 py-3">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <span class="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">NEON CASINO</span>
+        </div>
+        <div class="hidden md:flex items-center space-x-8">
+          <a href="index.html" class="text-white hover:text-primary transition">Home</a>
+          <a href="games.html" class="text-white hover:text-primary transition">Games</a>
+          <a href="index.html#promotions" class="text-white hover:text-primary transition">Promotions</a>
+          <a href="index.html#provably-fair" class="text-white hover:text-primary transition">Provably Fair</a>
+          <a href="games.html#recent-games" class="text-white hover:text-primary transition">Leaderboard</a>
+          <a href="admin.html" class="text-primary font-semibold transition">Admin</a>
+        </div>
+        <div class="hidden md:flex items-center space-x-4">
+          <div class="bg-gray-800 rounded-full px-4 py-1.5 flex items-center space-x-2">
+            <i data-feather="dollar-sign" class="w-4 h-4 text-accent"></i>
+            <span class="font-medium" data-balance data-default-balance="1000.00">1,000.00</span>
+          </div>
+          <div class="flex items-center gap-4" data-admin-auth-signed-out>
+            <a href="auth.html" class="gradient-btn rounded-full px-6 py-2 font-medium text-white hover:shadow-lg transition">
+              Sign In
+            </a>
+          </div>
+          <div class="hidden items-center gap-4" data-admin-auth-signed-in>
+            <div class="text-right">
+              <p class="text-[11px] uppercase tracking-[0.3em] text-gray-500">Administrator</p>
+              <p class="text-sm font-semibold text-white" data-admin-identity-name>—</p>
+              <p class="text-xs text-gray-400" data-admin-identity-email>—</p>
+            </div>
+            <button type="button" class="gradient-btn rounded-full px-6 py-2 font-medium text-white hover:shadow-lg transition" data-admin-signout>
+              Sign Out
+            </button>
+          </div>
+        </div>
+        <button type="button" class="md:hidden text-white focus:outline-none" data-mobile-toggle aria-expanded="false" aria-controls="mobile-menu">
+          <span class="sr-only">Toggle navigation</span>
+          <i data-feather="menu" class="w-6 h-6" data-icon-closed></i>
+          <i data-feather="x" class="w-6 h-6 hidden" data-icon-open></i>
+        </button>
+      </div>
+      <div id="mobile-menu" class="md:hidden hidden flex-col space-y-4 pt-4 border-t border-gray-800" data-mobile-menu>
+        <div class="flex flex-col space-y-3">
+          <a href="index.html" class="text-white hover:text-primary transition">Home</a>
+          <a href="games.html" class="text-white hover:text-primary transition">Games</a>
+          <a href="index.html#promotions" class="text-white hover:text-primary transition">Promotions</a>
+          <a href="index.html#provably-fair" class="text-white hover:text-primary transition">Provably Fair</a>
+          <a href="games.html#recent-games" class="text-white hover:text-primary transition">Leaderboard</a>
+          <a href="admin.html" class="text-primary font-semibold transition">Admin</a>
+        </div>
+        <div class="space-y-3 border-t border-gray-800 pt-4">
+          <div class="space-y-2">
+            <span class="text-xs uppercase tracking-wide text-gray-400">Wallet Balance</span>
+            <div class="bg-gray-800 rounded-full px-4 py-1.5 flex items-center space-x-2">
+              <i data-feather="dollar-sign" class="w-4 h-4 text-accent"></i>
+              <span class="font-medium" data-balance data-default-balance="1000.00">1,000.00</span>
+            </div>
+          </div>
+          <div class="space-y-3" data-admin-auth-signed-out>
+            <a href="auth.html" class="gradient-btn rounded-full px-6 py-2 font-medium text-white text-center hover:shadow-lg transition">
+              Sign In
+            </a>
+          </div>
+          <div class="hidden space-y-3" data-admin-auth-signed-in>
+            <div class="rounded-2xl border border-gray-800 px-4 py-3">
+              <p class="text-[11px] uppercase tracking-[0.3em] text-gray-500">Signed in as</p>
+              <p class="text-sm font-semibold text-white" data-admin-identity-name>—</p>
+              <p class="text-xs text-gray-400 mt-0.5" data-admin-identity-email>—</p>
+            </div>
+            <button type="button" class="gradient-btn rounded-full px-6 py-2 font-medium text-white text-center hover:shadow-lg transition" data-admin-signout>
+              Sign Out
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="pt-32 pb-16 px-4 relative overflow-hidden" data-admin-shell>
+    <div class="absolute inset-0 opacity-20" aria-hidden="true">
+      <div class="absolute top-1/5 left-1/4 w-72 h-72 rounded-full bg-primary blur-3xl"></div>
+      <div class="absolute bottom-1/5 right-1/5 w-72 h-72 rounded-full bg-secondary blur-3xl"></div>
+    </div>
+    <div class="container mx-auto relative z-10 space-y-12">
+      <section class="space-y-6" data-aos="fade-up">
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+          <div class="space-y-4 max-w-2xl">
+            <span class="inline-flex items-center rounded-full border border-primary/50 bg-primary/10 px-3 py-1 text-xs uppercase tracking-[0.3em] text-primary/80">Operations Console</span>
+            <h1 class="text-3xl md:text-4xl font-bold leading-tight">Admin Control Center</h1>
+            <p class="text-gray-300 text-base md:text-lg">Monitor player sentiment, orchestrate wallet balances, and resolve compliance events without leaving the Neon aesthetic. Every interaction is recorded in the audit trail for total transparency.</p>
+            <div class="flex flex-wrap items-center gap-3 text-xs text-gray-400">
+              <div class="flex items-center gap-2">
+                <span class="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_0_4px_rgba(16,185,129,0.15)]"></span>
+                <span>Realtime ledger sync active</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="h-2 w-2 rounded-full bg-sky-400 shadow-[0_0_0_4px_rgba(14,165,233,0.15)]"></span>
+                <span>Risk engine connected</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="h-2 w-2 rounded-full bg-purple-400 shadow-[0_0_0_4px_rgba(139,92,246,0.15)]"></span>
+                <span>Last sync <span data-last-sync class="font-medium text-gray-300">—</span></span>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-col sm:flex-row items-stretch gap-3">
+            <button type="button" class="gradient-btn px-5 py-3 rounded-2xl text-sm font-semibold text-white shadow-neon-blue" data-add-user>
+              Create new user
+            </button>
+            <button type="button" class="px-5 py-3 rounded-2xl text-sm font-semibold text-primary border border-primary/40 bg-primary/5 hover:bg-primary/10 transition" data-export-users>
+              Export snapshot
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="grid gap-4 md:grid-cols-2 xl:grid-cols-4" data-aos="fade-up" data-aos-delay="100">
+        <div class="glass-card rounded-2xl p-6 relative overflow-hidden">
+          <div class="absolute -top-10 -right-10 h-32 w-32 bg-primary/20 rounded-full blur-3xl"></div>
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-xs uppercase tracking-widest text-gray-400">Total users</p>
+              <p class="text-3xl font-bold text-white" data-summary="total-users">0</p>
+              <p class="text-xs text-gray-500 mt-1">Active now: <span class="text-primary font-semibold" data-summary="active-now">0</span></p>
+            </div>
+            <div class="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center border border-primary/40">
+              <i data-feather="users" class="w-5 h-5 text-primary"></i>
+            </div>
+          </div>
+        </div>
+        <div class="glass-card rounded-2xl p-6 relative overflow-hidden">
+          <div class="absolute -bottom-8 -left-10 h-32 w-32 bg-secondary/20 rounded-full blur-3xl"></div>
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-xs uppercase tracking-widest text-gray-400">Wallet float</p>
+              <p class="text-3xl font-bold text-white" data-summary="total-balance">$0.00</p>
+              <p class="text-xs text-gray-500 mt-1">Includes promotional credit</p>
+            </div>
+            <div class="h-12 w-12 rounded-full bg-secondary/10 flex items-center justify-center border border-secondary/40">
+              <i data-feather="database" class="w-5 h-5 text-secondary"></i>
+            </div>
+          </div>
+        </div>
+        <div class="glass-card rounded-2xl p-6 relative overflow-hidden">
+          <div class="absolute top-0 right-0 h-20 w-20 bg-accent/20 rounded-full blur-3xl"></div>
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-xs uppercase tracking-widest text-gray-400">New signups · 7d</p>
+              <p class="text-3xl font-bold text-white" data-summary="new-signups">0</p>
+              <p class="text-xs text-gray-500 mt-1">Auto welcome bonus sent</p>
+            </div>
+            <div class="h-12 w-12 rounded-full bg-accent/10 flex items-center justify-center border border-accent/30">
+              <i data-feather="user-plus" class="w-5 h-5 text-accent"></i>
+            </div>
+          </div>
+        </div>
+        <div class="glass-card rounded-2xl p-6 relative overflow-hidden">
+          <div class="absolute -bottom-12 -right-6 h-28 w-28 bg-blue-500/20 rounded-full blur-3xl"></div>
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-xs uppercase tracking-widest text-gray-400">Admin accounts</p>
+              <p class="text-3xl font-bold text-white" data-summary="admin-count">0</p>
+              <p class="text-xs text-gray-500 mt-1">Flagged accounts: <span data-summary="flagged" class="font-medium text-amber-200">0</span></p>
+            </div>
+            <div class="h-12 w-12 rounded-full bg-blue-500/10 flex items-center justify-center border border-blue-500/30">
+              <i data-feather="shield" class="w-5 h-5 text-blue-400"></i>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="grid gap-8 xl:grid-cols-[minmax(0,1.8fr)_minmax(0,1fr)] items-start">
+        <section class="glass-card rounded-3xl p-6 lg:p-8 space-y-6" data-aos="fade-up" data-aos-delay="150">
+          <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            <div>
+              <h2 class="text-2xl font-semibold text-white">Player directory</h2>
+              <p class="text-sm text-gray-400 mt-1">Search, filter, and select any profile to reveal full wallet controls and compliance notes.</p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <button type="button" class="px-4 py-2 rounded-xl text-xs font-semibold text-gray-300 border border-gray-700 hover:border-primary/40 hover:text-primary transition" data-refresh-users>Refresh data</button>
+              <button type="button" class="px-4 py-2 rounded-xl text-xs font-semibold text-gray-300 border border-gray-700 hover:border-secondary/40 hover:text-secondary transition" data-open-audit>Audit log</button>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-4 lg:flex-row lg:items-center">
+            <div class="relative flex-1">
+              <span class="absolute inset-y-0 left-3 flex items-center text-gray-500">
+                <i data-feather="search" class="w-4 h-4"></i>
+              </span>
+              <input type="search" placeholder="Search by name, email, or tag" class="w-full bg-black/30 border border-gray-800 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder:text-gray-500 focus:border-primary/60 focus:ring-2 focus:ring-primary/20" data-user-search />
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full lg:w-auto">
+              <select class="bg-black/30 border border-gray-800 rounded-xl px-3 py-2 text-sm text-gray-200 focus:border-primary/50 focus:ring-2 focus:ring-primary/20" data-filter="status">
+                <option value="all">All statuses</option>
+                <option value="Active">Active</option>
+                <option value="Cooling Off">Cooling off</option>
+                <option value="Under Review">Under review</option>
+                <option value="Suspended">Suspended</option>
+              </select>
+              <select class="bg-black/30 border border-gray-800 rounded-xl px-3 py-2 text-sm text-gray-200 focus:border-primary/50 focus:ring-2 focus:ring-primary/20" data-filter="role">
+                <option value="all">All roles</option>
+                <option value="Player">Player</option>
+                <option value="VIP">VIP</option>
+                <option value="Moderator">Moderator</option>
+                <option value="Administrator">Administrator</option>
+              </select>
+              <select class="bg-black/30 border border-gray-800 rounded-xl px-3 py-2 text-sm text-gray-200 focus:border-primary/50 focus:ring-2 focus:ring-primary/20" data-filter="vip">
+                <option value="all">All VIP tiers</option>
+                <option value="Bronze">Bronze</option>
+                <option value="Silver">Silver</option>
+                <option value="Gold">Gold</option>
+                <option value="Platinum">Platinum</option>
+                <option value="Diamond">Diamond</option>
+                <option value="Obsidian">Obsidian</option>
+                <option value="Executive">Executive</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto rounded-2xl border border-gray-800/80">
+            <table class="min-w-full divide-y divide-gray-800/80 text-sm">
+              <thead class="bg-black/40 text-gray-400 uppercase text-xs tracking-wide">
+                <tr>
+                  <th scope="col" class="px-4 py-3 text-left">User</th>
+                  <th scope="col" class="px-4 py-3 text-left">Status</th>
+                  <th scope="col" class="px-4 py-3 text-left">Wallet</th>
+                  <th scope="col" class="px-4 py-3 text-left">VIP &amp; Role</th>
+                  <th scope="col" class="px-4 py-3 text-left">Last active</th>
+                  <th scope="col" class="px-4 py-3 text-left">Risk</th>
+                </tr>
+              </thead>
+              <tbody data-user-table class="bg-black/20 divide-y divide-gray-800/70"></tbody>
+            </table>
+          </div>
+
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between text-xs text-gray-500">
+            <span>Showing <span class="text-white font-semibold" data-table-count>0</span> of <span class="text-white font-semibold" data-table-total>0</span> profiles</span>
+            <span class="text-gray-500">Click a row to open full management controls</span>
+          </div>
+        </section>
+
+        <aside class="glass-card rounded-3xl p-6 lg:p-8 space-y-6" data-detail-panel data-aos="fade-up" data-aos-delay="200">
+          <div data-empty-view class="text-sm text-gray-400 space-y-3 hidden">
+            <p class="font-semibold text-white">Select a player</p>
+            <p>Choose a profile from the directory to unlock wallet controls, compliance flags, and communication utilities.</p>
+          </div>
+
+          <div data-selected-view class="space-y-7 hidden">
+            <div class="flex flex-col gap-4">
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <p class="text-xs uppercase tracking-widest text-gray-500">Selected profile</p>
+                  <h2 class="text-2xl font-semibold text-white" data-detail-name>—</h2>
+                  <div class="flex flex-wrap gap-2 mt-3">
+                    <span class="badge border border-gray-700 text-gray-300" data-detail-role>—</span>
+                    <span class="badge border border-gray-700 text-gray-300" data-detail-status>—</span>
+                    <span class="badge border border-gray-700 text-gray-300" data-detail-vip>—</span>
+                  </div>
+                </div>
+                <div class="text-right space-y-3">
+                  <div>
+                    <p class="text-[11px] uppercase tracking-[0.25em] text-gray-500">User ID</p>
+                    <p class="font-mono text-sm text-gray-300" data-detail-id>—</p>
+                  </div>
+                  <button type="button" class="px-3 py-1.5 rounded-xl text-xs font-semibold border border-gray-700 text-gray-300 hover:text-primary hover:border-primary/40 transition" data-admin-action="impersonate" data-action-message="Impersonation session started in a sandbox window." data-action-tone="warning">
+                    Impersonate (demo)
+                  </button>
+                </div>
+              </div>
+              <div class="space-y-2 text-sm text-gray-400">
+                <a href="#" class="text-primary hover:text-primary/80 transition" data-detail-email>—</a>
+                <p><span class="text-gray-500">Location:</span> <span data-detail-location>—</span></p>
+                <p><span class="text-gray-500">Last active:</span> <span data-detail-last-active>—</span></p>
+              </div>
+              <div class="flex flex-wrap gap-2" data-detail-tags></div>
+              <div class="rounded-2xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-xs text-amber-200 hidden" data-detail-cooldown>
+                <p class="font-semibold">Cooling-off period in effect</p>
+                <p data-detail-cooldown-text class="mt-1 text-amber-100/80">—</p>
+              </div>
+            </div>
+
+            <div class="grid gap-3 sm:grid-cols-3">
+              <div class="rounded-2xl border border-primary/30 bg-primary/10 px-4 py-3">
+                <p class="text-[11px] uppercase tracking-[0.3em] text-primary/70">Wallet balance</p>
+                <p class="text-xl font-semibold text-white mt-1" data-detail-balance>$0.00</p>
+              </div>
+              <div class="rounded-2xl border border-secondary/30 bg-secondary/10 px-4 py-3">
+                <p class="text-[11px] uppercase tracking-[0.3em] text-secondary/70">Lifetime deposits</p>
+                <p class="text-xl font-semibold text-white mt-1" data-detail-deposits>$0.00</p>
+              </div>
+              <div class="rounded-2xl border border-emerald-400/30 bg-emerald-500/10 px-4 py-3">
+                <p class="text-[11px] uppercase tracking-[0.3em] text-emerald-200/80">Lifetime wagered</p>
+                <p class="text-xl font-semibold text-white mt-1" data-detail-wagered>$0.00</p>
+              </div>
+              <div class="rounded-2xl border border-blue-400/30 bg-blue-500/10 px-4 py-3">
+                <p class="text-[11px] uppercase tracking-[0.3em] text-blue-200/80">Lifetime payouts</p>
+                <p class="text-xl font-semibold text-white mt-1" data-detail-payouts>$0.00</p>
+              </div>
+            </div>
+
+            <form data-user-form class="space-y-7">
+              <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                  <h3 class="text-sm font-semibold text-white uppercase tracking-[0.3em]">General profile</h3>
+                  <button type="button" class="text-xs text-gray-400 hover:text-primary transition" data-reset-user>Reset</button>
+                </div>
+                <div class="grid gap-4 sm:grid-cols-2">
+                  <label class="space-y-2 text-sm text-gray-300">
+                    <span class="text-xs uppercase tracking-widest text-gray-500">Display name</span>
+                    <input name="userName" type="text" class="w-full bg-black/30 border border-gray-800 rounded-xl px-3 py-2.5 text-sm text-white focus:border-primary/60 focus:ring-2 focus:ring-primary/20" required />
+                  </label>
+                  <label class="space-y-2 text-sm text-gray-300">
+                    <span class="text-xs uppercase tracking-widest text-gray-500">Email</span>
+                    <input name="userEmail" type="email" class="w-full bg-black/30 border border-gray-800 rounded-xl px-3 py-2.5 text-sm text-white focus:border-primary/60 focus:ring-2 focus:ring-primary/20" required />
+                  </label>
+                  <label class="space-y-2 text-sm text-gray-300">
+                    <span class="text-xs uppercase tracking-widest text-gray-500">Role</span>
+                    <select name="userRole" class="w-full bg-black/30 border border-gray-800 rounded-xl px-3 py-2.5 text-sm text-gray-200 focus:border-primary/60 focus:ring-2 focus:ring-primary/20">
+                      <option value="Player">Player</option>
+                      <option value="VIP">VIP</option>
+                      <option value="Moderator">Moderator</option>
+                      <option value="Administrator">Administrator</option>
+                    </select>
+                  </label>
+                  <label class="space-y-2 text-sm text-gray-300">
+                    <span class="text-xs uppercase tracking-widest text-gray-500">Status</span>
+                    <select name="userStatus" class="w-full bg-black/30 border border-gray-800 rounded-xl px-3 py-2.5 text-sm text-gray-200 focus:border-primary/60 focus:ring-2 focus:ring-primary/20">
+                      <option value="Active">Active</option>
+                      <option value="Cooling Off">Cooling off</option>
+                      <option value="Under Review">Under review</option>
+                      <option value="Suspended">Suspended</option>
+                    </select>
+                  </label>
+                  <label class="space-y-2 text-sm text-gray-300">
+                    <span class="text-xs uppercase tracking-widest text-gray-500">VIP tier</span>
+                    <select name="userVip" class="w-full bg-black/30 border border-gray-800 rounded-xl px-3 py-2.5 text-sm text-gray-200 focus:border-primary/60 focus:ring-2 focus:ring-primary/20">
+                      <option value="Bronze">Bronze</option>
+                      <option value="Silver">Silver</option>
+                      <option value="Gold">Gold</option>
+                      <option value="Platinum">Platinum</option>
+                      <option value="Diamond">Diamond</option>
+                      <option value="Obsidian">Obsidian</option>
+                      <option value="Executive">Executive</option>
+                    </select>
+                  </label>
+                  <label class="space-y-2 text-sm text-gray-300">
+                    <span class="text-xs uppercase tracking-widest text-gray-500">Risk level</span>
+                    <select name="userRisk" class="w-full bg-black/30 border border-gray-800 rounded-xl px-3 py-2.5 text-sm text-gray-200 focus:border-primary/60 focus:ring-2 focus:ring-primary/20">
+                      <option value="Low">Low</option>
+                      <option value="Medium">Medium</option>
+                      <option value="Elevated">Elevated</option>
+                      <option value="Critical">Critical</option>
+                    </select>
+                  </label>
+                  <label class="space-y-2 text-sm text-gray-300">
+                    <span class="text-xs uppercase tracking-widest text-gray-500">Location</span>
+                    <input name="userLocation" type="text" class="w-full bg-black/30 border border-gray-800 rounded-xl px-3 py-2.5 text-sm text-white focus:border-primary/60 focus:ring-2 focus:ring-primary/20" placeholder="City, Country" />
+                  </label>
+                </div>
+              </div>
+
+              <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                  <h3 class="text-sm font-semibold text-white uppercase tracking-[0.3em]">Wallet controls</h3>
+                  <button type="button" class="text-xs text-gray-400 hover:text-primary transition" data-balance-reset>Reset balance</button>
+                </div>
+                <div class="grid gap-4 sm:grid-cols-2">
+                  <label class="space-y-2 text-sm text-gray-300">
+                    <span class="text-xs uppercase tracking-widest text-gray-500">Current balance (USD)</span>
+                    <input name="userBalance" type="number" step="0.01" min="0" class="w-full bg-black/30 border border-gray-800 rounded-xl px-3 py-2.5 text-sm text-white focus:border-primary/60 focus:ring-2 focus:ring-primary/20" data-balance-input />
+                  </label>
+                  <div class="space-y-2 text-sm text-gray-300">
+                    <span class="text-xs uppercase tracking-widest text-gray-500">Quick adjustments</span>
+                    <div class="flex flex-wrap gap-2">
+                      <button type="button" class="px-3 py-1.5 rounded-lg border border-primary/40 text-primary text-xs font-semibold hover:bg-primary/10 transition" data-balance-adjust="25">+ $25</button>
+                      <button type="button" class="px-3 py-1.5 rounded-lg border border-primary/40 text-primary text-xs font-semibold hover:bg-primary/10 transition" data-balance-adjust="100">+ $100</button>
+                      <button type="button" class="px-3 py-1.5 rounded-lg border border-primary/40 text-primary text-xs font-semibold hover:bg-primary/10 transition" data-balance-adjust="500">+ $500</button>
+                      <button type="button" class="px-3 py-1.5 rounded-lg border border-rose-400/40 text-rose-200 text-xs font-semibold hover:bg-rose-500/10 transition" data-balance-adjust="-25">- $25</button>
+                      <button type="button" class="px-3 py-1.5 rounded-lg border border-rose-400/40 text-rose-200 text-xs font-semibold hover:bg-rose-500/10 transition" data-balance-adjust="-100">- $100</button>
+                      <button type="button" class="px-3 py-1.5 rounded-lg border border-gray-700 text-gray-300 text-xs font-semibold hover:bg-gray-800/60 transition" data-balance-action="zero">Set to $0</button>
+                    </div>
+                  </div>
+                  <label class="space-y-2 text-sm text-gray-300">
+                    <span class="text-xs uppercase tracking-widest text-gray-500">Lifetime deposits</span>
+                    <input name="userDeposits" type="number" step="0.01" min="0" class="w-full bg-black/30 border border-gray-800 rounded-xl px-3 py-2.5 text-sm text-white focus:border-primary/60 focus:ring-2 focus:ring-primary/20" />
+                  </label>
+                  <label class="space-y-2 text-sm text-gray-300">
+                    <span class="text-xs uppercase tracking-widest text-gray-500">Lifetime wagered</span>
+                    <input name="userWagered" type="number" step="0.01" min="0" class="w-full bg-black/30 border border-gray-800 rounded-xl px-3 py-2.5 text-sm text-white focus:border-primary/60 focus:ring-2 focus:ring-primary/20" />
+                  </label>
+                  <label class="space-y-2 text-sm text-gray-300">
+                    <span class="text-xs uppercase tracking-widest text-gray-500">Lifetime payouts</span>
+                    <input name="userPayouts" type="number" step="0.01" min="0" class="w-full bg-black/30 border border-gray-800 rounded-xl px-3 py-2.5 text-sm text-white focus:border-primary/60 focus:ring-2 focus:ring-primary/20" />
+                  </label>
+                </div>
+              </div>
+
+              <div class="space-y-3">
+                <h3 class="text-sm font-semibold text-white uppercase tracking-[0.3em]">Security &amp; compliance</h3>
+                <label class="flex items-center gap-3 text-sm text-gray-300">
+                  <input type="checkbox" name="userTwoFactor" class="h-4 w-4 rounded border-gray-700 bg-black/40 text-primary focus:ring-primary/40" />
+                  <span>Two-factor authentication enabled</span>
+                </label>
+                <label class="flex items-center gap-3 text-sm text-gray-300">
+                  <input type="checkbox" name="userEmailVerified" class="h-4 w-4 rounded border-gray-700 bg-black/40 text-primary focus:ring-primary/40" />
+                  <span>Email verified</span>
+                </label>
+                <label class="flex items-center gap-3 text-sm text-gray-300">
+                  <input type="checkbox" name="userPayoutHold" class="h-4 w-4 rounded border-gray-700 bg-black/40 text-primary focus:ring-primary/40" />
+                  <span>Withdrawal hold active</span>
+                </label>
+                <div class="grid gap-2 sm:grid-cols-2">
+                  <button type="button" class="px-3 py-2 rounded-xl text-xs font-semibold border border-gray-700 text-gray-300 hover:text-accent hover:border-accent/50 transition" data-admin-action="send-reset" data-action-message="Password reset email queued for delivery.">Send reset email</button>
+                  <button type="button" class="px-3 py-2 rounded-xl text-xs font-semibold border border-gray-700 text-gray-300 hover:text-secondary hover:border-secondary/50 transition" data-admin-action="send-summary" data-action-message="Account summary emailed to player." data-action-tone="success">Send account summary</button>
+                  <button type="button" class="px-3 py-2 rounded-xl text-xs font-semibold border border-rose-500/40 text-rose-200 hover:bg-rose-500/10 transition" data-admin-action="suspend" data-action-message="Account suspended. Player notified automatically." data-action-tone="danger">Suspend account</button>
+                  <button type="button" class="px-3 py-2 rounded-xl text-xs font-semibold border border-emerald-500/40 text-emerald-200 hover:bg-emerald-500/10 transition" data-admin-action="schedule-call" data-action-message="Responsible gaming check-in scheduled.">Schedule wellbeing call</button>
+                </div>
+              </div>
+
+              <div class="space-y-3">
+                <h3 class="text-sm font-semibold text-white uppercase tracking-[0.3em]">Internal notes</h3>
+                <textarea name="userNotes" rows="4" class="w-full bg-black/30 border border-gray-800 rounded-2xl px-4 py-3 text-sm text-white focus:border-primary/60 focus:ring-2 focus:ring-primary/20" placeholder="Add retention plans, compliance reminders, or player preferences."></textarea>
+                <div class="flex items-center justify-end gap-3">
+                  <button type="button" class="px-4 py-2 rounded-xl text-xs font-semibold border border-gray-700 text-gray-300 hover:text-primary hover:border-primary/40 transition" data-reset-user>Revert changes</button>
+                  <button type="submit" class="gradient-btn px-4 py-2 rounded-xl text-xs font-semibold text-white shadow-neon-blue">Save changes</button>
+                </div>
+              </div>
+            </form>
+
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <h3 class="text-sm font-semibold text-white uppercase tracking-[0.3em]">Recent activity</h3>
+                <button type="button" class="text-xs text-gray-400 hover:text-primary transition" data-admin-action="refresh-activity" data-action-message="Activity feed synced." data-action-tone="success">Refresh</button>
+              </div>
+              <ul class="space-y-3 max-h-60 overflow-y-auto pr-1" data-activity-list></ul>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <section class="glass-card rounded-3xl p-6 lg:p-8 space-y-6" data-aos="fade-up" data-aos-delay="250">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <h2 class="text-2xl font-semibold text-white">Audit timeline</h2>
+            <p class="text-sm text-gray-400 mt-1">Every balance adjustment, verification event, and status change is captured for accountability.</p>
+          </div>
+          <button type="button" class="px-4 py-2 rounded-xl text-xs font-semibold border border-gray-700 text-gray-300 hover:text-primary hover:border-primary/40 transition" data-refresh-audit>Refresh timeline</button>
+        </div>
+        <div class="space-y-6" data-audit-list></div>
+      </section>
+    </div>
+  </main>
+
+  <div class="hidden fixed bottom-6 right-6 z-50 max-w-xs px-5 py-4 rounded-2xl border text-sm shadow-lg backdrop-blur" data-toast>
+    <div class="flex items-center justify-between gap-4">
+      <p data-toast-message class="font-medium">Action completed.</p>
+      <button type="button" class="text-xs uppercase tracking-widest text-gray-400 hover:text-white transition" data-toast-close>&times;</button>
+    </div>
+  </div>
+
+  
+  <div class="hidden fixed inset-0 z-50" data-admin-gate>
+    <div class="absolute inset-0 bg-black/70 backdrop-blur-lg"></div>
+    <div class="relative z-10 flex h-full w-full items-center justify-center px-4">
+      <div class="glass-card w-full max-w-md rounded-3xl border border-gray-800/80 bg-black/60 p-8 text-center shadow-[0_20px_60px_rgba(8,15,35,0.8)] hidden" data-gate-screen="loading">
+        <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary">
+          <svg class="h-6 w-6 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+          </svg>
+        </div>
+        <h2 class="text-xl font-semibold text-white">Preparing admin console</h2>
+        <p class="mt-2 text-sm text-gray-400">Connecting to Firebase and verifying your access…</p>
+      </div>
+
+      <div class="glass-card w-full max-w-md space-y-6 rounded-3xl border border-gray-800/80 bg-black/60 p-8 shadow-[0_20px_60px_rgba(8,15,35,0.8)] hidden text-left" data-gate-screen="login">
+        <div class="space-y-2">
+          <span class="inline-flex items-center rounded-full border border-primary/40 bg-primary/10 px-3 py-1 text-[11px] uppercase tracking-[0.3em] text-primary/70">Admin access</span>
+          <h2 class="text-2xl font-semibold text-white">Sign in to continue</h2>
+          <p class="text-sm text-gray-400">Use your administrator credentials to unlock real-time user management tools.</p>
+        </div>
+        <form class="space-y-4" data-admin-login-form>
+          <div class="space-y-2">
+            <label class="text-xs uppercase tracking-[0.3em] text-gray-500">Email</label>
+            <input type="email" name="email" required class="w-full rounded-xl border border-gray-800 bg-black/40 px-4 py-3 text-sm text-white focus:border-primary/60 focus:ring-2 focus:ring-primary/20" placeholder="admin@example.com" data-admin-login-email />
+          </div>
+          <div class="space-y-2">
+            <label class="text-xs uppercase tracking-[0.3em] text-gray-500">Password</label>
+            <input type="password" name="password" required class="w-full rounded-xl border border-gray-800 bg-black/40 px-4 py-3 text-sm text-white focus:border-primary/60 focus:ring-2 focus:ring-primary/20" placeholder="••••••••" data-admin-login-password />
+          </div>
+          <p class="hidden rounded-xl border border-rose-500/40 bg-rose-500/10 px-4 py-2 text-sm text-rose-200" data-admin-login-error></p>
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <button type="button" class="text-xs font-semibold uppercase tracking-[0.3em] text-gray-400 hover:text-primary transition" data-admin-login-reset>Send reset email</button>
+            <button type="submit" class="gradient-btn w-full sm:w-auto rounded-xl px-6 py-3 text-sm font-semibold text-white shadow-neon-blue" data-admin-login-submit>
+              Sign In
+            </button>
+          </div>
+        </form>
+        <p class="text-xs text-gray-500">Only approved administrators can access player balances, compliance flags, and audit logs.</p>
+      </div>
+
+      <div class="glass-card w-full max-w-md space-y-4 rounded-3xl border border-amber-500/30 bg-black/60 p-8 text-center shadow-[0_20px_60px_rgba(8,15,35,0.8)] hidden" data-gate-screen="unauthorized">
+        <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-amber-500/10 text-amber-300">
+          <i data-feather="shield-off" class="h-6 w-6"></i>
+        </div>
+        <h2 class="text-2xl font-semibold text-white">Access requires elevation</h2>
+        <p class="text-sm text-gray-400" data-admin-unauthorized-message></p>
+        <button type="button" class="gradient-btn rounded-xl px-6 py-3 text-sm font-semibold text-white shadow-neon-blue" data-admin-signout>
+          Switch account
+        </button>
+      </div>
+
+      <div class="glass-card w-full max-w-md space-y-4 rounded-3xl border border-rose-500/40 bg-black/60 p-8 text-center shadow-[0_20px_60px_rgba(8,15,35,0.8)] hidden" data-gate-screen="error">
+        <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-rose-500/10 text-rose-300">
+          <i data-feather="alert-triangle" class="h-6 w-6"></i>
+        </div>
+        <h2 class="text-2xl font-semibold text-white">Unable to load admin tools</h2>
+        <p class="text-sm text-gray-400" data-admin-error-message></p>
+        <button type="button" class="gradient-btn rounded-xl px-6 py-3 text-sm font-semibold text-white shadow-neon-blue" data-admin-retry>Retry</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="admin.js"></script>
+</body>
+</html>
