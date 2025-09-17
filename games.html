@@ -3,12 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEON CASINO | Games</title>
+    <title>NEON CASINO | Mines</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="https://unpkg.com/feather-icons"></script>
-    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -17,2588 +13,927 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Poppins', 'sans-serif'],
+                        sans: ['Poppins', 'sans-serif']
                     },
                     colors: {
-                        dark: '#0e0f13',
                         primary: '#00c2ff',
-                        secondary: '#7c3aed',
                         accent: '#2bd975',
-                    },
-                    boxShadow: {
-                        'neon-blue': '0 0 10px rgba(0, 194, 255, 0.5)',
-                        'neon-purple': '0 0 10px rgba(124, 58, 237, 0.5)',
-                        'neon-green': '0 0 10px rgba(43, 217, 117, 0.5)',
-                        'glow-blue': '0 0 15px rgba(0, 194, 255, 0.7)',
+                        surface: '#0f172a'
                     }
                 }
             }
-        }
+        };
     </script>
-
-    <script type="application/json" id="firebase-config">
-        {
-            "apiKey": "AIzaSyB_Dj7URsA_5N1okSuxCN5m2c7q7H9098o",
-            "authDomain": "casino-cd04e.firebaseapp.com",
-            "projectId": "casino-cd04e",
-            "storageBucket": "casino-cd04e.appspot.com",
-            "messagingSenderId": "237834419290"
-        }
-    </script>
-
     <style>
         body {
-            background-color: #0e0f13;
-            color: #fff;
+            background: radial-gradient(circle at top left, rgba(0, 194, 255, 0.12), transparent 45%),
+                radial-gradient(circle at bottom right, rgba(124, 58, 237, 0.1), transparent 50%),
+                #070b15;
+            color: #f8fafc;
         }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+
+        .glass-panel {
+            background: linear-gradient(160deg, rgba(15, 23, 42, 0.92), rgba(10, 15, 28, 0.92));
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            box-shadow: 0 24px 60px rgba(7, 11, 21, 0.6);
         }
-        .gradient-btn {
-            background: linear-gradient(45deg, #00c2ff, #7c3aed);
+
+        .glass-panel--light {
+            background: linear-gradient(160deg, rgba(15, 23, 42, 0.78), rgba(10, 14, 24, 0.85));
         }
-        .gradient-btn:hover {
-            box-shadow: 0 0 15px rgba(0, 194, 255, 0.7);
-        }
-        .mobile-nav-toggle {
-            transition: border-color 0.2s ease, background-color 0.2s ease;
-        }
-        .mobile-nav-toggle .mobile-nav-icon--close {
-            display: none;
-        }
-        .mobile-nav-toggle.is-open {
-            border-color: rgba(59, 130, 246, 0.45);
-            background-color: rgba(15, 23, 42, 0.65);
-        }
-        .mobile-nav-toggle.is-open .mobile-nav-icon--open {
-            display: none;
-        }
-        .mobile-nav-toggle.is-open .mobile-nav-icon--close {
-            display: inline;
-        }
-        .mobile-nav-panel {
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.45);
-        }
-        .game-sidebar-item:hover {
-            background: rgba(255, 255, 255, 0.05);
-        }
-        .game-sidebar-item.active {
-            background: rgba(0, 194, 255, 0.1);
-            border-left: 3px solid #00c2ff;
-        }
-        .crash-visualization {
+
+        .mines-cell {
             position: relative;
-            width: 100%;
-        }
-        .crash-launch-area {
-            position: relative;
-            width: 100%;
-            height: 20rem;
-            border-radius: 1.5rem;
-            border: 1px solid rgba(148, 197, 255, 0.18);
-            background: radial-gradient(circle at 20% -10%, rgba(59, 130, 246, 0.35), transparent 55%),
-                radial-gradient(circle at 80% 120%, rgba(14, 116, 144, 0.25), transparent 60%),
-                linear-gradient(160deg, #0f172a 0%, #0b1220 65%, #0a101b 100%);
-            overflow: hidden;
-            padding: 1.75rem 2rem 2.5rem 3rem;
-            box-shadow: inset 0 0 40px rgba(15, 23, 42, 0.8);
-        }
-        .crash-launch-area::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background-image:
-                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-            background-size: 100% 56px, 56px 100%;
-            opacity: 0.35;
-            pointer-events: none;
-        }
-        .crash-launch-area::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at 50% 85%, rgba(8, 145, 178, 0.28), transparent 70%);
-            opacity: 0.4;
-            pointer-events: none;
-        }
-        .crash-launch-area.active {
-            box-shadow: 0 0 40px rgba(16, 185, 129, 0.25), inset 0 0 40px rgba(14, 165, 233, 0.15);
-        }
-        .crash-graph-svg {
-            position: absolute;
-            inset: 0;
-            z-index: 1;
-        }
-        .crash-graph-path-base {
-            fill: none;
-            stroke: rgba(250, 204, 21, 0.2);
-            stroke-width: 2.8;
-            stroke-linecap: round;
-        }
-        .crash-graph-path-active {
-            fill: none;
-            stroke: #facc15;
-            stroke-width: 3.2;
-            stroke-linecap: round;
-            filter: drop-shadow(0 0 10px rgba(250, 204, 21, 0.4));
-        }
-        .crash-axis {
-            position: absolute;
-            font-size: 0.75rem;
-            font-weight: 500;
-            color: rgba(148, 197, 255, 0.6);
-            z-index: 3;
-            pointer-events: none;
-        }
-        .crash-axis--y {
-            top: 3.5rem;
-            bottom: 3.75rem;
-            left: 0.75rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            text-align: left;
-        }
-        .crash-axis--x {
-            left: 3rem;
-            right: 2rem;
-            bottom: 1.75rem;
-            display: flex;
-            justify-content: space-between;
-            text-transform: uppercase;
-        }
-        .crash-multiplier-display {
-            position: absolute;
-            inset: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 3;
-            pointer-events: none;
+            aspect-ratio: 1 / 1;
+            border-radius: 0.9rem;
+            border: 1px solid rgba(100, 116, 139, 0.42);
+            background: linear-gradient(160deg, rgba(15, 23, 42, 0.92), rgba(10, 16, 28, 0.9));
+            color: #e2e8f0;
+            font-weight: 600;
+            transition: transform 0.22s ease, box-shadow 0.35s ease, border-color 0.18s ease, background 0.35s ease;
+            box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.08);
+            overflow: hidden;
         }
-        .crash-multiplier {
-            font-size: clamp(2.75rem, 6vw, 5.5rem);
-            font-weight: 700;
-            color: #f8fafc;
-            text-shadow: 0 18px 35px rgba(15, 23, 42, 0.8), 0 0 25px rgba(250, 204, 21, 0.25);
-            letter-spacing: -0.03em;
-        }
-        .crash-status-dock {
-            position: absolute;
-            inset: auto 1.75rem 1.5rem auto;
-            display: flex;
-            justify-content: flex-end;
-            pointer-events: none;
-            z-index: 4;
-        }
-        .crash-status-panel {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 0.4rem;
-            padding: 0.75rem 1rem;
-            border-radius: 1rem;
-            border: 1px solid rgba(148, 197, 255, 0.2);
-            background: rgba(15, 23, 42, 0.55);
-            backdrop-filter: blur(6px);
-            text-align: right;
-            box-shadow: 0 18px 35px rgba(15, 23, 42, 0.45);
-            pointer-events: auto;
-        }
-        .crash-status-label {
-            font-size: 0.9rem;
-            font-weight: 700;
-            letter-spacing: 0.28em;
-            text-transform: uppercase;
-            transition: color 0.2s ease;
-        }
-        .crash-status-message {
-            font-size: 0.82rem;
-            color: rgba(226, 232, 240, 0.75);
-            line-height: 1.45;
-            max-width: 16rem;
-            margin-left: auto;
-        }
-        .crash-trail {
-            position: absolute;
-            width: 7.25rem;
-            height: 0.4rem;
-            border-radius: 999px;
-            background: linear-gradient(90deg, rgba(251, 191, 36, 0.08) 0%, rgba(250, 204, 21, 0.55) 55%, rgba(250, 204, 21, 0) 100%);
-            opacity: 0;
-            transform-origin: 100% 50%;
-            filter: blur(1.5px);
-            z-index: 2;
-            transition: opacity 0.2s ease;
-        }
-        .crash-explosion {
-            position: absolute;
-            width: 7rem;
-            height: 7rem;
-            transform: translate(-50%, 50%);
-            pointer-events: none;
-            opacity: 0;
-            z-index: 6;
-            will-change: transform, opacity;
-        }
-        .crash-explosion-core,
-        .crash-explosion-shockwave,
-        .crash-explosion-ring {
+
+        .mines-cell::before {
+            content: '';
             position: absolute;
             inset: 0;
-            border-radius: 50%;
+            border-radius: inherit;
+            background: linear-gradient(135deg, rgba(148, 163, 184, 0.18), transparent 55%);
             opacity: 0;
-            transform-origin: 50% 50%;
+            transition: opacity 0.35s ease;
+            pointer-events: none;
         }
-        .crash-explosion-core {
-            background: radial-gradient(circle, rgba(251, 191, 36, 0.9) 0%, rgba(248, 113, 113, 0.55) 48%, rgba(14, 14, 22, 0) 75%);
+
+        .mines-cell--hidden {
+            cursor: pointer;
         }
-        .crash-explosion-shockwave {
-            background: radial-gradient(circle, rgba(250, 204, 21, 0.6) 0%, rgba(250, 204, 21, 0) 70%);
-            transform: scale(0.6);
+
+        .mines-cell--hidden:hover {
+            transform: translateY(-2px);
+            border-color: rgba(148, 163, 184, 0.5);
+            box-shadow: 0 16px 40px rgba(8, 15, 30, 0.55);
         }
-        .crash-explosion-ring {
-            border: 3px solid rgba(250, 204, 21, 0.3);
-            box-shadow: 0 0 25px rgba(250, 204, 21, 0.35);
-            transform: scale(0.45);
+
+        .mines-cell--hidden:hover::before {
+            opacity: 0.35;
         }
-        .crash-explosion.active {
-            opacity: 1;
+
+        .mines-cell--safe {
+            border-color: rgba(34, 197, 94, 0.7);
+            background: linear-gradient(160deg, rgba(6, 95, 70, 0.45), rgba(5, 46, 22, 0.9));
+            box-shadow: 0 0 32px rgba(34, 197, 94, 0.45);
         }
-        .crash-explosion.active .crash-explosion-core {
-            animation: crash-explosion-core 0.9s ease-out forwards;
-            -webkit-animation: crash-explosion-core 0.9s ease-out forwards;
+
+        .mines-cell--safe::before {
+            opacity: 0.45;
+            background: linear-gradient(135deg, rgba(134, 239, 172, 0.5), transparent 55%);
         }
-        .crash-explosion.active .crash-explosion-shockwave {
-            animation: crash-explosion-shockwave 0.9s ease-out forwards;
-            -webkit-animation: crash-explosion-shockwave 0.9s ease-out forwards;
+
+        .mines-cell--mine {
+            border-color: rgba(248, 113, 113, 0.72);
+            background: linear-gradient(160deg, rgba(127, 29, 29, 0.55), rgba(69, 10, 10, 0.95));
+            box-shadow: 0 0 34px rgba(248, 113, 113, 0.42);
         }
-        .crash-explosion.active .crash-explosion-ring {
-            animation: crash-explosion-ring 0.9s ease-out forwards;
-            -webkit-animation: crash-explosion-ring 0.9s ease-out forwards;
+
+        .mines-cell--mine::before {
+            opacity: 0.3;
+            background: linear-gradient(135deg, rgba(248, 113, 113, 0.45), transparent 55%);
         }
-        @keyframes crash-explosion-core {
+
+        .mines-cell--mine-trigger {
+            box-shadow: 0 0 44px rgba(248, 113, 113, 0.58);
+            border-color: rgba(248, 113, 113, 0.88);
+        }
+
+        .mines-cell--disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .mines-cell__icon {
+            width: 2.85rem;
+            height: 2.85rem;
+            filter: drop-shadow(0 0 18px rgba(34, 197, 94, 0.55));
+        }
+
+        .mines-cell--mine .mines-cell__icon {
+            filter: drop-shadow(0 0 16px rgba(248, 113, 113, 0.6));
+        }
+
+        .animate-pop {
+            animation: tile-pop 220ms ease-out;
+        }
+
+        .animate-shake {
+            animation: tile-shake 360ms ease-out;
+        }
+
+        @keyframes tile-pop {
             0% {
+                transform: scale(0.82);
                 opacity: 0;
-                transform: scale(0.25);
             }
-            25% {
+            70% {
+                transform: scale(1.08);
                 opacity: 1;
-                transform: scale(1.05);
-            }
-            55% {
-                opacity: 1;
-                transform: scale(1.25);
             }
             100% {
-                opacity: 0;
-                transform: scale(0.35);
+                transform: scale(1);
+                opacity: 1;
             }
         }
-        @-webkit-keyframes crash-explosion-core {
-            0% {
-                opacity: 0;
-                transform: scale(0.25);
+
+        @keyframes tile-shake {
+            0%, 100% {
+                transform: translate(0);
             }
-            25% {
-                opacity: 1;
-                transform: scale(1.05);
+            20% {
+                transform: translate(-4px, 3px);
             }
-            55% {
-                opacity: 1;
-                transform: scale(1.25);
-            }
-            100% {
-                opacity: 0;
-                transform: scale(0.35);
-            }
-        }
-        @keyframes crash-explosion-shockwave {
-            0% {
-                opacity: 0.75;
-                transform: scale(0.65);
+            40% {
+                transform: translate(4px, -4px);
             }
             60% {
-                opacity: 0.4;
-                transform: scale(1.35);
+                transform: translate(-3px, 2px);
             }
-            100% {
-                opacity: 0;
-                transform: scale(1.5);
+            80% {
+                transform: translate(2px, -2px);
             }
         }
-        @-webkit-keyframes crash-explosion-shockwave {
-            0% {
-                opacity: 0.75;
-                transform: scale(0.65);
-            }
-            60% {
-                opacity: 0.4;
-                transform: scale(1.35);
-            }
-            100% {
-                opacity: 0;
-                transform: scale(1.5);
-            }
+
+        .status-message {
+            font-size: 0.875rem;
+            font-weight: 500;
+            min-height: 1.5rem;
+            color: rgba(148, 163, 184, 1);
+            transition: color 0.3s ease;
         }
-        @keyframes crash-explosion-ring {
-            0% {
-                opacity: 0.6;
-                transform: scale(0.55);
-            }
-            50% {
-                opacity: 0.6;
-                transform: scale(1.4);
-            }
-            100% {
-                opacity: 0;
-                transform: scale(1.65);
-            }
+
+        .status-message--info {
+            color: rgba(125, 211, 252, 1);
         }
-        @-webkit-keyframes crash-explosion-ring {
-            0% {
-                opacity: 0.6;
-                transform: scale(0.55);
-            }
-            50% {
-                opacity: 0.6;
-                transform: scale(1.4);
-            }
-            100% {
-                opacity: 0;
-                transform: scale(1.65);
-            }
+
+        .status-message--success {
+            color: rgba(134, 239, 172, 1);
         }
-        .crash-ship {
-            position: absolute;
-            width: 2.05rem;
-            height: 3.6rem;
-            transform: translate(-50%, 50%);
-            transform-origin: 50% 75%;
-            transition: left 0.2s linear, bottom 0.2s linear, transform 0.2s linear, filter 0.3s ease;
-            z-index: 4;
+
+        .status-message--warning {
+            color: rgba(250, 204, 21, 1);
         }
-        .crash-ship--stalled {
-            filter: grayscale(0.7) brightness(0.85);
+
+        .status-message--error {
+            color: rgba(248, 113, 113, 1);
         }
-        .crash-ship-body {
-            position: absolute;
-            inset: 0;
-            border-radius: 999px 999px 45% 45%;
-            background: linear-gradient(180deg, rgba(14, 165, 233, 0.95), rgba(76, 29, 149, 0.9));
-            box-shadow: 0 12px 35px rgba(14, 165, 233, 0.45);
+
+        .profit-value {
+            transition: color 0.3s ease;
+            color: rgba(226, 232, 240, 1);
         }
-        .crash-ship-window {
-            position: absolute;
-            top: 27%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0.82rem;
-            height: 0.82rem;
-            border-radius: 999px;
-            background: radial-gradient(circle at 35% 35%, #ffffff 0%, #c4f1ff 40%, #0ea5e9 75%);
-            border: 2px solid rgba(255, 255, 255, 0.6);
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.45);
+
+        .profit-value.is-positive {
+            color: rgba(134, 239, 172, 1);
         }
-        .crash-ship-wing {
-            position: absolute;
-            bottom: 0.95rem;
-            width: 0.9rem;
-            height: 1.35rem;
-            background: linear-gradient(160deg, rgba(124, 58, 237, 0.85), rgba(14, 165, 233, 0.7));
-            border-radius: 0.75rem;
-            box-shadow: 0 0 18px rgba(124, 58, 237, 0.35);
+
+        .profit-value.is-negative {
+            color: rgba(248, 113, 113, 1);
         }
-        .crash-ship-wing--left {
-            left: -0.7rem;
-            transform: rotate(-18deg);
-        }
-        .crash-ship-wing--right {
-            right: -0.7rem;
-            transform: rotate(18deg);
-        }
-        .crash-flame {
-            position: absolute;
-            bottom: -1.35rem;
-            left: 50%;
-            width: 1.05rem;
-            height: 1.7rem;
-            transform: translateX(-50%);
-            background: radial-gradient(circle at 50% 18%, #ffffff 0%, #fde047 38%, #fb923c 65%, rgba(248, 113, 113, 0) 100%);
-            filter: blur(0.65px);
-            opacity: 0;
-            animation: flame-flicker 0.18s infinite alternate;
-        }
-        .crash-flame.active {
-            opacity: 1;
-        }
-        .crash-controls {
+
+        .control-tab {
             position: relative;
-        }
-        .crash-action-button {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 0.35rem;
+            border-radius: 9999px;
+            padding: 0.45rem 1.4rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: rgba(148, 163, 184, 1);
+            transition: color 0.25s ease, background 0.25s ease;
         }
-        .crash-mobile-action {
-            border-radius: 999px;
+
+        .control-tab.is-active {
+            background: linear-gradient(135deg, rgba(0, 194, 255, 0.75), rgba(43, 217, 117, 0.6));
+            color: #0f172a;
+            box-shadow: 0 12px 30px rgba(0, 194, 255, 0.35);
         }
-        @keyframes flame-flicker {
-            from {
-                transform: translateX(-50%) scaleY(1);
-            }
-            to {
-                transform: translateX(-50%) scaleY(0.82);
-            }
+
+        .control-tab:not(.is-active):hover {
+            color: rgba(226, 232, 240, 1);
         }
-        @media (max-width: 768px) {
-            .game-sidebar {
-                overflow-x: auto;
-                flex-direction: row;
-                padding: 0.5rem;
-            }
-            .game-sidebar-item {
-                min-width: 100px;
-                border-left: none;
-                border-bottom: 3px solid transparent;
-            }
-            .game-sidebar-item.active {
-                border-left: none;
-                border-bottom: 3px solid #00c2ff;
-            }
-            .crash-launch-area {
-                height: 18rem;
-                padding: 1.4rem 1.35rem 2.15rem 2rem;
-            }
-            .crash-axis--y {
-                left: 0.5rem;
-            }
-            .crash-axis--x {
-                left: 2rem;
-                right: 1.25rem;
-                bottom: 1.45rem;
-            }
-            .crash-status-message {
-                max-width: 12rem;
-            }
-            .crash-trail {
-                width: 6.5rem;
-            }
-            .crash-multiplier {
-                font-size: clamp(2.4rem, 8vw, 4.2rem);
-            }
-        }
+
         @media (max-width: 640px) {
-            .crash-launch-area {
-                height: 17rem;
-                padding: 1.15rem 1.1rem 2.6rem 1.75rem;
+            .mines-cell {
+                border-radius: 0.75rem;
             }
-            .crash-explosion {
-                width: 5.5rem;
-                height: 5.5rem;
-            }
-            .crash-status-dock {
-                position: static;
-                width: 100%;
-                margin-top: 0.85rem;
-                justify-content: center;
-                pointer-events: auto;
-            }
-            .crash-status-panel {
-                flex-direction: row;
-                align-items: center;
-                gap: 0.65rem;
-                width: 100%;
-                max-width: none;
-                text-align: left;
-                padding: 0.65rem 0.9rem;
-                border-radius: 999px;
-                box-shadow: 0 16px 30px rgba(15, 23, 42, 0.4);
-            }
-            .crash-status-label {
-                letter-spacing: 0.18em;
-            }
-            .crash-status-message {
-                margin-left: 0;
-                max-width: none;
-                flex: 1;
-            }
-            .crash-controls {
-                padding-bottom: 2.25rem;
-            }
-            .crash-mobile-action {
-                position: sticky;
-                bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
-                margin: 1.25rem auto 0;
-                width: 100%;
-                border-radius: 999px;
-                box-shadow: 0 12px 26px rgba(15, 23, 42, 0.4);
-                z-index: 5;
-            }
-            .crash-mobile-action:not(:disabled) {
-                box-shadow: 0 18px 36px rgba(14, 165, 233, 0.45);
-            }
-        }
-        @media (min-width: 641px) {
-            .crash-mobile-action {
-                display: none;
-                position: static;
-                left: auto;
-                right: auto;
-                bottom: auto;
-                box-shadow: none;
+
+            .mines-cell__icon {
+                width: 2.35rem;
+                height: 2.35rem;
             }
         }
     </style>
 </head>
-<body class="font-sans min-h-screen">
-    <!-- Navbar -->
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-dark/80 backdrop-blur-md border-b border-gray-800">
-        <div class="container mx-auto px-4 py-3">
-            <div class="flex items-center justify-between">
-                <!-- Logo -->
-                <div class="flex items-center space-x-2">
-                    <span class="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">NEON
-CASINO</span>
+<body class="min-h-screen font-sans antialiased">
+    <div class="min-h-screen">
+        <nav class="fixed inset-x-0 top-0 z-30 border-b border-white/5 bg-slate-950/85 backdrop-blur-xl">
+            <div class="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4">
+                <a href="index.html" class="text-xl font-bold tracking-wider text-white">
+                    <span class="bg-gradient-to-r from-primary via-primary/80 to-accent bg-clip-text text-transparent">NEON CASINO</span>
+                </a>
+                <div class="hidden items-center gap-8 text-sm font-medium text-slate-300 md:flex">
+                    <a href="index.html" class="transition hover:text-white">Home</a>
+                    <a href="#" class="text-primary">Mines</a>
+                    <a href="#" class="transition hover:text-white">Promotions</a>
+                    <a href="#" class="transition hover:text-white">Provably Fair</a>
                 </div>
-
-                <!-- Desktop Nav Links -->
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="index.html" class="text-white hover:text-primary transition">Home</a>
-                    <a href="#" class="text-primary transition" aria-current="page">Games</a>
-                    <a href="#" class="text-white hover:text-primary transition">Promotions</a>
-                    <a href="#" class="text-white hover:text-primary transition">Provably Fair</a>
-                  <a href="#" class="text-white hover:text-primary transition">Leaderboard</a>
-                </div>
-
-                <!-- Wallet & Auth -->
-                <div class="hidden md:flex items-center space-x-4">
-                    <div class="bg-gray-800 rounded-full px-4 py-1.5 flex items-center space-x-2">
-                        <i data-feather="dollar-sign" class="w-4 h-4 text-accent"></i>
-                        <span class="font-medium" data-balance data-default-balance="1000.00">1,000.00</span>
+                <div class="hidden items-center gap-3 md:flex">
+                    <div class="rounded-full border border-slate-700/60 bg-slate-900/80 px-4 py-1.5 text-sm text-slate-200 shadow-[0_0_18px_rgba(14,165,233,0.25)]">
+                        Balance: €1,000.00
                     </div>
-                    <a href="auth.html" class="gradient-btn rounded-full px-6 py-2 font-medium text-white hover:shadow-lg transition">
-                        Sign In
-                    </a>
+                    <a href="auth.html" class="rounded-full bg-primary px-5 py-2 text-sm font-semibold text-slate-950 transition hover:bg-primary/90">Wallet</a>
                 </div>
-
-                <!-- Mobile Menu Button -->
-                <button type="button" class="md:hidden text-white focus:outline-none" data-mobile-toggle aria-expanded="false" aria-controls="mobile-menu">
-                    <span class="sr-only">Toggle navigation</span>
-                    <i data-feather="menu" class="w-6 h-6" data-icon-closed></i>
-                    <i data-feather="x" class="w-6 h-6 hidden" data-icon-open></i>
+                <button id="mobileNavToggle" class="rounded-full border border-slate-700/70 bg-slate-900/90 px-4 py-2 text-sm font-semibold text-slate-200 transition hover:border-primary/60 md:hidden" aria-label="Toggle navigation" aria-expanded="false">
+                    Menu
                 </button>
             </div>
-
-            <!-- Mobile Menu -->
-            <div id="mobile-menu" class="md:hidden hidden flex-col space-y-4 pt-4 border-t border-gray-800" data-mobile-menu>
-                <div class="flex flex-col space-y-3">
-                    <a href="index.html" class="text-white hover:text-primary transition">Home</a>
-                    <a href="#" class="text-primary transition font-semibold" aria-current="page">Games</a>
-                    <a href="#" class="text-white hover:text-primary transition">Promotions</a>
-                    <a href="#" class="text-white hover:text-primary transition">Provably Fair</a>
-                    <a href="#" class="text-white hover:text-primary transition">Leaderboard</a>
-                </div>
-                <div class="space-y-3 border-t border-gray-800 pt-4">
-                    <div class="space-y-2">
-                        <span class="text-xs uppercase tracking-wide text-gray-400">Wallet Balance</span>
-                        <div class="bg-gray-800 rounded-full px-4 py-1.5 flex items-center space-x-2">
-                            <i data-feather="dollar-sign" class="w-4 h-4 text-accent"></i>
-                            <span class="font-medium" data-balance data-default-balance="1000.00">1,000.00</span>
-                        </div>
-                    </div>
-                    <a href="auth.html" class="gradient-btn rounded-full px-6 py-2 font-medium text-white text-center hover:shadow-lg transition">
-                        Sign In
-                    </a>
+            <div id="mobileNavPanel" class="hidden border-t border-slate-800/60 bg-slate-950/95 px-4 py-4 md:hidden">
+                <div class="flex flex-col space-y-4 text-sm text-slate-200">
+                    <a href="index.html" class="transition hover:text-white">Home</a>
+                    <a href="#" class="text-primary">Mines</a>
+                    <a href="#" class="transition hover:text-white">Promotions</a>
+                    <a href="#" class="transition hover:text-white">Provably Fair</a>
+                    <a href="auth.html" class="transition hover:text-white">Wallet</a>
                 </div>
             </div>
-        </div>
-    </nav>
-    <!-- Main Content -->
-    <div class="container mx-auto px-4 pt-32 pb-16 flex flex-col md:flex-row">
-        <!-- Sidebar -->
-        <div class="md:w-1/5 mb-8 md:mb-0 md:pr-4">
-            <div class="game-sidebar glass-card rounded-xl p-2 flex flex-col md:overflow-y-auto">
-                <a href="#" class="game-sidebar-item active flex items-center space-x-3 p-3 rounded-lg transition">
-                    <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                        <i data-feather="trending-up" class="w-4 h-4 text-primary"></i>
-                    </div>
-                    <span class="font-medium">Crash</span>
-                </a>
-                <a href="#" class="game-sidebar-item flex items-center space-x-3 p-3 rounded-lg transition">
-                    <div class="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center">
-                        <i data-feather="flag" class="w-4 h-4 text-secondary"></i>
-                    </div>
-                    <span class="font-medium">Mines</span>
-                </a>
-                <a href="#" class="game-sidebar-item flex items-center space-x-3 p-3 rounded-lg transition">
-                    <div class="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center">
-                        <i data-feather="droplet" class="w-4 h-4 text-accent"></i>
-                    </div>
-                    <span class="font-medium">Plinko</span>
-                </a>
-                <a href="#" class="game-sidebar-item flex items-center space-x-3 p-3 rounded-lg transition">
-                    <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                        <i data-feather="bar-chart-2" class="w-4 h-4 text-primary"></i>
-                    </div>
-                    <span class="font-medium">Limbo</span>
-                </a>
-                <a href="#" class="game-sidebar-item flex items-center space-x-3 p-3 rounded-lg transition">
-                    <div class="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center">
-                        <i data-feather="dice-5" class="w-4 h-4 text-secondary"></i>
-                    </div>
-                    <span class="font-medium">Dice</span>
-                </a>
-                <a href="#" class="game-sidebar-item flex items-center space-x-3 p-3 rounded-lg transition">
-                    <div class="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center">
-                        <i data-feather="circle" class="w-4 h-4 text-accent"></i>
-                    </div>
-                    <span class="font-medium">Roulette</span>
-                </a>
-            </div>
-        </div>
+        </nav>
 
-        <!-- Game Area -->
-        <div class="md:w-4/5">
-            <div class="glass-card rounded-xl p-6">
-                <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-2xl font-bold game-title">CRASH — Demo Preview</h2>
-                    <div class="flex items-center space-x-4">
-                        <div class="bg-gray-800 rounded-full px-4 py-1.5 flex items-center space-x-2">
-                            <i data-feather="dollar-sign" class="w-4 h-4 text-accent"></i>
-                            <span class="font-medium" data-balance data-default-balance="1000.00">1,000.00</span>
-                        </div>
-                    </div>
+        <main class="mx-auto w-full max-w-6xl px-4 pt-28 pb-16">
+            <header class="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                    <p class="text-sm uppercase tracking-[0.4em] text-primary">Featured Demo</p>
+                    <h1 class="mt-3 text-3xl font-semibold text-white md:text-4xl">Mines</h1>
+                    <p class="mt-2 max-w-xl text-sm text-slate-300">Reveal gems on the grid to build your multiplier. Cash out before hitting a mine and secure your profit.</p>
                 </div>
+                <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-right text-xs uppercase tracking-wider text-slate-300 shadow-[0_0_30px_rgba(14,165,233,0.18)]">
+                    Demo credits only · No real wagers
+                </div>
+            </header>
 
-                <!-- Game Preview -->
-                <div class="bg-gray-800 rounded-xl p-8 mb-6 flex flex-col items-center justify-center" style="min-height: 400px;">
-                    <div class="relative w-full max-w-3xl mb-10">
-                        <div class="absolute inset-0 bg-gradient-to-r from-transparent via-primary/20 to-transparent opacity-30 blur-lg"></div>
-                        <div class="relative bg-dark border border-primary/20 rounded-2xl p-6 md:p-8 game-preview overflow-hidden">
-                                <div class="crash-visualization">
-                                    <div id="crashLaunchArea" class="crash-launch-area">
-                                        <svg class="crash-graph-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-                                            <path id="crashPathGuide" class="crash-graph-path-base" d="M6 88 Q 34 68 56 48 T 94 12"></path>
-                                            <path id="crashPathActive" class="crash-graph-path-active" d="M6 88 Q 34 68 56 48 T 94 12"></path>
-                                        </svg>
-                                        <div class="crash-axis crash-axis--y">
-                                            <span>4.3x</span>
-                                            <span>3.7x</span>
-                                            <span>3.1x</span>
-                                            <span>2.5x</span>
-                                            <span>1.9x</span>
-                                            <span>1.3x</span>
-                                        </div>
-                                        <div class="crash-axis crash-axis--x">
-                                            <span>1s</span>
-                                            <span>3s</span>
-                                            <span>7s</span>
-                                            <span>11s</span>
-                                            <span>14s</span>
-                                            <span>17s</span>
-                                        </div>
-                                        <div class="crash-multiplier-display">
-                                            <div id="crashMultiplier" class="crash-multiplier">1.00x</div>
-                                        </div>
-                                        <div id="crashTrail" class="crash-trail"></div>
-                                        <div id="crashExplosion" class="crash-explosion">
-                                            <div class="crash-explosion-core" data-explosion-part></div>
-                                            <div class="crash-explosion-shockwave" data-explosion-part></div>
-                                            <div class="crash-explosion-ring" data-explosion-part></div>
-                                        </div>
-                                        <div id="crashShip" class="crash-ship">
-                                            <div class="crash-ship-body"></div>
-                                            <div class="crash-ship-window"></div>
-                                            <div class="crash-ship-wing crash-ship-wing--left"></div>
-                                            <div class="crash-ship-wing crash-ship-wing--right"></div>
-                                            <div id="crashFlame" class="crash-flame"></div>
-                                        </div>
-                                    </div>
-                                    <div class="crash-status-dock">
-                                        <div class="crash-status-panel">
-                                            <p id="crashStatus" class="crash-status-label">WAITING</p>
-                                            <p id="crashMessage" class="crash-status-message">Place your bet to start the next launch.</p>
-                                        </div>
-                                    </div>
+            <div class="grid gap-6 lg:grid-cols-[minmax(0,320px)_1fr]">
+                <aside class="glass-panel rounded-3xl p-6 lg:sticky lg:top-28 lg:h-max">
+                    <div class="flex items-center justify-between">
+                        <div class="rounded-full border border-white/10 bg-slate-950/60 p-1">
+                            <button type="button" data-mode-button="manual" class="control-tab is-active">Manual</button>
+                            <button type="button" data-mode-button="auto" class="control-tab">Auto</button>
+                        </div>
+                        <span class="text-xs font-semibold uppercase tracking-widest text-slate-400">Demo Balance</span>
+                    </div>
+                    <div class="mt-6 space-y-6">
+                        <section>
+                            <div class="flex items-center justify-between text-xs font-semibold uppercase tracking-wide text-slate-400">
+                                <span>Bet Amount</span>
+                                <span class="text-slate-200">€</span>
+                            </div>
+                            <div class="mt-3 flex items-center gap-3">
+                                <button id="betDecrease" type="button" class="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-700/70 bg-slate-900/80 text-lg text-slate-200 transition hover:border-primary/60 hover:text-white">−</button>
+                                <input id="betInput" type="number" min="0.10" step="0.01" value="1.00" class="h-11 flex-1 rounded-xl border border-slate-700/70 bg-slate-950/70 px-4 text-center text-lg font-semibold text-white outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/40" />
+                                <button id="betIncrease" type="button" class="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-700/70 bg-slate-900/80 text-lg text-slate-200 transition hover:border-primary/60 hover:text-white">+</button>
+                            </div>
+                            <div class="mt-3 grid grid-cols-3 gap-2 text-sm font-medium">
+                                <button type="button" data-bet-action="half" class="rounded-xl border border-slate-700/70 bg-slate-900/80 py-2 text-slate-200 transition hover:border-primary/60 hover:text-white">½</button>
+                                <button type="button" data-bet-action="double" class="rounded-xl border border-slate-700/70 bg-slate-900/80 py-2 text-slate-200 transition hover:border-primary/60 hover:text-white">2×</button>
+                                <button type="button" data-bet-action="max" class="rounded-xl border border-slate-700/70 bg-slate-900/80 py-2 text-slate-200 transition hover:border-primary/60 hover:text-white">Max</button>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div class="flex items-center justify-between text-xs font-semibold uppercase tracking-wide text-slate-400">
+                                <span>Mines</span>
+                                <div class="flex items-center gap-2 text-sm text-slate-200">
+                                    <button id="minesMinus" type="button" class="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-700/70 bg-slate-900/80 transition hover:border-primary/60">−</button>
+                                    <span id="minesDisplay" class="text-lg font-semibold text-white">3</span>
+                                    <button id="minesPlus" type="button" class="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-700/70 bg-slate-900/80 transition hover:border-primary/60">+</button>
+                                </div>
+                            </div>
+                            <input id="minesInput" type="range" min="1" max="24" value="3" class="mt-3 w-full accent-primary" />
+                            <p class="mt-2 text-xs text-slate-400">Adjust the number of mines on the grid. Fewer mines means lower risk.</p>
+                        </section>
+
+                        <section class="grid grid-cols-2 gap-3 text-sm">
+                            <div class="glass-panel--light rounded-2xl border border-white/10 px-4 py-3">
+                                <span class="text-xs font-semibold uppercase tracking-wide text-slate-400">Gems Remaining</span>
+                                <p id="gemsDisplay" class="mt-1 text-2xl font-semibold text-white">22</p>
+                            </div>
+                            <div class="glass-panel--light rounded-2xl border border-white/10 px-4 py-3">
+                                <span class="text-xs font-semibold uppercase tracking-wide text-slate-400">Total Profit (<span id="profitMultiplier">1.00x</span>)</span>
+                                <p id="profitAmount" class="profit-value mt-1 text-2xl font-semibold">€0.00</p>
+                            </div>
+                        </section>
+
+                        <p id="betError" class="min-h-[1.25rem] text-sm text-rose-300"></p>
+
+                        <div class="space-y-3">
+                            <button id="randomButton" type="button" class="w-full rounded-xl border border-primary/40 bg-primary/15 py-3 text-sm font-semibold uppercase tracking-wide text-primary transition hover:border-primary/60 hover:bg-primary/25 disabled:cursor-not-allowed disabled:opacity-50" disabled>Pick random tile</button>
+                            <button id="actionButton" type="button" class="w-full rounded-xl bg-sky-500 py-3 text-sm font-semibold uppercase tracking-wide text-slate-900 shadow-[0_0_30px_rgba(14,165,233,0.25)] transition hover:bg-sky-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-950">Start Round</button>
+                        </div>
+
+                        <p id="statusLabel" class="status-message">Set your bet to begin.</p>
+                    </div>
+                </aside>
+
+                <section class="glass-panel rounded-3xl p-6">
+                    <div class="relative overflow-hidden rounded-2xl border border-white/10 bg-slate-950/40 p-6">
+                        <div class="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/10"></div>
+                        <div class="relative z-10 flex flex-col gap-6">
+                            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                                <div>
+                                    <h2 class="text-2xl font-semibold text-white">Mines Grid</h2>
+                                    <p class="text-sm text-slate-300">Reveal gems to build your payout. Each successful pick raises the multiplier.</p>
+                                </div>
+                                <div class="flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-wide text-slate-300">
+                                    <span id="activeMinesLabel" class="rounded-full border border-white/10 bg-white/5 px-3 py-1">3 Mines Active</span>
+                                    <span class="rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1 text-emerald-200">Manual Mode</span>
+                                </div>
+                            </div>
+
+                            <div id="minesBoard" class="grid grid-cols-5 gap-2 sm:gap-3 md:gap-4"></div>
+
+                            <div class="grid gap-3 text-sm sm:grid-cols-3">
+                                <div class="glass-panel--light rounded-2xl border border-white/10 px-4 py-3">
+                                    <span class="text-xs font-semibold uppercase tracking-wide text-slate-400">Safe Picks</span>
+                                    <p id="safePicksDisplay" class="mt-1 text-2xl font-semibold text-white">0</p>
+                                </div>
+                                <div class="glass-panel--light rounded-2xl border border-white/10 px-4 py-3">
+                                    <span class="text-xs font-semibold uppercase tracking-wide text-slate-400">Next Tile Success</span>
+                                    <p id="nextChanceDisplay" class="mt-1 text-2xl font-semibold text-white">0.0%</p>
+                                </div>
+                                <div class="glass-panel--light rounded-2xl border border-white/10 px-4 py-3">
+                                    <span class="text-xs font-semibold uppercase tracking-wide text-slate-400">Current Cashout</span>
+                                    <p id="potentialPayoutDisplay" class="mt-1 text-2xl font-semibold text-white">€0.00</p>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="w-full max-w-md space-y-4 crash-controls">
-                        <div id="crashAuthNotice" data-auth-guest class="rounded-xl border border-primary/30 bg-primary/10 px-4 py-3 text-sm text-primary flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                            <span class="font-semibold text-primary/90">Sign in to place bets and launch missions.</span>
-                            <button data-auth-trigger="sign-in" class="w-full sm:w-auto gradient-btn px-4 py-2 rounded-full text-white font-semibold transition hover:shadow-lg">Sign In</button>
-                        </div>
-                        <div class="flex items-center justify-between">
-                            <span class="text-gray-400">Bet Amount</span>
-                            <div class="flex items-center space-x-2">
-                                <button id="decreaseBet" class="bg-gray-700 hover:bg-gray-600 text-white w-9 h-9 rounded-lg transition" type="button">-</button>
-                                <input id="betAmount" type="number" min="0.10" step="0.01" class="bg-gray-800 border border-gray-700 rounded-lg w-28 px-3 py-1.5 text-center focus:outline-none focus:border-primary" value="10.00">
-                                <button id="increaseBet" class="bg-gray-700 hover:bg-gray-600 text-white w-9 h-9 rounded-lg transition" type="button">+</button>
-                            </div>
-                        </div>
-                        <p id="betError" class="text-xs text-red-400 min-h-[1.5rem]"></p>
-                        <div class="grid grid-cols-3 gap-2">
-                            <button class="bg-gray-800 hover:bg-gray-700 text-white py-2 rounded-lg transition" type="button" data-quick="half">1/2</button>
-                            <button class="bg-gray-800 hover:bg-gray-700 text-white py-2 rounded-lg transition" type="button" data-quick="double">2x</button>
-                            <button class="bg-gray-800 hover:bg-gray-700 text-white py-2 rounded-lg transition" type="button" data-quick="max">Max</button>
-                        </div>
-                        <button id="crashActionButton" data-crash-action type="button" class="crash-action-button hidden sm:flex w-full py-3 rounded-lg font-bold text-white transition gradient-btn hover:shadow-lg">
-                            Place Bet
-                        </button>
-                        <button data-crash-action type="button" class="crash-action-button crash-mobile-action flex sm:hidden w-full py-3 font-bold text-white transition gradient-btn">
-                            Place Bet
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Game Stats -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="glass-card rounded-lg p-4">
-                        <div class="flex items-center justify-between">
-                            <span class="text-gray-400">Last Crash</span>
-                            <span id="lastResult" class="font-bold text-primary">—</span>
-                        </div>
-                    </div>
-                    <div class="glass-card rounded-lg p-4">
-                        <div class="flex items-center justify-between">
-                            <span class="text-gray-400">Players</span>
-                            <span class="font-bold text-secondary">1,253</span>
-                        </div>
-                    </div>
-                    <div class="glass-card rounded-lg p-4">
-                        <div class="flex items-center justify-between">
-                            <span class="text-gray-400">Active Bets</span>
-                            <span class="font-bold text-accent">87</span>
-                        </div>
-                    </div>
-                </div>
+                </section>
             </div>
+        </main>
 
-            <!-- Recent Games -->
-            <div class="mt-8" id="recent-games">
-                <h3 class="text-xl font-bold mb-4">Recent Games</h3>
-                <div class="glass-card rounded-xl overflow-hidden">
-                    <div class="overflow-x-auto">
-                        <table class="w-full">
-                            <thead class="bg-gray-800/50">
-                                <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Game ID</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Player</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Bet</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Result</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Payout</th>
-                                </tr>
-                            </thead>
-                            <tbody id="recentGamesBody" class="divide-y divide-gray-800">
-                                <tr class="empty-state">
-                                    <td colspan="5" class="px-6 py-6 text-center text-sm text-gray-500">No rounds played yet. Place a bet to begin.</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+        <footer class="border-t border-white/5 bg-slate-950/90 py-8 text-sm text-slate-400">
+            <div class="mx-auto flex w-full max-w-6xl flex-col gap-4 px-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <span class="text-lg font-semibold text-white">NEON CASINO</span>
+                    <p class="text-xs text-slate-500">Demo experience · 18+</p>
                 </div>
+                <div class="flex flex-wrap gap-4">
+                    <a href="#" class="transition hover:text-white">Terms</a>
+                    <a href="#" class="transition hover:text-white">Privacy</a>
+                    <a href="#" class="transition hover:text-white">Responsible Play</a>
+                    <a href="#" class="transition hover:text-white">Support</a>
+                </div>
+                <p class="text-xs text-slate-500">© 2025 Neon Casino Demo</p>
             </div>
-        </div>
+        </footer>
     </div>
 
-    <!-- Auth Modal -->
-    <div id="authModal" class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/60 px-4">
-        <div class="relative w-full max-w-md rounded-2xl border border-primary/30 bg-gray-900/95 p-6 shadow-[0_0_35px_rgba(14,165,233,0.35)]">
-            <button type="button" data-auth-close class="absolute right-4 top-4 text-gray-500 transition hover:text-white">
-                <i data-feather="x" class="w-4 h-4"></i>
-            </button>
-            <div class="mb-4">
-                <h2 class="text-xl font-semibold text-white">Command Center Access</h2>
-                <p class="text-sm text-gray-400 mt-1">Sign in with your Neon credentials to sync your live Firebase balance.</p>
-            </div>
-            <div data-auth-disabled class="hidden rounded-xl border border-amber-400/40 bg-amber-400/10 px-4 py-3 text-xs font-semibold uppercase tracking-wide text-amber-200">
-                Authentication is currently unavailable. Configure Firebase credentials to continue.
-            </div>
-            <div data-auth-form-wrapper class="space-y-5">
-                <div class="flex items-center gap-2 rounded-full bg-gray-800/60 p-1 text-xs font-semibold uppercase tracking-[0.18em]">
-                    <button type="button" data-auth-mode-button="signin" class="flex-1 rounded-full bg-primary/80 px-4 py-2 text-white shadow-[0_0_12px_rgba(14,165,233,0.45)] transition hover:bg-primary">Sign In</button>
-                    <button type="button" data-auth-mode-button="signup" class="flex-1 rounded-full px-4 py-2 text-gray-400 transition hover:text-white">Create Account</button>
-                </div>
-                <form id="authForm" data-auth-form class="space-y-4">
-                    <div>
-                        <label for="authEmail" class="text-xs font-semibold uppercase tracking-wide text-gray-400">Email</label>
-                        <input id="authEmail" type="email" required autocomplete="email" class="mt-1 w-full rounded-lg border border-gray-700 bg-gray-900/60 px-3 py-2 text-white focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/40" placeholder="you@example.com">
-                    </div>
-                    <div>
-                        <div class="flex items-center justify-between">
-                            <label for="authPassword" class="text-xs font-semibold uppercase tracking-wide text-gray-400">Password</label>
-                            <button type="button" data-auth-forgot class="text-[0.65rem] font-semibold uppercase tracking-wide text-primary transition hover:text-white">Forgot?</button>
-                        </div>
-                        <input id="authPassword" type="password" required autocomplete="current-password" class="mt-1 w-full rounded-lg border border-gray-700 bg-gray-900/60 px-3 py-2 text-white focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/40" placeholder="••••••••">
-                    </div>
-                    <div data-auth-mode-field="signup" class="hidden">
-                        <label for="authDisplayName" class="text-xs font-semibold uppercase tracking-wide text-gray-400">Display Name</label>
-                        <input id="authDisplayName" type="text" autocomplete="nickname" class="mt-1 w-full rounded-lg border border-gray-700 bg-gray-900/60 px-3 py-2 text-white focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/40" placeholder="Captain Cosmos">
-                    </div>
-                    <p id="authFeedback" class="min-h-[1.25rem] text-xs font-medium text-red-400"></p>
-                    <button type="submit" data-auth-submit class="w-full rounded-lg bg-primary/90 py-2.5 font-semibold text-white transition hover:bg-primary">Sign In</button>
-                </form>
-            </div>
-            <div data-auth-signed-view class="mt-5 hidden rounded-xl border border-primary/30 bg-primary/10 px-4 py-4 text-sm text-gray-200">
-                <p class="mb-3">You are signed in as <span class="font-semibold text-white" data-username></span>. Your live balance is <span class="font-semibold text-primary" data-balance></span>.</p>
-                <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                    <button type="button" data-auth-continue class="gradient-btn inline-flex items-center justify-center gap-2 rounded-full px-4 py-2 font-semibold text-white transition hover:shadow-lg">
-                        Return to Crash
-                    </button>
-                    <button type="button" data-auth-trigger="sign-out" class="text-xs font-semibold uppercase tracking-wide text-primary transition hover:text-white">Sign Out</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const TILE_COUNT = 25;
+            const MIN_MINES = 1;
+            const MAX_MINES = 24;
+            const BET_MIN = 0.1;
+            const BET_MAX = 100000;
+            const DEFAULT_BET = 1.0;
 
-    <!-- Footer -->
-    <footer class="bg-gray-900/50 border-t border-gray-800 py-8 px-4">
-        <div class="container mx-auto">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="mb-4 md:mb-0">
-                    <span class="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">NEON CASINO</span>
-                    <p class="text-gray-500 text-sm mt-1">Demo site. No real-money gambling.</p>
-                </div>
-                <div class="flex flex-wrap justify-center gap-4 md:gap-6 mb-4 md:mb-0">
-                    <a href="#" class="text-gray-400 hover:text-white text-xs uppercase">Terms</a>
-                    <a href="#" class="text-gray-400 hover:text-white text-xs uppercase">Privacy</a>
-                    <a href="#" class="text-gray-400 hover:text-white text-xs uppercase">Responsible Play</a>
-                    <a href="#" class="text-gray-400 hover:text-white text-xs uppercase">Contact</a>
-                </div>
-                <div class="text-gray-500 text-sm">
-                    © 2025 Neon Casino Demo • 18+ Only
-                </div>
-            </div>
-        </div>
-    </footer>
+            const boardElement = document.getElementById('minesBoard');
+            const betInput = document.getElementById('betInput');
+            const betDecrease = document.getElementById('betDecrease');
+            const betIncrease = document.getElementById('betIncrease');
+            const betError = document.getElementById('betError');
+            const quickBetButtons = document.querySelectorAll('[data-bet-action]');
+            const minesInput = document.getElementById('minesInput');
+            const minesDisplay = document.getElementById('minesDisplay');
+            const minesMinus = document.getElementById('minesMinus');
+            const minesPlus = document.getElementById('minesPlus');
+            const gemsDisplay = document.getElementById('gemsDisplay');
+            const profitAmount = document.getElementById('profitAmount');
+            const profitMultiplier = document.getElementById('profitMultiplier');
+            const randomButton = document.getElementById('randomButton');
+            const actionButton = document.getElementById('actionButton');
+            const statusLabel = document.getElementById('statusLabel');
+            const activeMinesLabel = document.getElementById('activeMinesLabel');
+            const safePicksDisplay = document.getElementById('safePicksDisplay');
+            const nextChanceDisplay = document.getElementById('nextChanceDisplay');
+            const potentialPayoutDisplay = document.getElementById('potentialPayoutDisplay');
+            const modeButtons = document.querySelectorAll('[data-mode-button]');
+            const mobileNavToggle = document.getElementById('mobileNavToggle');
+            const mobileNavPanel = document.getElementById('mobileNavPanel');
+            const boardTiles = [];
 
-        <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import {
-            getAuth,
-            onAuthStateChanged,
-            signInWithEmailAndPassword,
-            createUserWithEmailAndPassword,
-            signOut as firebaseSignOut,
-            updateProfile,
-            sendPasswordResetEmail
-        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-        import {
-            getFirestore,
-            doc,
-            getDoc,
-            setDoc,
-            updateDoc,
-            onSnapshot,
-            runTransaction,
-            serverTimestamp
-        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-        AOS.init({
-            duration: 800,
-            easing: 'ease-in-out',
-            once: true
-        });
-        feather.replace();
-        initNavigation();
-
-        const DEFAULT_BALANCE = 1000;
-        const currencyFormatter = new Intl.NumberFormat('en-US', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        });
-
-        const firebaseConfigWarnings = { missingAppId: false };
-
-        const firebaseServices = initFirebase();
-        const authController = createAuthController(DEFAULT_BALANCE, firebaseServices);
-        const authUI = initAuthUI(authController);
-        initSidebarPreview();
-        initCrashGame(authController, authUI);
-
-        function initFirebase() {
-            const config = readFirebaseConfig();
-            if (!config) {
-                console.warn('Firebase configuration missing. Authentication is disabled.');
-                return { status: { ready: false, reason: 'missing-config' } };
-            }
-
-            try {
-                const app = initializeApp(config);
-                const auth = getAuth(app);
-                const db = getFirestore(app);
-                return { app, auth, db, status: { ready: true } };
-            } catch (error) {
-                console.error('Failed to initialize Firebase', error);
-                return { status: { ready: false, reason: 'initialization-error', error } };
-            }
-        }
-
-        function readFirebaseConfig() {
-            const globalCandidates = [
-                window.NEON_CASINO_FIREBASE_CONFIG,
-                window.firebaseConfig,
-                window.__FIREBASE_CONFIG__,
-                window.__FIREBASE_DEFAULTS__
-            ];
-            for (const candidate of globalCandidates) {
-                const cachedConfig = validateFirebaseConfig(candidate);
-                if (cachedConfig) {
-                    window.NEON_CASINO_FIREBASE_CONFIG = cachedConfig;
-                    return cachedConfig;
-                }
-            }
-
-            const configEl = document.getElementById('firebase-config');
-            if (!configEl) {
-                console.warn('Firebase configuration script tag not found.');
-                return null;
-            }
-
-            const datasetConfig = parseFirebaseConfigFromDataset(configEl);
-            if (datasetConfig) {
-                const validated = validateFirebaseConfig(datasetConfig);
-                if (validated) {
-                    window.NEON_CASINO_FIREBASE_CONFIG = validated;
-                    return validated;
-                }
-            }
-
-            const textConfig = parseFirebaseConfigFromText(configEl.textContent || '');
-            if (textConfig) {
-                const validated = validateFirebaseConfig(textConfig);
-                if (validated) {
-                    window.NEON_CASINO_FIREBASE_CONFIG = validated;
-                    return validated;
-                }
-            }
-
-            console.warn('Firebase configuration is missing or incomplete. Add your web app credentials to #firebase-config.');
-            return null;
-        }
-
-        function parseFirebaseConfigFromDataset(el) {
-            if (!el?.dataset) {
-                return null;
-            }
-            const dataset = el.dataset;
-            const keys = ['apiKey', 'authDomain', 'projectId', 'storageBucket', 'messagingSenderId', 'appId', 'measurementId', 'databaseUrl'];
-            const config = {};
-            let hasValue = false;
-            keys.forEach(key => {
-                const value = dataset[key];
-                if (value) {
-                    config[key === 'databaseUrl' ? 'databaseURL' : key] = value;
-                    hasValue = true;
-                }
-            });
-            return hasValue ? config : null;
-        }
-
-        function parseFirebaseConfigFromText(rawText) {
-            const trimmed = rawText.trim();
-            if (!trimmed) {
-                return null;
-            }
-            try {
-                return JSON.parse(trimmed);
-            } catch (jsonError) {
-                const objectLiteral = extractObjectLiteral(trimmed);
-                if (!objectLiteral) {
-                    console.warn('Unable to parse Firebase configuration text. Provide valid JSON or data attributes.', jsonError);
-                    return null;
-                }
-                try {
-                    // eslint-disable-next-line no-new-func
-                    return new Function(`return (${objectLiteral});`)();
-                } catch (objectError) {
-                    console.warn('Unable to evaluate Firebase configuration object. Ensure the syntax matches a JS object literal.', objectError);
-                    return null;
-                }
-            }
-        }
-
-        function extractObjectLiteral(source) {
-            const start = source.indexOf('{');
-            if (start === -1) {
-                return null;
-            }
-            let depth = 0;
-            let inString = false;
-            let stringChar = '';
-            for (let index = start; index < source.length; index += 1) {
-                const char = source[index];
-                if (inString) {
-                    if (char === stringChar && source[index - 1] !== '\\') {
-                        inString = false;
-                        stringChar = '';
-                    }
-                    continue;
-                }
-                if (char === '"' || char === "'") {
-                    inString = true;
-                    stringChar = char;
-                    continue;
-                }
-                if (char === '{') {
-                    depth += 1;
-                } else if (char === '}') {
-                    depth -= 1;
-                    if (depth === 0) {
-                        return source.slice(start, index + 1);
-                    }
-                }
-            }
-            return null;
-        }
-
-        function validateFirebaseConfig(rawConfig) {
-            if (!rawConfig || typeof rawConfig !== 'object') {
-                return null;
-            }
-            const normalized = {};
-            Object.keys(rawConfig).forEach(key => {
-                const value = rawConfig[key];
-                if (value === undefined || value === null) {
-                    return;
-                }
-                normalized[key] = typeof value === 'string' ? value.trim() : value;
-            });
-            const requiredKeys = ['apiKey', 'authDomain', 'projectId'];
-            const missingKey = requiredKeys.find(key => {
-                const value = normalized[key];
-                return !value || (typeof value === 'string' && value.startsWith('YOUR_FIREBASE_'));
-            });
-            if (missingKey) {
-                return null;
-            }
-            if (!normalized.appId && !firebaseConfigWarnings.missingAppId) {
-                console.warn('Firebase config is missing appId. Authentication will still work, but analytics features may be unavailable.');
-                firebaseConfigWarnings.missingAppId = true;
-            }
-            return normalized;
-        }
-
-        function formatCurrency(value) {
-            return currencyFormatter.format(Math.max(0, Number(value) || 0));
-        }
-
-        function initNavigation() {
-            const toggle = document.getElementById('mobileNavToggle');
-            const panel = document.getElementById('mobileNavPanel');
-            const nav = document.querySelector('nav');
-            if (!toggle || !panel || !nav) {
-                return;
-            }
-
-            const body = document.body;
-            let isOpen = false;
-
-            function setOpen(open) {
-                isOpen = open;
-                panel.classList.toggle('hidden', !open);
-                toggle.classList.toggle('is-open', open);
-                toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-                body.classList.toggle('overflow-hidden', open);
-            }
-
-            function openPanel() {
-                if (!isOpen) {
-                    setOpen(true);
-                }
-            }
-
-            function closePanel() {
-                if (isOpen) {
-                    setOpen(false);
-                }
-            }
-
-            toggle.addEventListener('click', () => {
-                if (isOpen) {
-                    closePanel();
-                } else {
-                    openPanel();
-                }
-            });
-
-            panel.querySelectorAll('a, button[data-auth-trigger]').forEach(item => {
-                item.addEventListener('click', () => closePanel());
-            });
-
-            window.addEventListener('resize', () => {
-                if (window.innerWidth >= 768) {
-                    closePanel();
-                }
-            });
-
-            document.addEventListener('keydown', event => {
-                if (event.key === 'Escape') {
-                    closePanel();
-                }
-            });
-
-            document.addEventListener('click', event => {
-                if (!isOpen) {
-                    return;
-                }
-                if (nav.contains(event.target)) {
-                    return;
-                }
-                closePanel();
-            });
-        }
-
-        function initSidebarPreview() {
-            const sidebarItems = document.querySelectorAll('.game-sidebar-item');
-            const gameTitleEl = document.querySelector('.game-title');
-            const previewIconContainer = document.querySelector('.game-preview-icon');
-
-            sidebarItems.forEach(item => {
-                item.addEventListener('click', event => {
-                    event.preventDefault();
-                    const active = document.querySelector('.game-sidebar-item.active');
-                    if (active) {
-                        active.classList.remove('active');
-                    }
-                    item.classList.add('active');
-
-                    const name = item.querySelector('span')?.textContent ?? '';
-                    if (gameTitleEl && name) {
-                        gameTitleEl.textContent = `${name.toUpperCase()} — Demo Preview`;
-                    }
-
-                    const iconName = item.querySelector('[data-feather]')?.getAttribute('data-feather');
-                    if (previewIconContainer && iconName) {
-                        previewIconContainer.innerHTML = `<i data-feather="${iconName}" class="w-10 h-10 text-primary"></i>`;
-                        feather.replace();
-                    }
-                });
-            });
-        }
-
-        function createAuthController(defaultBalance, services) {
-            if (!services?.status?.ready || !services?.auth || !services?.db) {
-                return createDisabledAuthController(defaultBalance, services?.status);
-            }
-
-            const { auth, db } = services;
-            const listeners = new Set();
-            let currentUser = null;
-            let profileUnsubscribe = null;
-
-            function notify() {
-                const snapshot = currentUser ? { ...currentUser } : null;
-                listeners.forEach(listener => {
-                    try {
-                        listener(snapshot);
-                    } catch (error) {
-                        console.error('Auth listener error', error);
-                    }
-                });
-            }
-
-            function detachProfileListener() {
-                if (typeof profileUnsubscribe === 'function') {
-                    profileUnsubscribe();
-                    profileUnsubscribe = null;
-                }
-            }
-
-            function deriveDisplayName(user, profileData = {}) {
-                return profileData.displayName || user.displayName || (user.email ? user.email.split('@')[0] : 'Player');
-            }
-
-            async function ensureProfile(user, options = {}) {
-                const userDocRef = doc(db, 'users', user.uid);
-                const snapshot = await getDoc(userDocRef);
-                const desiredName = options.displayName || deriveDisplayName(user, snapshot.data() || {});
-
-                if (!snapshot.exists()) {
-                    await setDoc(userDocRef, {
-                        balance: defaultBalance,
-                        displayName: desiredName,
-                        email: user.email ?? null,
-                        updatedAt: serverTimestamp()
-                    });
-                    return { balance: defaultBalance, displayName: desiredName };
-                }
-
-                const data = snapshot.data() || {};
-                const updates = {};
-                if (typeof data.balance !== 'number') {
-                    updates.balance = defaultBalance;
-                }
-                if (!data.displayName && desiredName) {
-                    updates.displayName = desiredName;
-                }
-                if (Object.keys(updates).length) {
-                    updates.updatedAt = serverTimestamp();
-                    await updateDoc(userDocRef, updates);
-                }
-                return { ...data, ...updates };
-            }
-
-            function attachProfileListener(user) {
-                detachProfileListener();
-                if (!user) {
-                    currentUser = null;
-                    notify();
-                    return;
-                }
-                const userDocRef = doc(db, 'users', user.uid);
-                profileUnsubscribe = onSnapshot(userDocRef, snapshot => {
-                    const data = snapshot.data() || {};
-                    const balanceValue = typeof data.balance === 'number' ? data.balance : defaultBalance;
-                    currentUser = {
-                        uid: user.uid,
-                        email: user.email ?? '',
-                        username: deriveDisplayName(user, data),
-                        balance: parseFloat(balanceValue.toFixed(2))
-                    };
-                    notify();
-                }, error => {
-                    console.error('Failed to listen to profile', error);
-                });
-            }
-
-            onAuthStateChanged(auth, async user => {
-                detachProfileListener();
-                if (user) {
-                    try {
-                        await ensureProfile(user);
-                        attachProfileListener(user);
-                    } catch (error) {
-                        console.error('Unable to prepare user profile', error);
-                        currentUser = null;
-                        notify();
-                    }
-                } else {
-                    currentUser = null;
-                    notify();
-                }
-            });
-
-            async function performSignIn(email, password) {
-                const credential = await signInWithEmailAndPassword(auth, email, password);
-                return credential.user;
-            }
-
-            async function performRegister({ email, password, displayName }) {
-                const credential = await createUserWithEmailAndPassword(auth, email, password);
-                if (displayName) {
-                    await updateProfile(credential.user, { displayName });
-                }
-                await ensureProfile(credential.user, { displayName });
-                return credential.user;
-            }
-
-            async function performUpdateBalance(balance) {
-                const user = auth.currentUser;
-                if (!user) {
-                    throw new Error('Not signed in');
-                }
-                const sanitized = Number.isFinite(balance) ? Math.max(0, Number(balance)) : 0;
-                const userDocRef = doc(db, 'users', user.uid);
-                await runTransaction(db, async transaction => {
-                    const snapshot = await transaction.get(userDocRef);
-                    if (!snapshot.exists()) {
-                        transaction.set(userDocRef, {
-                            balance: sanitized,
-                            displayName: deriveDisplayName(user, {}),
-                            email: user.email ?? null,
-                            updatedAt: serverTimestamp()
-                        });
-                        return;
-                    }
-                    transaction.update(userDocRef, {
-                        balance: sanitized,
-                        updatedAt: serverTimestamp()
-                    });
-                });
-            }
-
-            return {
-                defaultBalance,
-                getUser: () => (currentUser ? { ...currentUser } : null),
-                subscribe(listener) {
-                    listeners.add(listener);
-                    try {
-                        listener(currentUser ? { ...currentUser } : null);
-                    } catch (error) {
-                        console.error('Auth listener error', error);
-                    }
-                    return () => listeners.delete(listener);
-                },
-                async signIn(email, password) {
-                    return performSignIn(email, password);
-                },
-                async register(payload) {
-                    return performRegister(payload);
-                },
-                async signOut() {
-                    detachProfileListener();
-                    await firebaseSignOut(auth);
-                },
-                async resetPassword(email) {
-                    return sendPasswordResetEmail(auth, email);
-                },
-                async updateBalance(balance) {
-                    return performUpdateBalance(balance);
-                },
-                isDisabled: false
-            };
-        }
-
-        function createDisabledAuthController(defaultBalance, status = {}) {
-            const listeners = new Set();
-            return {
-                defaultBalance,
-                getUser: () => null,
-                subscribe(listener) {
-                    listeners.add(listener);
-                    try {
-                        listener(null);
-                    } catch (error) {
-                        console.error('Auth listener error', error);
-                    }
-                    return () => listeners.delete(listener);
-                },
-                async signIn() {
-                    throw new Error(status.reason === 'missing-config' ? 'Firebase configuration missing.' : 'Authentication unavailable.');
-                },
-                async register() {
-                    throw new Error(status.reason === 'missing-config' ? 'Firebase configuration missing.' : 'Authentication unavailable.');
-                },
-                async signOut() {},
-                async resetPassword() {
-                    throw new Error('Authentication unavailable.');
-                },
-                async updateBalance() {},
-                isDisabled: true,
-                status
-            };
-        }
-
-        function initAuthUI(authController) {
-            const authModal = document.getElementById('authModal');
-            const authForm = document.getElementById('authForm');
-            const emailInput = document.getElementById('authEmail');
-            const passwordInput = document.getElementById('authPassword');
-            const displayNameInput = document.getElementById('authDisplayName');
-            const feedbackEl = document.getElementById('authFeedback');
-            const submitButton = authModal?.querySelector('[data-auth-submit]');
-            const forgotButton = authModal?.querySelector('[data-auth-forgot]');
-            const closeButtons = document.querySelectorAll('[data-auth-close]');
-            const signInTriggers = document.querySelectorAll('[data-auth-trigger="sign-in"]');
-            const signOutTriggers = document.querySelectorAll('[data-auth-trigger="sign-out"]');
-            const guestEls = document.querySelectorAll('[data-auth-guest]');
-            const userEls = document.querySelectorAll('[data-auth-user]');
-            const usernameEls = document.querySelectorAll('[data-username]');
-            const modeButtons = authModal?.querySelectorAll('[data-auth-mode-button]') ?? [];
-            const modeFields = authModal?.querySelectorAll('[data-auth-mode-field]') ?? [];
-            const disabledNotice = authModal?.querySelector('[data-auth-disabled]');
-            const formWrapper = authModal?.querySelector('[data-auth-form-wrapper]');
-            const signedView = authModal?.querySelector('[data-auth-signed-view]');
-            const continueButton = authModal?.querySelector('[data-auth-continue]');
-
-            let mode = 'signin';
-            let submitting = false;
-
-            function setMode(nextMode) {
-                mode = nextMode;
-                modeButtons.forEach(btn => {
-                    const btnMode = btn.getAttribute('data-auth-mode-button');
-                    const isActive = btnMode === mode;
-                    btn.classList.toggle('bg-primary/80', isActive);
-                    btn.classList.toggle('text-white', isActive);
-                    btn.classList.toggle('shadow-[0_0_12px_rgba(14,165,233,0.45)]', isActive);
-                    btn.classList.toggle('text-gray-400', !isActive);
-                });
-                modeFields.forEach(field => {
-                    const targetMode = field.getAttribute('data-auth-mode-field');
-                    field.classList.toggle('hidden', targetMode !== mode);
-                });
-                if (submitButton) {
-                    submitButton.textContent = mode === 'signin' ? 'Sign In' : 'Create Account';
-                }
-                clearFeedback();
-            }
-
-            function clearFeedback() {
-                if (!feedbackEl) {
-                    return;
-                }
-                feedbackEl.textContent = '';
-                feedbackEl.classList.remove('text-emerald-400');
-                feedbackEl.classList.add('text-red-400');
-            }
-
-            function setFeedback(message, tone = 'error') {
-                if (!feedbackEl) {
-                    return;
-                }
-                feedbackEl.textContent = message;
-                if (tone === 'success') {
-                    feedbackEl.classList.remove('text-red-400');
-                    feedbackEl.classList.add('text-emerald-400');
-                } else {
-                    feedbackEl.classList.remove('text-emerald-400');
-                    feedbackEl.classList.add('text-red-400');
-                }
-            }
-
-            function toggleModal(visible) {
-                if (!authModal) {
-                    return;
-                }
-                authModal.classList.toggle('hidden', !visible);
-                authModal.classList.toggle('flex', visible);
-            }
-
-            function focusEmail() {
-                window.setTimeout(() => {
-                    if (emailInput && !authController.isDisabled) {
-                        emailInput.focus();
-                    }
-                }, 50);
-            }
-
-            function openModal() {
-                if (!authModal) {
-                    return;
-                }
-                const isDisabled = authController.isDisabled;
-                toggleModal(true);
-                if (isDisabled) {
-                    if (disabledNotice) {
-                        disabledNotice.classList.remove('hidden');
-                    }
-                    if (formWrapper) {
-                        formWrapper.classList.add('hidden');
-                    }
-                    if (signedView) {
-                        signedView.classList.add('hidden');
-                    }
-                    setFeedback('Firebase authentication is not configured.', 'error');
-                    return;
-                }
-
-                const currentUser = authController.getUser();
-                if (currentUser) {
-                    if (signedView) {
-                        signedView.classList.remove('hidden');
-                    }
-                    if (formWrapper) {
-                        formWrapper.classList.add('hidden');
-                    }
-                    updateSignedInSummary(currentUser);
-                } else {
-                    if (signedView) {
-                        signedView.classList.add('hidden');
-                    }
-                    if (formWrapper) {
-                        formWrapper.classList.remove('hidden');
-                    }
-                    setMode('signin');
-                    if (authForm) {
-                        authForm.reset();
-                    }
-                    clearFeedback();
-                    focusEmail();
-                }
-                if (disabledNotice) {
-                    disabledNotice.classList.add('hidden');
-                }
-            }
-
-            function closeModal() {
-                toggleModal(false);
-            }
-
-            function parseFirebaseError(error, modeContext) {
-                const code = error?.code;
-                switch (code) {
-                    case 'auth/invalid-email':
-                        return 'Enter a valid email address.';
-                    case 'auth/missing-password':
-                        return 'Enter your password to continue.';
-                    case 'auth/user-not-found':
-                        return 'No account was found for that email.';
-                    case 'auth/wrong-password':
-                        return 'Incorrect password. Try again or reset it.';
-                    case 'auth/too-many-requests':
-                        return 'Too many attempts. Please wait and try again.';
-                    case 'auth/email-already-in-use':
-                        return 'An account already exists for that email address.';
-                    case 'auth/weak-password':
-                        return 'Choose a stronger password (at least 6 characters).';
-                    default:
-                        if (modeContext === 'reset') {
-                            return 'Unable to send reset email. Try again later.';
-                        }
-                        return error?.message || 'Authentication failed. Try again.';
-                }
-            }
-
-            function updateSignedInSummary(user) {
-                if (!signedView) {
-                    return;
-                }
-                signedView.querySelectorAll('[data-username]').forEach(el => {
-                    el.textContent = user?.username || '';
-                });
-                signedView.querySelectorAll('[data-balance]').forEach(el => {
-                    el.textContent = formatCurrency(user?.balance ?? 0);
-                });
-            }
-
-        (function initNavigation() {
-            const BALANCE_STORAGE_KEY = 'neonCasinoBalance';
-            const resolveFallbackBalance = element => {
-                const attributeValue = element.getAttribute('data-default-balance');
-                if (attributeValue != null && attributeValue !== '') {
-                    return attributeValue;
-                }
-
-                const textValue = (element.textContent || '').trim();
-                if (textValue) {
-                    return textValue;
-                }
-
-                return '0.00';
-            };
-            const balanceTargets = Array.from(document.querySelectorAll('[data-balance]')).map(element => ({
-                element,
-                fallback: resolveFallbackBalance(element)
-            }));
-            const formatCurrency = value => value.toLocaleString('en-US', {
+            const currencyFormatter = new Intl.NumberFormat('en-US', {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2
             });
 
-            const updateBalanceFromStorage = () => {
-                if (!balanceTargets.length) {
-                    return;
-                }
+            const GEM_SVG = `<svg viewBox="0 0 64 64" aria-hidden="true" class="mines-cell__icon"><path fill="currentColor" d="M12.2 24.4 28.8 7.1c1.7-1.8 4.7-1.8 6.4 0l16.6 17.3c1.3 1.4 1.6 3.6.6 5.3L35.5 55c-.9 1.6-2.4 2.6-4.1 2.6s-3.2-1-4.1-2.6L11.6 29.7c-1-1.7-.7-3.9.6-5.3z" opacity=".35"></path><path fill="currentColor" d="M32 8.7 46.3 24 32 55.2 17.7 24z"></path><path fill="currentColor" d="M12.8 25.3 24.6 12l7.4 12.1-8.7 20.8z" opacity=".6"></path><path fill="currentColor" d="M51.2 25.3 39.4 12l-7.4 12.1 8.7 20.8z" opacity=".6"></path></svg>`;
+            const MINE_SVG = `<svg viewBox="0 0 64 64" aria-hidden="true" class="mines-cell__icon"><circle cx="32" cy="32" r="18" fill="currentColor" opacity=".9"></circle><path fill="#0f172a" d="M26 26h12v12H26z"></path><path fill="#0f172a" d="M20 30h24v4H20z"></path><path fill="#0f172a" d="M30 20h4v24h-4z"></path><path fill="currentColor" d="M9 30h10v4H9zM45 30h10v4H45zM30 9h4v10h-4zM30 45h4v10h-4z" opacity=".8"></path></svg>`;
 
-                let storedBalance = null;
-                try {
-                    storedBalance = window.localStorage.getItem(BALANCE_STORAGE_KEY);
-                } catch (error) {
-                    storedBalance = null;
-                }
+            let round = null;
 
-                if (storedBalance == null) {
-                    balanceTargets.forEach(({ element, fallback }) => {
-                        element.textContent = fallback;
-                    });
-                    return;
-                }
-
-                const numericValue = Number.parseFloat(storedBalance);
-                if (Number.isFinite(numericValue)) {
-                    const formatted = formatCurrency(numericValue);
-                    balanceTargets.forEach(({ element }) => {
-                        element.textContent = formatted;
-                    });
-                } else {
-                    balanceTargets.forEach(({ element, fallback }) => {
-                        element.textContent = fallback;
-                    });
-                }
-            };
-
-            updateBalanceFromStorage();
-
-            window.addEventListener('storage', event => {
-                if (event.key === BALANCE_STORAGE_KEY) {
-                    updateBalanceFromStorage();
-                }
+            initBoard();
+            setActionMode('start');
+            setStatus('Adjust your bet, choose how many mines to place and start a round.', 'info');
+            updateMinesValue(parseInt(minesInput.value, 10) || 3);
+            updateBetDisplay();
+            updateProfitUI(1, 0);
+            updateBoardStats({
+                safePicks: 0,
+                chance: calculateInitialChance(parseInt(minesInput.value, 10) || 3),
+                payout: sanitizeBet(parseFloat(betInput.value) || DEFAULT_BET)
             });
+            updateRandomButtonState();
 
-            document.addEventListener('neonCasinoBalanceUpdated', updateBalanceFromStorage);
-
-            const toggleButton = document.querySelector('[data-mobile-toggle]');
-            const mobileMenu = document.querySelector('[data-mobile-menu]');
-
-            if (toggleButton && mobileMenu) {
-                const setMenuState = isOpen => {
-                    mobileMenu.classList.toggle('hidden', !isOpen);
-                    toggleButton.setAttribute('aria-expanded', String(isOpen));
-
-                    const openIcon = toggleButton.querySelector('[data-icon-open]');
-                    const closedIcon = toggleButton.querySelector('[data-icon-closed]');
-                    if (openIcon) {
-                        openIcon.classList.toggle('hidden', !isOpen);
-                    }
-                    if (closedIcon) {
-                        closedIcon.classList.toggle('hidden', isOpen);
-                    }
-
-                    document.body.classList.toggle('overflow-hidden', isOpen);
-                };
-
-                toggleButton.addEventListener('click', () => {
-                    const currentlyOpen = !mobileMenu.classList.contains('hidden');
-                    setMenuState(!currentlyOpen);
+            if (mobileNavToggle && mobileNavPanel) {
+                mobileNavToggle.addEventListener('click', () => {
+                    const expanded = mobileNavToggle.getAttribute('aria-expanded') === 'true';
+                    mobileNavToggle.setAttribute('aria-expanded', String(!expanded));
+                    mobileNavPanel.classList.toggle('hidden', expanded);
                 });
-
-                mobileMenu.querySelectorAll('a, button').forEach(element => {
-                    element.addEventListener('click', () => setMenuState(false));
+                mobileNavPanel.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileNavPanel.classList.add('hidden');
+                        mobileNavToggle.setAttribute('aria-expanded', 'false');
+                    });
                 });
-
-                document.addEventListener('keydown', event => {
-                    if (event.key === 'Escape') {
-                        setMenuState(false);
-                    }
-                });
-
-                const mediaQuery = window.matchMedia('(min-width: 768px)');
-                const handleMediaChange = event => {
-                    if (event.matches) {
-                        setMenuState(false);
-                    }
-                };
-
-                if (typeof mediaQuery.addEventListener === 'function') {
-                    mediaQuery.addEventListener('change', handleMediaChange);
-                } else if (typeof mediaQuery.addListener === 'function') {
-                    mediaQuery.addListener(handleMediaChange);
-                }
-
-                setMenuState(false);
             }
-        })();
 
-        const sidebarItems = document.querySelectorAll('.game-sidebar-item');
-        const gameTitleEl = document.querySelector('.game-title');
-        const previewIconContainer = document.querySelector('.game-preview-icon');
-
-            authForm?.addEventListener('submit', async event => {
-                event.preventDefault();
-                if (authController.isDisabled || submitting) {
-                    return;
-                }
-                clearFeedback();
-
-                const email = emailInput?.value.trim();
-                const password = passwordInput?.value.trim();
-                const displayName = displayNameInput?.value.trim();
-
-                if (!email) {
-                    setFeedback('Enter your email address to continue.');
-                    emailInput?.focus();
-                    return;
-                }
-                if (!password || password.length < 6) {
-                    setFeedback('Password must be at least 6 characters long.');
-                    passwordInput?.focus();
-                    return;
-                }
-                if (mode === 'signup' && !displayName) {
-                    setFeedback('Choose a display name for your account.');
-                    displayNameInput?.focus();
-                    return;
-                }
-
-                submitting = true;
-                if (submitButton) {
-                    submitButton.disabled = true;
-                    submitButton.textContent = mode === 'signin' ? 'Signing In...' : 'Creating Account...';
-                }
-
-                try {
-                    if (mode === 'signin') {
-                        await authController.signIn(email, password);
+            modeButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const mode = button.getAttribute('data-mode-button');
+                    if (mode === 'manual') {
+                        modeButtons.forEach(btn => btn.classList.toggle('is-active', btn === button));
+                        setStatus('Manual mode lets you pick each tile yourself. Auto mode is coming soon.', 'info');
                     } else {
-                        await authController.register({ email, password, displayName });
-                    }
-                    closeModal();
-                } catch (error) {
-                    console.error('Auth form error', error);
-                    setFeedback(parseFirebaseError(error, mode));
-                } finally {
-                    submitting = false;
-                    if (submitButton) {
-                        submitButton.disabled = false;
-                        submitButton.textContent = mode === 'signin' ? 'Sign In' : 'Create Account';
-                    }
-                }
-            });
-
-            forgotButton?.addEventListener('click', async () => {
-                if (authController.isDisabled || submitting) {
-                    return;
-                }
-                const email = emailInput?.value.trim();
-                if (!email) {
-                    setFeedback('Enter your email above so we can send the reset link.');
-                    return;
-                }
-                submitting = true;
-                setFeedback('Sending reset email...', 'success');
-                try {
-                    await authController.resetPassword(email);
-                    setFeedback('Password reset email sent. Check your inbox!', 'success');
-                } catch (error) {
-                    console.error('Reset password error', error);
-                    setFeedback(parseFirebaseError(error, 'reset'));
-                } finally {
-                    submitting = false;
-                }
-            });
-
-            continueButton?.addEventListener('click', () => {
-                closeModal();
-            });
-
-            signInTriggers.forEach(trigger => {
-                trigger.addEventListener('click', event => {
-                    event.preventDefault();
-                    openModal();
-                });
-            });
-
-            signOutTriggers.forEach(trigger => {
-                trigger.addEventListener('click', async event => {
-                    event.preventDefault();
-                    try {
-                        await authController.signOut();
-                    } catch (error) {
-                        console.error('Sign out error', error);
+                        setStatus('Auto mode is coming soon. Stay tuned!', 'warning');
                     }
                 });
             });
 
-            closeButtons.forEach(btn => {
-                btn.addEventListener('click', () => closeModal());
-            });
-
-            authModal?.addEventListener('click', event => {
-                if (event.target === authModal) {
-                    closeModal();
+            betDecrease?.addEventListener('click', () => adjustBet(-1));
+            betIncrease?.addEventListener('click', () => adjustBet(1));
+            betInput?.addEventListener('change', () => {
+                sanitizeBetInput();
+                updateBetDisplay();
+                if (!round || !round.active) {
+                    updateBoardStats({
+                        safePicks: 0,
+                        chance: calculateInitialChance(parseInt(minesInput.value, 10) || 3),
+                        payout: sanitizeBet(parseFloat(betInput.value))
+                    });
                 }
             });
+            betInput?.addEventListener('input', () => clearBetError());
 
-            document.addEventListener('keydown', event => {
-                if (event.key === 'Escape' && authModal && authModal.classList.contains('flex')) {
-                    closeModal();
-                }
+            quickBetButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const action = button.getAttribute('data-bet-action');
+                    const current = sanitizeBet(parseFloat(betInput.value));
+                    let next = current;
+                    if (action === 'half') {
+                        next = current / 2;
+                    } else if (action === 'double') {
+                        next = current * 2;
+                    } else if (action === 'max') {
+                        next = BET_MAX;
+                    }
+                    betInput.value = sanitizeBet(next).toFixed(2);
+                    updateBetDisplay();
+                    if (!round || !round.active) {
+                        updateBoardStats({
+                            safePicks: 0,
+                            chance: calculateInitialChance(parseInt(minesInput.value, 10) || 3),
+                            payout: sanitizeBet(parseFloat(betInput.value))
+                        });
+                    }
+                });
             });
 
-            function updateUI(user) {
-                const signedIn = Boolean(user);
-                guestEls.forEach(el => el.classList.toggle('hidden', signedIn));
-                userEls.forEach(el => el.classList.toggle('hidden', !signedIn));
-                usernameEls.forEach(el => {
-                    el.textContent = user?.username ?? '';
-                });
-                if (signedIn) {
-                    updateSignedInSummary(user);
-                } else if (signedView) {
-                    signedView.classList.add('hidden');
-                    if (!authController.isDisabled && formWrapper) {
-                        formWrapper.classList.remove('hidden');
-                    }
-                }
-            }
-
-            updateUI(authController.getUser());
-            authController.subscribe(updateUI);
-
-            return {
-                openSignIn: openModal
-            };
-        }
-
-        function initCrashGame(authController, authUI) {
-            const betInput = document.getElementById('betAmount');
-            const actionButtons = Array.from(document.querySelectorAll('[data-crash-action]'));
-            const decreaseBetButton = document.getElementById('decreaseBet');
-            const increaseBetButton = document.getElementById('increaseBet');
-            const quickButtons = document.querySelectorAll('[data-quick]');
-            const betErrorEl = document.getElementById('betError');
-            const multiplierEl = document.getElementById('crashMultiplier');
-            const statusEl = document.getElementById('crashStatus');
-            const messageEl = document.getElementById('crashMessage');
-            const launchAreaEl = document.getElementById('crashLaunchArea');
-            const shipEl = document.getElementById('crashShip');
-            const flameEl = document.getElementById('crashFlame');
-            const trailEl = document.getElementById('crashTrail');
-            const explosionEl = document.getElementById('crashExplosion');
-            const explosionParts = explosionEl ? Array.from(explosionEl.querySelectorAll('[data-explosion-part]')) : [];
-            const pathGuideEl = document.getElementById('crashPathGuide');
-            const pathActiveEl = document.getElementById('crashPathActive');
-            const lastResultEl = document.getElementById('lastResult');
-            const historyBody = document.getElementById('recentGamesBody');
-            const balanceEls = document.querySelectorAll('[data-balance]');
-
-            if (!betInput || actionButtons.length === 0 || !multiplierEl) {
-                return;
-            }
-
-            const COOLDOWN_MS = 2000;
-            const initialUser = authController.getUser();
-
-            const state = {
-                balance: initialUser && Number.isFinite(initialUser.balance) ? parseFloat(initialUser.balance.toFixed(2)) : 0,
-                running: false,
-                cashedOut: false,
-                intervalId: null,
-                resetTimeoutId: null,
-                currentBet: 0,
-                multiplier: 1,
-                crashPoint: null,
-                cashedOutAt: null,
-                payout: 0,
-                history: [],
-                cooldownActive: false,
-                authenticated: Boolean(initialUser),
-                playerName: initialUser?.username || 'Guest',
-                playerUid: initialUser?.uid || null
-            };
-
-            let explosionTimeoutId = null;
-            let crashPathLength = 0;
-            const LOG_MAX_MULTIPLIER = Math.log(50);
-
-            if (pathGuideEl && typeof pathGuideEl.getTotalLength === 'function') {
-                crashPathLength = pathGuideEl.getTotalLength();
-                if (pathActiveEl) {
-                    const dashValue = crashPathLength.toString();
-                    pathActiveEl.style.strokeDasharray = dashValue;
-                    pathActiveEl.style.strokeDashoffset = dashValue;
-                }
-                updatePathHighlight(getProgressForMultiplier(state.multiplier));
-            }
-
-            function persistBalance(balance) {
-                if (authController.isDisabled || typeof authController.updateBalance !== 'function') {
+            minesInput?.addEventListener('input', event => {
+                const value = parseInt(event.target.value, 10);
+                if (round?.active) {
+                    event.target.value = round.minesCount;
                     return;
                 }
-                authController.updateBalance(balance).catch(error => {
-                    console.error('Failed to persist balance', error);
-                });
-            }
+                updateMinesValue(value);
+            });
+            minesMinus?.addEventListener('click', () => stepMines(-1));
+            minesPlus?.addEventListener('click', () => stepMines(1));
 
-            function formatMultiplier(value) {
-                return `${(Number(value) || 0).toFixed(2)}x`;
-            }
-
-            function updateBalanceDisplay() {
-                const formatted = formatCurrency(state.balance);
-                balanceEls.forEach(el => {
-                    el.textContent = formatted;
-                });
-            }
-
-            function setStatus(label, message, tone = 'neutral') {
-                const toneClasses = {
-                    neutral: 'text-gray-400',
-                    live: 'text-primary',
-                    success: 'text-accent',
-                    danger: 'text-red-400',
-                    warning: 'text-amber-300'
-                };
-
-                if (statusEl) {
-                    statusEl.textContent = label;
-                    statusEl.className = 'crash-status-label transition-colors duration-200';
-                    statusEl.classList.add(toneClasses[tone] || toneClasses.neutral);
-                }
-
-                if (messageEl) {
-                    messageEl.textContent = message;
-                }
-            }
-
-            const buttonStateConfig = {
-                cashout: {
-                    text: 'Cash Out',
-                    disabled: false,
-                    classes: ['bg-accent', 'text-dark', 'hover:brightness-110', 'hover:shadow-lg', 'shadow-lg']
-                },
-                waiting: {
-                    text: 'Awaiting new launch...',
-                    disabled: true,
-                    classes: ['bg-gray-800', 'text-gray-500', 'cursor-not-allowed']
-                },
-                cooldown: {
-                    text: 'Preparing launch...',
-                    disabled: true,
-                    classes: ['bg-gray-800', 'text-gray-500', 'cursor-wait']
-                },
-                signin: {
-                    text: 'Sign In to Play',
-                    disabled: false,
-                    classes: ['bg-gray-700', 'text-gray-300', 'hover:bg-gray-600', 'border', 'border-primary/40']
-                },
-                place: {
-                    text: 'Place Bet',
-                    disabled: false,
-                    classes: ['gradient-btn', 'text-white', 'hover:shadow-lg', 'shadow-lg']
-                }
-            };
-
-            const buttonToggleClasses = [
-                'gradient-btn',
-                'bg-accent',
-                'bg-gray-800',
-                'bg-gray-700',
-                'text-dark',
-                'text-white',
-                'text-gray-500',
-                'text-gray-300',
-                'hover:shadow-lg',
-                'hover:bg-gray-600',
-                'hover:brightness-110',
-                'cursor-not-allowed',
-                'cursor-wait',
-                'shadow-lg',
-                'border',
-                'border-primary/40'
-            ];
-
-            function setActionButtonState(stateKey) {
-                const config = buttonStateConfig[stateKey];
-                actionButtons.forEach(button => {
-                    button.disabled = config ? config.disabled : true;
-                    if (!config) {
-                        button.textContent = 'Unavailable';
-                        return;
-                    }
-                    button.textContent = config.text;
-                    button.classList.remove(...buttonToggleClasses);
-                    button.classList.add(...config.classes);
-                });
-            }
-
-            function setControlsDisabled(disabled) {
-                betInput.disabled = disabled;
-                decreaseBetButton?.setAttribute('aria-disabled', String(disabled));
-                increaseBetButton?.setAttribute('aria-disabled', String(disabled));
-                quickButtons.forEach(btn => btn.toggleAttribute('disabled', disabled));
-            }
-
-            function showBetError(message) {
-                if (!betErrorEl) {
-                    return;
-                }
-                betErrorEl.textContent = message;
-            }
-
-            function getProgressForMultiplier(multiplier) {
-                const ratio = Math.log(Math.max(1, multiplier)) / LOG_MAX_MULTIPLIER;
-                return Math.min(1, Math.max(0, ratio));
-            }
-
-            function getPathMetrics(progress) {
-                if (!pathGuideEl || crashPathLength <= 0) {
-                    return {
-                        leftPercent: progress * 100,
-                        bottomPercent: progress * 80 + 10,
-                        angle: 45
-                    };
-                }
-
-                const bounded = Math.min(1, Math.max(0, progress));
-
-                if (bounded <= 0) {
-                    const startPoint = pathGuideEl.getPointAtLength(0);
-                    return {
-                        leftPercent: startPoint.x,
-                        bottomPercent: 100 - startPoint.y,
-                        angle: 45
-                    };
-                }
-
-                const length = crashPathLength * bounded;
-                const point = pathGuideEl.getPointAtLength(length);
-                const ahead = pathGuideEl.getPointAtLength(Math.min(crashPathLength, length + crashPathLength * 0.02));
-                const dx = ahead.x - point.x;
-                const dy = ahead.y - point.y;
-                const angle = Math.atan2(-(dy), dx) * (180 / Math.PI);
-
-                return {
-                    leftPercent: point.x,
-                    bottomPercent: 100 - point.y,
-                    angle
-                };
-            }
-
-            function updatePathHighlight(progress) {
-                if (!pathActiveEl || crashPathLength <= 0) {
-                    return;
-                }
-
-                const offset = crashPathLength * (1 - Math.min(1, Math.max(0, progress)));
-                pathActiveEl.style.strokeDashoffset = offset;
-            }
-
-            function updateMultiplierDisplay() {
-                if (multiplierEl) {
-                    multiplierEl.textContent = formatMultiplier(state.multiplier);
-                }
-
-                updateFlightVisuals();
-            }
-
-            function setFlameActive(active) {
-                if (!flameEl) {
-                    return;
-                }
-
-                flameEl.classList.toggle('active', Boolean(active));
-            }
-
-            function updateFlightVisuals() {
-                const progress = getProgressForMultiplier(state.multiplier);
-                const metrics = getPathMetrics(progress);
-
-                if (shipEl) {
-                    shipEl.style.left = `${metrics.leftPercent}%`;
-                    shipEl.style.bottom = `${metrics.bottomPercent}%`;
-                    shipEl.style.transform = `translate(-50%, 50%) rotate(${metrics.angle}deg)`;
-                }
-
-                if (trailEl) {
-                    if (state.running) {
-                        trailEl.style.opacity = '0.85';
-                        trailEl.style.left = `${metrics.leftPercent}%`;
-                        trailEl.style.bottom = `${metrics.bottomPercent}%`;
-                        trailEl.style.transform = `translate(-95%, -35%) rotate(${metrics.angle}deg)`;
-                    } else {
-                        trailEl.style.opacity = '0';
-                    }
-                }
-
-                updatePathHighlight(progress);
-            }
-
-            function deactivateExplosion() {
-                if (!explosionEl) {
-                    return;
-                }
-
-                explosionEl.classList.remove('active');
-                explosionEl.style.removeProperty('animation');
-                explosionEl.style.removeProperty('-webkit-animation');
-                explosionParts.forEach(part => {
-                    part.style.removeProperty('animation');
-                    part.style.removeProperty('-webkit-animation');
-                });
-            }
-
-            function prepareExplosionReplay() {
-                if (!explosionEl) {
-                    return;
-                }
-
-                deactivateExplosion();
-                // Force a reflow so Mobile Safari and other browsers restart the keyframes reliably.
-                void explosionEl.offsetWidth;
-                explosionParts.forEach(part => void part.offsetWidth);
-            }
-
-            function triggerExplosion(multiplierValue) {
-                if (!explosionEl) {
-                    return;
-                }
-
-                const progress = getProgressForMultiplier(multiplierValue);
-                const metrics = getPathMetrics(progress);
-
-                explosionEl.style.left = `${metrics.leftPercent}%`;
-                explosionEl.style.bottom = `${metrics.bottomPercent}%`;
-                updatePathHighlight(progress);
-
-                if (explosionTimeoutId) {
-                    clearTimeout(explosionTimeoutId);
-                    explosionTimeoutId = null;
-                }
-
-                prepareExplosionReplay();
-
-                window.requestAnimationFrame(() => {
-                    explosionEl.classList.add('active');
-
-                    explosionTimeoutId = window.setTimeout(() => {
-                        deactivateExplosion();
-                        explosionTimeoutId = null;
-                    }, 950);
-                });
-            }
-
-            function getCrashChance(multiplier) {
-                const adjusted = Math.max(multiplier - 1, 0);
-                const scaled = Math.pow(adjusted, 1.2) / 140;
-                const base = 0.005;
-                return Math.min(0.35, base + scaled);
-            }
-
-            function generateGameId() {
-                const randomPart = Math.random().toString(16).slice(2, 8);
-                return `#${randomPart}`;
-            }
-
-            function renderHistory() {
-                if (!historyBody) {
-                    return;
-                }
-
-                historyBody.innerHTML = '';
-
-                if (!state.history.length) {
-                    historyBody.innerHTML = `
-                        <tr class="empty-state">
-                            <td colspan="5" class="px-6 py-6 text-center text-sm text-gray-500">No rounds played yet. Place a bet to begin.</td>
-                        </tr>
-                    `;
-                    return;
-                }
-
-                state.history.forEach(entry => {
-                    const row = document.createElement('tr');
-
-                    const idCell = document.createElement('td');
-                    idCell.className = 'px-6 py-4 whitespace-nowrap text-sm text-gray-300';
-                    idCell.textContent = entry.id;
-                    row.appendChild(idCell);
-
-                    const playerCell = document.createElement('td');
-                    playerCell.className = 'px-6 py-4 whitespace-nowrap text-sm text-gray-300';
-                    playerCell.textContent = entry.playerName;
-                    row.appendChild(playerCell);
-
-                    const betCell = document.createElement('td');
-                    betCell.className = 'px-6 py-4 whitespace-nowrap text-sm text-gray-300';
-                    betCell.textContent = formatCurrency(entry.bet);
-                    row.appendChild(betCell);
-
-                    const resultCell = document.createElement('td');
-                    resultCell.className = `px-6 py-4 whitespace-nowrap text-sm ${entry.cashedOut ? 'text-accent' : 'text-red-400'}`;
-                    resultCell.textContent = entry.resultText;
-                    row.appendChild(resultCell);
-
-                    const payoutCell = document.createElement('td');
-                    payoutCell.className = `px-6 py-4 whitespace-nowrap text-sm ${entry.cashedOut ? 'text-accent' : 'text-gray-400'}`;
-                    payoutCell.textContent = entry.payoutText;
-                    row.appendChild(payoutCell);
-
-                    historyBody.appendChild(row);
-                });
-            }
-
-            function recordHistoryEntry(entry) {
-                const resultText = entry.cashedOut && entry.cashOutMultiplier != null
-                    ? `${entry.cashOutMultiplier.toFixed(2)}x`
-                    : `Busted @ ${entry.crashMultiplier.toFixed(2)}x`;
-                const payoutText = entry.cashedOut ? formatCurrency(entry.payout) : formatCurrency(0);
-
-                state.history.unshift({
-                    ...entry,
-                    resultText,
-                    payoutText,
-                    playerName: entry.playerName ?? state.playerName
-                });
-
-                if (state.history.length > 10) {
-                    state.history.pop();
-                }
-
-                renderHistory();
-            }
-
-            function enterCooldown() {
-                state.cooldownActive = true;
-                setControlsDisabled(true);
-                if (state.authenticated) {
-                    setActionButtonState('cooldown');
+            randomButton?.addEventListener('click', () => pickRandomTile());
+            actionButton?.addEventListener('click', () => {
+                if (actionButton.dataset.state === 'cashout') {
+                    cashOut();
                 } else {
-                    setActionButtonState('signin');
+                    startRound();
                 }
-            }
+            });
 
-            function exitCooldown() {
-                state.cooldownActive = false;
-                if (state.running) {
-                    return;
-                }
-                if (!state.authenticated) {
-                    setControlsDisabled(true);
-                    setActionButtonState('signin');
-                    return;
-                }
-                setControlsDisabled(false);
-                setActionButtonState('place');
-                setStatus('WAITING', 'Place your bet to start the next launch.', 'neutral');
-            }
-
-            function resetRoundState() {
-                enterCooldown();
-
-                state.currentBet = 0;
-                state.cashedOut = false;
-                state.cashedOutAt = null;
-                state.payout = 0;
-                state.crashPoint = null;
-
-                if (state.resetTimeoutId) {
-                    clearTimeout(state.resetTimeoutId);
-                }
-
-                state.resetTimeoutId = window.setTimeout(() => {
-                    if (state.running) {
-                        return;
-                    }
-
-                    state.multiplier = 1;
-                    updateMultiplierDisplay();
-                    setFlameActive(false);
-
-                    if (trailEl) {
-                        trailEl.style.opacity = '0';
-                    }
-
-                    if (shipEl) {
-                        shipEl.classList.remove('crash-ship--stalled');
-                    }
-
-                    if (launchAreaEl) {
-                        launchAreaEl.classList.remove('active');
-                    }
-
-                    deactivateExplosion();
-
-                    if (explosionTimeoutId) {
-                        clearTimeout(explosionTimeoutId);
-                        explosionTimeoutId = null;
-                    }
-
-                    exitCooldown();
-                    state.resetTimeoutId = null;
-                }, COOLDOWN_MS);
-            }
-
-            function completeRound() {
-                if (!state.running) {
-                    return;
-                }
-
-                state.running = false;
-                setFlameActive(false);
-
-                if (state.intervalId) {
-                    clearInterval(state.intervalId);
-                    state.intervalId = null;
-                }
-
-                if (state.crashPoint != null && !state.cashedOut) {
-                    triggerExplosion(state.crashPoint);
-                    if (shipEl) {
-                        shipEl.classList.add('crash-ship--stalled');
+            function initBoard() {
+                for (let index = 0; index < TILE_COUNT; index += 1) {
+                    const tile = document.createElement('button');
+                    tile.type = 'button';
+                    tile.className = 'mines-cell mines-cell--hidden';
+                    tile.dataset.state = 'hidden';
+                    tile.dataset.index = String(index);
+                    tile.setAttribute('aria-label', `Hidden tile ${index + 1}`);
+                    tile.addEventListener('click', () => handleTileClick(index));
+                    boardTiles.push(tile);
+                    if (boardElement) {
+                        boardElement.appendChild(tile);
                     }
                 }
-
-                const crashMultiplier = state.crashPoint != null ? state.crashPoint : state.multiplier;
-                const didCashOut = state.cashedOut;
-
-                if (!didCashOut) {
-                    setStatus('CRASHED', `Mission failed at ${crashMultiplier.toFixed(2)}x. Better luck next launch.`, 'danger');
-                    setActionButtonState('waiting');
-                }
-
-                const entry = {
-                    id: generateGameId(),
-                    bet: state.currentBet,
-                    crashMultiplier,
-                    cashedOut: didCashOut,
-                    cashOutMultiplier: state.cashedOutAt,
-                    payout: state.payout,
-                    playerName: state.playerName
-                };
-
-                recordHistoryEntry(entry);
-
-                if (lastResultEl) {
-                    lastResultEl.textContent = didCashOut
-                        ? `${state.cashedOutAt?.toFixed(2) ?? crashMultiplier.toFixed(2)}x`
-                        : `${crashMultiplier.toFixed(2)}x`;
-                    lastResultEl.classList.toggle('text-accent', didCashOut);
-                    lastResultEl.classList.toggle('text-primary', !didCashOut);
-                }
-
-                if (!didCashOut) {
-                    setActionButtonState('waiting');
-                }
-
-                resetRoundState();
             }
 
             function startRound() {
-                if (state.running || state.cooldownActive || !state.authenticated) {
+                sanitizeBetInput();
+                const bet = sanitizeBet(parseFloat(betInput?.value));
+                if (!Number.isFinite(bet) || bet < BET_MIN) {
+                    setBetError(`Minimum bet is €${currencyFormatter.format(BET_MIN)}.`);
                     return;
                 }
+                clearBetError();
 
-                const rawValue = parseFloat(betInput.value);
-                if (!Number.isFinite(rawValue) || rawValue <= 0) {
-                    showBetError('Enter a valid bet amount.');
-                    return;
-                }
-                if (rawValue > state.balance) {
-                    showBetError('Insufficient balance for that bet.');
-                    return;
-                }
+                const minesCount = clamp(parseInt(minesInput?.value, 10), MIN_MINES, MAX_MINES);
+                const mines = generateMines(minesCount);
 
-                const bet = Math.max(0.1, Number(rawValue.toFixed(2)));
+                round = {
+                    active: true,
+                    ended: false,
+                    bet,
+                    mines,
+                    minesCount,
+                    revealedSafe: 0,
+                    multiplier: 1,
+                    remainingTiles: TILE_COUNT,
+                    remainingMines: minesCount
+                };
 
-                if (state.intervalId) {
-                    clearInterval(state.intervalId);
-                    state.intervalId = null;
-                }
-                if (state.resetTimeoutId) {
-                    clearTimeout(state.resetTimeoutId);
-                    state.resetTimeoutId = null;
-                }
+                boardTiles.forEach(tile => {
+                    tile.className = 'mines-cell mines-cell--hidden';
+                    tile.dataset.state = 'hidden';
+                    tile.innerHTML = '';
+                    tile.removeAttribute('aria-disabled');
+                });
 
-                state.currentBet = bet;
-                state.balance = parseFloat((state.balance - bet).toFixed(2));
-                if (state.balance < 0) {
-                    state.balance = 0;
-                }
-
-                state.multiplier = 1;
-                state.crashPoint = null;
-                state.running = true;
-                state.cashedOut = false;
-                state.cashedOutAt = null;
-                state.payout = 0;
-
-                betInput.value = bet.toFixed(2);
-                updateBalanceDisplay();
-                persistBalance(state.balance);
-                showBetError('');
-                setControlsDisabled(true);
-                setActionButtonState('cashout');
-                setStatus('LIVE', 'Spaceship launching — cash out before it crashes!', 'live');
-                setFlameActive(true);
-                if (shipEl) {
-                    shipEl.classList.remove('crash-ship--stalled');
-                }
-                if (launchAreaEl) {
-                    launchAreaEl.classList.add('active');
-                }
-                deactivateExplosion();
-                if (explosionTimeoutId) {
-                    clearTimeout(explosionTimeoutId);
-                    explosionTimeoutId = null;
-                }
-                updateMultiplierDisplay();
-
-                const growthFactor = 1.01;
-                state.intervalId = window.setInterval(() => {
-                    state.multiplier = parseFloat((state.multiplier * growthFactor).toFixed(3));
-                    updateMultiplierDisplay();
-
-                    const crashChance = getCrashChance(state.multiplier);
-                    const forcedCrash = state.multiplier >= 50;
-
-                    if (forcedCrash || Math.random() < crashChance) {
-                        state.crashPoint = parseFloat(state.multiplier.toFixed(2));
-                        completeRound();
-                    }
-                }, 120);
+                updateMinesValue(minesCount);
+                updateGemsDisplay(TILE_COUNT - minesCount);
+                updateProfitUI(1, 0);
+                updateBoardStats({
+                    safePicks: 0,
+                    chance: calculateChance(round.remainingTiles - round.remainingMines, round.remainingTiles),
+                    payout: bet
+                });
+                toggleControlsDisabled(true);
+                setActionMode('cashout');
+                setStatus('Round started! Select a tile to reveal a gem.', 'info');
+                updateRandomButtonState();
             }
 
             function cashOut() {
-                if (!state.running || state.cashedOut) {
+                if (!round?.active) {
+                    startRound();
+                    return;
+                }
+                const payout = round.bet * round.multiplier;
+                const profit = payout - round.bet;
+                updateProfitUI(round.multiplier, profit);
+                setStatus(`You cashed out with ${formatCurrency(payout)} (${round.multiplier.toFixed(2)}x).`, 'success');
+                finishRound('cashout');
+            }
+
+            function handleTileClick(index) {
+                if (!round?.active) {
+                    return;
+                }
+                const tile = boardTiles[index];
+                if (!tile || tile.dataset.state !== 'hidden') {
+                    return;
+                }
+                if (round.mines.has(index)) {
+                    revealMine(tile, true);
+                    revealRemainingMines(index);
+                    updateProfitUI(0, -round.bet);
+                    setStatus('Boom! You uncovered a mine and lost the round.', 'error');
+                    finishRound('bust');
                     return;
                 }
 
-                const currentMultiplier = parseFloat(state.multiplier.toFixed(2));
-                state.cashedOut = true;
-                state.cashedOutAt = currentMultiplier;
-                state.payout = parseFloat((state.currentBet * currentMultiplier).toFixed(2));
-                state.balance = parseFloat((state.balance + state.payout).toFixed(2));
-                updateBalanceDisplay();
-                persistBalance(state.balance);
-                setStatus('CASHED OUT', `You bailed out with ${formatCurrency(state.payout)} at ${currentMultiplier.toFixed(2)}x. Mission control is tracking the crash.`, 'success');
-                setActionButtonState('waiting');
+                revealSafe(tile);
+                const chance = calculateChance(round.remainingTiles - round.remainingMines, round.remainingTiles);
+                const safeLeft = TILE_COUNT - round.minesCount - round.revealedSafe;
+                const payout = round.bet * round.multiplier;
+                const profit = payout - round.bet;
+                updateProfitUI(round.multiplier, profit);
+                updateBoardStats({
+                    safePicks: round.revealedSafe,
+                    chance,
+                    payout
+                });
+                updateGemsDisplay(safeLeft);
+                setStatus(safeLeft > 0 ? 'Nice! Each gem raises your multiplier. Keep going or cash out.' : 'All gems collected! Cashout locked in.', 'success');
+
+                if (safeLeft <= 0) {
+                    finishRound('cleared');
+                    return;
+                }
+                updateRandomButtonState();
+            }
+
+            function revealSafe(tile) {
+                tile.className = 'mines-cell mines-cell--safe animate-pop';
+                tile.dataset.state = 'safe';
+                tile.innerHTML = GEM_SVG;
+                tile.addEventListener('animationend', () => {
+                    tile.classList.remove('animate-pop');
+                }, { once: true });
+
+                const odds = round.remainingTiles / (round.remainingTiles - round.remainingMines);
+                round.multiplier = Number.parseFloat((round.multiplier * odds).toFixed(4));
+                round.revealedSafe += 1;
+                round.remainingTiles -= 1;
+            }
+
+            function revealMine(tile, triggered = false) {
+                tile.className = `mines-cell mines-cell--mine${triggered ? ' mines-cell--mine-trigger animate-shake' : ''}`;
+                tile.dataset.state = 'mine';
+                tile.innerHTML = MINE_SVG;
+                if (triggered) {
+                    tile.addEventListener('animationend', () => {
+                        tile.classList.remove('animate-shake');
+                    }, { once: true });
+                }
+            }
+
+            function revealRemainingMines(triggeredIndex) {
+                if (!round) {
+                    return;
+                }
+                round.mines.forEach(index => {
+                    const tile = boardTiles[index];
+                    if (!tile || tile.dataset.state === 'mine') {
+                        return;
+                    }
+                    revealMine(tile, index === triggeredIndex);
+                });
+            }
+
+            function finishRound(outcome) {
+                if (!round) {
+                    return;
+                }
+                round.active = false;
+                round.ended = true;
+                toggleControlsDisabled(false);
+                setActionMode('start');
+                randomButton.disabled = true;
+                updateRandomButtonState();
+
+                boardTiles.forEach(tile => {
+                    tile.setAttribute('aria-disabled', 'true');
+                });
+
+                if (outcome === 'bust') {
+                    updateBoardStats({
+                        safePicks: round.revealedSafe,
+                        chance: 0,
+                        payout: 0
+                    });
+                } else {
+                    const payout = round.bet * round.multiplier;
+                    updateBoardStats({
+                        safePicks: round.revealedSafe,
+                        chance: 0,
+                        payout
+                    });
+                }
+
+                updateGemsDisplay(TILE_COUNT - clamp(parseInt(minesInput.value, 10), MIN_MINES, MAX_MINES));
+            }
+
+            function pickRandomTile() {
+                if (!round?.active) {
+                    return;
+                }
+                const hiddenSafe = [];
+                const hiddenTiles = [];
+                for (let i = 0; i < TILE_COUNT; i += 1) {
+                    if (boardTiles[i].dataset.state === 'hidden') {
+                        hiddenTiles.push(i);
+                        if (!round.mines.has(i)) {
+                            hiddenSafe.push(i);
+                        }
+                    }
+                }
+                if (hiddenTiles.length === 0) {
+                    updateRandomButtonState();
+                    return;
+                }
+                const pool = hiddenSafe.length > 0 ? hiddenSafe : hiddenTiles;
+                const index = pool[Math.floor(Math.random() * pool.length)];
+                handleTileClick(index);
+            }
+
+            function toggleControlsDisabled(disabled) {
+                const elements = [
+                    betInput, betDecrease, betIncrease,
+                    ...Array.from(quickBetButtons),
+                    minesInput, minesMinus, minesPlus
+                ];
+                elements.forEach(el => {
+                    if (!el) return;
+                    el.disabled = disabled;
+                    if (disabled) {
+                        el.setAttribute('aria-disabled', 'true');
+                    } else {
+                        el.removeAttribute('aria-disabled');
+                    }
+                });
             }
 
             function adjustBet(delta) {
-                if (state.running || !state.authenticated) {
-                    return;
-                }
-                const current = parseFloat(betInput.value) || 0;
-                let updated = current + delta;
-                if (updated < 0.1) {
-                    updated = 0.1;
-                }
-                betInput.value = updated.toFixed(2);
-                showBetError('');
-            }
-
-            function abortRoundForSignOut() {
-                if (state.intervalId) {
-                    clearInterval(state.intervalId);
-                    state.intervalId = null;
-                }
-                if (state.resetTimeoutId) {
-                    clearTimeout(state.resetTimeoutId);
-                    state.resetTimeoutId = null;
-                }
-                if (explosionTimeoutId) {
-                    clearTimeout(explosionTimeoutId);
-                    explosionTimeoutId = null;
-                }
-
-                state.running = false;
-                state.cooldownActive = false;
-                state.cashedOut = false;
-                state.cashedOutAt = null;
-                state.payout = 0;
-                state.currentBet = 0;
-                state.multiplier = 1;
-                state.crashPoint = null;
-
-                updateMultiplierDisplay();
-                setFlameActive(false);
-
-                if (trailEl) {
-                    trailEl.style.opacity = '0';
-                }
-                if (launchAreaEl) {
-                    launchAreaEl.classList.remove('active');
-                }
-                if (shipEl) {
-                    shipEl.classList.add('crash-ship--stalled');
-                }
-                deactivateExplosion();
-
-                setControlsDisabled(true);
-                setActionButtonState('signin');
-            }
-
-            decreaseBetButton?.addEventListener('click', () => adjustBet(-1));
-            increaseBetButton?.addEventListener('click', () => adjustBet(1));
-
-            quickButtons.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    if (state.running || !state.authenticated) {
-                        return;
-                    }
-
-                    const action = btn.dataset.quick;
-                    let current = parseFloat(betInput.value) || 0;
-
-                    if (action === 'half') {
-                        current = Math.max(0.1, current / 2);
-                    } else if (action === 'double') {
-                        current = current * 2;
-                    } else if (action === 'max') {
-                        current = state.balance;
-                    }
-
-                    if (current <= 0) {
-                        current = 0.1;
-                    }
-
-                    betInput.value = current.toFixed(2);
-                    showBetError('');
-                });
-            });
-
-            betInput.addEventListener('input', () => showBetError(''));
-            betInput.addEventListener('blur', () => {
-                const value = parseFloat(betInput.value);
-                if (!Number.isNaN(value) && value > 0) {
-                    betInput.value = value.toFixed(2);
-                }
-            });
-
-            actionButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    if (!state.authenticated) {
-                        authUI?.openSignIn?.();
-                        return;
-                    }
-
-                    if (state.running) {
-                        if (!state.cashedOut) {
-                            cashOut();
-                        }
-                    } else if (!state.cooldownActive) {
-                        startRound();
-                    }
-                });
-            });
-
-            function applyAuth(user) {
-                const previousUid = state.playerUid;
-                state.playerUid = user?.uid || null;
-                state.authenticated = Boolean(user);
-                state.playerName = user?.username || 'Guest';
-                state.balance = state.authenticated && Number.isFinite(user.balance)
-                    ? parseFloat(user.balance.toFixed(2))
-                    : 0;
-                updateBalanceDisplay();
-
-                if (authController.isDisabled) {
-                    setStatus('AUTH REQUIRED', 'Configure Firebase to enable Crash betting.', 'warning');
-                    setControlsDisabled(true);
-                    setActionButtonState('signin');
-                    return;
-                }
-
-                if (!state.authenticated) {
-                    abortRoundForSignOut();
-                    state.history = [];
-                    renderHistory();
-                    if (lastResultEl) {
-                        lastResultEl.textContent = '—';
-                    }
-                    setStatus('SIGN IN', 'Sign in to place bets and launch missions.', 'warning');
-                    return;
-                }
-
-                if (previousUid !== state.playerUid) {
-                    state.history = [];
-                    renderHistory();
-                    if (lastResultEl) {
-                        lastResultEl.textContent = '—';
-                    }
-                }
-
-                if (!state.running && !state.cooldownActive) {
-                    setControlsDisabled(false);
-                    setActionButtonState('place');
-                    setStatus('WAITING', 'Place your bet to start the next launch.', 'neutral');
+                sanitizeBetInput();
+                const current = sanitizeBet(parseFloat(betInput.value));
+                const next = sanitizeBet(current + delta);
+                betInput.value = next.toFixed(2);
+                if (!round || !round.active) {
+                    updateBoardStats({
+                        safePicks: 0,
+                        chance: calculateInitialChance(parseInt(minesInput.value, 10) || 3),
+                        payout: sanitizeBet(parseFloat(betInput.value))
+                    });
                 }
             }
 
-            authController.subscribe(applyAuth);
-            applyAuth(initialUser);
+            function sanitizeBetInput() {
+                const value = sanitizeBet(parseFloat(betInput.value));
+                betInput.value = value.toFixed(2);
+            }
 
-            renderHistory();
-            state.multiplier = 1;
-            updateMultiplierDisplay();
-            betInput.value = (parseFloat(betInput.value) || 10).toFixed(2);
-        }
+            function sanitizeBet(raw) {
+                if (!Number.isFinite(raw) || Number.isNaN(raw)) {
+                    return BET_MIN;
+                }
+                const clamped = Math.min(BET_MAX, Math.max(BET_MIN, raw));
+                return Number.parseFloat(clamped.toFixed(2));
+            }
 
+            function stepMines(delta) {
+                if (round?.active) {
+                    return;
+                }
+                const current = clamp(parseInt(minesInput.value, 10), MIN_MINES, MAX_MINES);
+                const next = clamp(current + delta, MIN_MINES, MAX_MINES);
+                minesInput.value = String(next);
+                updateMinesValue(next);
+            }
+
+            function updateMinesValue(value) {
+                const mines = clamp(value, MIN_MINES, MAX_MINES);
+                minesInput.value = String(mines);
+                if (minesDisplay) {
+                    minesDisplay.textContent = String(mines);
+                }
+                if (activeMinesLabel) {
+                    activeMinesLabel.textContent = `${mines} ${mines === 1 ? 'Mine' : 'Mines'} Active`;
+                }
+                if (!round || !round.active) {
+                    updateGemsDisplay(TILE_COUNT - mines);
+                    updateBoardStats({
+                        safePicks: 0,
+                        chance: calculateInitialChance(mines),
+                        payout: sanitizeBet(parseFloat(betInput.value))
+                    });
+                }
+            }
+
+            function updateGemsDisplay(value) {
+                if (gemsDisplay) {
+                    gemsDisplay.textContent = String(Math.max(0, value));
+                }
+            }
+
+            function updateProfitUI(multiplier, profit) {
+                if (profitMultiplier) {
+                    profitMultiplier.textContent = `${multiplier.toFixed(2)}x`;
+                }
+                if (profitAmount) {
+                    profitAmount.textContent = formatCurrency(profit);
+                    profitAmount.classList.toggle('is-negative', profit < 0);
+                    profitAmount.classList.toggle('is-positive', profit > 0);
+                }
+            }
+
+            function updateBoardStats({ safePicks, chance, payout }) {
+                if (typeof safePicks === 'number' && safePicksDisplay) {
+                    safePicksDisplay.textContent = String(safePicks);
+                }
+                if (typeof chance === 'number' && nextChanceDisplay) {
+                    const sanitized = Number.isFinite(chance) ? Math.max(0, chance) : 0;
+                    nextChanceDisplay.textContent = `${sanitized.toFixed(1)}%`;
+                }
+                if (typeof payout === 'number' && potentialPayoutDisplay) {
+                    potentialPayoutDisplay.textContent = formatCurrency(payout);
+                }
+            }
+
+            function updateRandomButtonState() {
+                if (!round?.active) {
+                    randomButton.disabled = true;
+                    return;
+                }
+                const hidden = boardTiles.some(tile => tile.dataset.state === 'hidden');
+                randomButton.disabled = !hidden;
+            }
+
+            function generateMines(count) {
+                const mineSet = new Set();
+                while (mineSet.size < count) {
+                    const index = Math.floor(Math.random() * TILE_COUNT);
+                    mineSet.add(index);
+                }
+                return mineSet;
+            }
+
+            function calculateChance(safeTiles, totalTiles) {
+                if (totalTiles <= 0) {
+                    return 0;
+                }
+                return (safeTiles / totalTiles) * 100;
+            }
+
+            function calculateInitialChance(mines) {
+                const safe = TILE_COUNT - clamp(mines, MIN_MINES, MAX_MINES);
+                return calculateChance(safe, TILE_COUNT);
+            }
+
+            function clamp(value, min, max) {
+                return Math.min(max, Math.max(min, value));
+            }
+
+            function formatCurrency(value) {
+                const absolute = Math.abs(value);
+                const sign = value < 0 ? '-€' : '€';
+                return `${sign}${currencyFormatter.format(absolute)}`;
+            }
+
+            function updateBetDisplay() {
+                if (!betInput) {
+                    return;
+                }
+                const sanitized = sanitizeBet(parseFloat(betInput.value));
+                betInput.value = sanitized.toFixed(2);
+            }
+
+            function setActionMode(mode) {
+                const base = 'w-full rounded-xl py-3 text-sm font-semibold uppercase tracking-wide transition focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-950 disabled:opacity-60 disabled:cursor-not-allowed';
+                if (mode === 'cashout') {
+                    actionButton.dataset.state = 'cashout';
+                    actionButton.textContent = 'Cashout';
+                    actionButton.className = `${base} bg-emerald-500 text-slate-900 shadow-[0_0_35px_rgba(16,185,129,0.35)] hover:bg-emerald-400`;
+                } else {
+                    actionButton.dataset.state = 'start';
+                    actionButton.textContent = 'Start Round';
+                    actionButton.className = `${base} bg-sky-500 text-slate-900 shadow-[0_0_30px_rgba(14,165,233,0.25)] hover:bg-sky-400`;
+                }
+            }
+
+            function setStatus(message, tone = 'info') {
+                if (!statusLabel) {
+                    return;
+                }
+                statusLabel.textContent = message;
+                statusLabel.className = 'status-message';
+                statusLabel.classList.add(`status-message--${tone}`);
+            }
+
+            function setBetError(message) {
+                if (betError) {
+                    betError.textContent = message;
+                }
+            }
+
+            function clearBetError() {
+                if (betError) {
+                    betError.textContent = '';
+                }
+            }
+        });
     </script>
-
-
-
 </body>
 </html>
